@@ -2,14 +2,15 @@ module.exports = {
   extends: [
     'next/core-web-vitals',
     'plugin:react/recommended',
+    'plugin:@typescript-eslint/recommended',
     'plugin:prettier/recommended',
-    '@typescript-eslint/recommended',
   ],
   rules: {
+    '@typescript-eslint/no-explicit-any': 'error',
+    '@typescript-eslint/no-unused-vars': 'error',
+    'react-hooks/exhaustive-deps': 'error',
+    '@typescript-eslint/no-unused-expressions': 'error',
     'react/react-in-jsx-scope': 'off',
-    'no-console': 'warn',
-    'react/prop-types': 'off',
   },
-  parser: '@typescript-eslint/parser',
-  plugins: ['@typescript-eslint'],
+  plugins: ['react-hooks'],
 };
