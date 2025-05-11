@@ -1,17 +1,18 @@
-import React from "react";
-import { Control, useController, UseControllerProps } from "react-hook-form";
-import { ErrorMessage } from "@hookform/error-message";
+import React from 'react';
+import { Control, useController, UseControllerProps } from 'react-hook-form';
+import { ErrorMessage } from '@hookform/error-message';
 
 interface InputFieldProp
   extends UseControllerProps,
-    Omit<React.InputHTMLAttributes<HTMLInputElement>, "name" | "defaultValue"> {
+    Omit<React.InputHTMLAttributes<HTMLInputElement>, 'name' | 'defaultValue'> {
   readonly type?: string;
   readonly className?: string;
   readonly asterisk?: boolean;
   readonly icon?: string;
-  readonly iconPosition?: "left" | "right";
+  readonly iconPosition?: 'left' | 'right';
   readonly label?: string;
   readonly disabled?: boolean;
+  /* eslint-disable  @typescript-eslint/no-explicit-any */
   readonly control?: Control<any>;
 }
 
@@ -47,8 +48,8 @@ export const InputField = (props: InputFieldProp) => {
             className={`
                             pointer-events-none absolute inset-y-0 flex items-center px-2.5
                             ${
-                              (iconPosition === "left" && "left-0") ||
-                              (iconPosition === "right" && "right-0")
+                              (iconPosition === 'left' && 'left-0') ||
+                              (iconPosition === 'right' && 'right-0')
                             }`}
           >
             <span>{icon}</span>
@@ -69,9 +70,7 @@ export const InputField = (props: InputFieldProp) => {
       <ErrorMessage
         name={name}
         errors={errors}
-        render={({ message }) => (
-          <p className="mt-1 text-xs text-red-500">{message}</p>
-        )}
+        render={({ message }) => <p className="mt-1 text-xs text-red-500">{message}</p>}
       />
     </>
   );

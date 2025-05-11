@@ -1,13 +1,13 @@
-import Button from "@/src/components/atoms/button/button";
-import InputField from "@/src/components/atoms/Input/input-field";
+import Button from '@/src/components/atoms/button/button';
+import InputField from '@/src/components/atoms/Input/input-field';
 // import Axiosauth from "@/lib/http-auth";
 // import Axios from "@/lib/http-client";
-import { useForm } from "react-hook-form";
-import { toast } from "react-toastify";
-import { useRouter } from "next/navigation";
-import { useUserStore } from "@/src/store/userStore";
-import { useEffect } from "react";
-import { signInAction } from "@/src/app/actions/actions";
+import { useForm } from 'react-hook-form';
+// import { toast } from "react-toastify";
+// import { useRouter } from "next/navigation";
+// import { useUserStore } from "@/src/store/userStore";
+// import { useEffect } from "react";
+import { signInAction } from '@/src/app/actions/actions';
 
 interface FormData {
   email: string;
@@ -15,9 +15,9 @@ interface FormData {
 }
 
 export default function AuthForm() {
-  const router = useRouter();
-  const setRole = useUserStore((state) => state.setRole);
-  const user = useUserStore((state) => state.user);
+  // const router = useRouter();
+  // const setRole = useUserStore((state) => state.setRole);
+  // const user = useUserStore((state) => state.user);
 
   //   const fetchUser = async () => {
   //  const
@@ -45,21 +45,21 @@ export default function AuthForm() {
   //     // }
   //     };
 
-  const { control, handleSubmit, trigger, getValues } = useForm<FormData>({
+  const { control, handleSubmit } = useForm<FormData>({
     defaultValues: {
-      email: "",
-      password: "",
+      email: '',
+      password: '',
     },
   });
 
-  useEffect(() => {
-    user !== null && router.push("/dashboard");
-  }, [user]);
+  // useEffect(() => {
+  //   user !== null && router.push("/dashboard");
+  // }, [user]);
 
   const submitForm = async (data: FormData) => {
     const form = new FormData();
-    form.append("email", "ajayiezekiel559@gmail.com");
-    form.append("password", "example-password");
+    form.append('email', data.email);
+    form.append('password', data.password);
     await signInAction(form);
     // try {
     //   const response = await Axiosauth.post("/token?grant_type=password", {
