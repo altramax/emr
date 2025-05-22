@@ -1,88 +1,39 @@
 import Button from '@/src/components/atoms/button/button';
 import InputField from '@/src/components/atoms/Input/input-field';
-// import Axiosauth from "@/lib/http-auth";
-// import Axios from "@/lib/http-client";
 import { useForm } from 'react-hook-form';
-// import { toast } from "react-toastify";
-// import { useRouter } from "next/navigation";
-// import { useUserStore } from "@/src/store/userStore";
-// import { useEffect } from "react";
+import { useRouter } from 'next/navigation';
 import { signInAction } from '@/src/app/actions/actions';
+import { SigninInputs, authSchema } from '@/src/validations/auth-schema';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { toast } from 'react-toastify';
 
-interface FormData {
-  email: string;
-  password: string;
-}
+const initialValues = {
+  email: '',
+  password: '',
+};
 
 export default function AuthForm() {
-  // const router = useRouter();
-  // const setRole = useUserStore((state) => state.setRole);
-  // const user = useUserStore((state) => state.user);
+  const router = useRouter();
 
-  //   const fetchUser = async () => {
-  //  const
-
-  //     // try {
-  //     //   const response = await Axios.post("/role", {
-  //     //     role: "Admin",
-  //     //   });
-  //     //   console.log("todo created", response);
-  //     //   return response.data;
-  //     // } catch (error: any) {
-  //     //   console.error("Signup failed:", error.response?.data || error.message);
-  //     // }
-
-  //     // try {
-  //     //   const response = await Axiosauth.post("/token?grant_type=password", {
-  //     //       email: 'ajayiezekiel559@gmail.com',
-  //     //     password: 'example-password'
-  //     //   });
-
-  //     //   console.log("user login", response);
-  //     //   return response.data;
-  //     // } catch (error: any) {
-  //     //   console.error("Signup failed:", error.response?.data || error.message);
-  //     // }
-  //     };
-
-  const { control, handleSubmit } = useForm<FormData>({
-    defaultValues: {
-      email: '',
-      password: '',
-    },
+  const { control, handleSubmit } = useForm<SigninInputs>({
+    resolver: yupResolver(authSchema),
+    mode: 'onChange',
+    defaultValues: initialValues,
   });
 
-  // useEffect(() => {
-  //   user !== null && router.push("/dashboard");
-  // }, [user]);
-
-  const submitForm = async (data: FormData) => {
+  const submitForm = async (data: SigninInputs) => {
     const form = new FormData();
     form.append('email', data.email);
     form.append('password', data.password);
-    await signInAction(form);
-    // try {
-    //   const response = await Axiosauth.post("/token?grant_type=password", {
-    //     email: data.email,
-    //     password: data.password,
-    //   });
-    //   const getRole = await Axios.get("/role", {
-    //     params: { user_id: `eq.${response.data.user.id}` },
-    //   });
-    //   console.log(getRole);
 
-    //   setRole(getRole.data[0].role);
-
-    //   if (response.status === 200 && getRole.status === 200) {
-    //     toast.success("Signin Successful");
-    //     router.replace("/dashboard");
-    //   }
-    // } catch (error) {
-    //   if (error) {
-    //     toast.error("Signin Failed");
-    //     console.log(error);
-    //   }
-    // }
+    try {
+      await signInAction(form);
+      toast.success('Signin Successful');
+      router.replace('/dashboard');
+    } catch (error) {
+      console.log(error);
+      return error;
+    }
   };
 
   return (
