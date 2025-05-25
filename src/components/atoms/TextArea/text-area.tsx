@@ -2,10 +2,9 @@ import React from 'react';
 import { Control, useController, UseControllerProps } from 'react-hook-form';
 import { ErrorMessage } from '@hookform/error-message';
 
-interface InputFieldProp
+interface TextareaFieldProp
   extends UseControllerProps,
-    Omit<React.InputHTMLAttributes<HTMLInputElement>, 'name' | 'defaultValue'> {
-  readonly type?: string;
+    Omit<React.TextareaHTMLAttributes<HTMLTextAreaElement>, 'name' | 'defaultValue'> {
   readonly className?: string;
   readonly asterisk?: boolean;
   readonly icon?: string;
@@ -16,7 +15,7 @@ interface InputFieldProp
   readonly control?: Control<any>;
 }
 
-const Input = (props: InputFieldProp) => {
+const Textarea = (props: TextareaFieldProp) => {
   const {
     field: { onChange, onBlur, value },
     formState: { errors },
@@ -24,7 +23,6 @@ const Input = (props: InputFieldProp) => {
 
   const {
     name,
-    type,
     placeholder,
     className,
     icon,
@@ -32,6 +30,7 @@ const Input = (props: InputFieldProp) => {
     asterisk,
     label,
     disabled,
+    rows = 6,
     ...others
   } = props;
 
@@ -47,17 +46,13 @@ const Input = (props: InputFieldProp) => {
         {icon && (
           <div
             className={`
-                            pointer-events-none absolute inset-y-0 flex items-center px-2.5
-                            ${
-                              (iconPosition === 'left' && 'left-0') ||
-                              (iconPosition === 'right' && 'right-0')
-                            }`}
+              pointer-events-none absolute inset-y-0 flex items-center px-2.5
+              ${(iconPosition === 'left' && 'left-0') || (iconPosition === 'right' && 'right-0')}`}
           >
             <span>{icon}</span>
           </div>
         )}
-        <input
-          type={type}
+        <textarea
           name={name}
           placeholder={placeholder}
           className={className}
@@ -65,7 +60,9 @@ const Input = (props: InputFieldProp) => {
           onChange={onChange}
           onBlur={onBlur}
           disabled={disabled}
+          rows={rows}
           {...others}
+          style={{ resize: 'none' }}
         />
       </div>
       <ErrorMessage
@@ -77,4 +74,4 @@ const Input = (props: InputFieldProp) => {
   );
 };
 
-export default Input;
+export default Textarea;

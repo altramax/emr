@@ -1,10 +1,15 @@
 import { useState } from 'react';
 import { createClient } from '../utils/supabase/client';
 
-export function useRoleHook() {
+export function useUserHook() {
   const supabase = createClient();
   const [loading, setLoading] = useState<boolean>(false);
-  const [role, setRole] = useState<string | null>(null);
+  const [user, setUser] = useState<Record<string, string | undefined>>({
+    id: '',
+    email: '',
+    role: '',
+    name: '',
+  });
   /* eslint-disable  @typescript-eslint/no-explicit-any */
   const [error, setError] = useState<any>(null);
 
@@ -12,11 +17,17 @@ export function useRoleHook() {
     try {
       setLoading(true);
       const { data } = await supabase.auth.getUser();
-      setRole(data?.user?.user_metadata?.role);
+      setUser({
+        id: data?.user?.id,
+        email: data?.user?.email,
+        role: data?.user?.user_metadata?.role,
+        name: data?.user?.user_metadata?.display_name,
+      });
+      setError(data);
       setLoading(false);
     } catch (err) {
-      setError(err);
+      console.log(err);
     }
   };
-  return { role, loading, error, getRole };
+  return { user, loading, error, getRole };
 }

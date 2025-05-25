@@ -62,7 +62,7 @@ export const signInAction = async (queryData: any) => {
           },
         });
 
-        return userRole?.role;
+        return 'success';
       }
     }
   } catch (error) {
@@ -135,5 +135,5 @@ export const resetPasswordAction = async (formData: FormData) => {
 export const signOutAction = async () => {
   const supabase = await createClient();
   await supabase.auth.signOut();
-  return redirect('/');
+  return 'success';
 };

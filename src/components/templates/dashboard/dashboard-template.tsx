@@ -1,20 +1,19 @@
 'use client';
-import Button from '@/src/components/atoms/button/button';
-import { signOutAction } from '@/src/app/actions/actions';
-import { useRoleHook } from '@/src/hooks/role-hook';
+
+import Header from '@/src/components/organisms/dashboard-organisms/header';
+import SummaryCardGroup from '@/src/components/organisms/dashboard-organisms/summary-card-group';
+import RecentPatients from '@/src/components/organisms/dashboard-organisms/recent-patients';
+import TodaysAppointments from '@/src/components/organisms/dashboard-organisms/todays-appointments';
 
 export default function DashboardTemplate() {
-  const logout = async () => {
-    await signOutAction();
-  };
-
-  const { role, getRole } = useRoleHook();
-
   return (
-    <div>
-      <Button value="Signout" onClick={logout} />
-      <Button value="getRole" onClick={getRole} />
-      This is {role} dashboard
-    </div>
+    <main className="flex-1 p-6">
+      <Header />
+      <SummaryCardGroup />
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 mt-6">
+        <RecentPatients />
+        <TodaysAppointments />
+      </div>
+    </main>
   );
 }

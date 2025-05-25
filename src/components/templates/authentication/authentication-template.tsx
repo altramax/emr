@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import React from "react";
-import AuthForm from "@/src/components/organisms/authentication/auth-form";
+import React from 'react';
+import AuthForm from '@/src/components/organisms/authentication/auth-form';
 
 const AuthenticationTemplate = () => {
   return (

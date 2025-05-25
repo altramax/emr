@@ -1,7 +1,5 @@
 import DashboardTemplate from '@/src/components/templates/dashboard/dashboard-template';
 
-const Page = async () => {
+export default function DashboardPage() {
   return <DashboardTemplate />;
-};
-
-export default Page;
+}

@@ -3,7 +3,7 @@ import InputField from '@/src/components/atoms/Input/input-field';
 import { useForm } from 'react-hook-form';
 import { useRouter } from 'next/navigation';
 import { signInAction } from '@/src/app/actions/actions';
-import { SigninInputs, authSchema } from '@/src/validations/auth-schema';
+import { SigninInputs, LoginSchema } from '@/src/validations/login-schema';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { toast } from 'react-toastify';
 
@@ -16,7 +16,7 @@ export default function AuthForm() {
   const router = useRouter();
 
   const { control, handleSubmit } = useForm<SigninInputs>({
-    resolver: yupResolver(authSchema),
+    resolver: yupResolver(LoginSchema),
     mode: 'onChange',
     defaultValues: initialValues,
   });
@@ -27,9 +27,11 @@ export default function AuthForm() {
     form.append('password', data.password);
 
     try {
-      await signInAction(form);
-      toast.success('Signin Successful');
-      router.replace('/dashboard');
+      const res = await signInAction(form);
+      if (res === 'success') {
+        toast.success('Signin Successful');
+        router.replace('/dashboard');
+      }
     } catch (error) {
       console.log(error);
       return error;
