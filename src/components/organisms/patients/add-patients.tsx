@@ -5,7 +5,7 @@ import Input from '../../atoms/Input/input-field';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { AddPatientSchema, inputType } from '@/src/validations/add-patient-schema';
-import SelectDropdown from '../../atoms/select-dropdown/select-dropdown';
+import SelectDropdown from '../../molecules/select-dropdown/select-dropdown';
 import Textarea from '../../atoms/TextArea/text-area';
 import Button from '../../atoms/button/button';
 import { toast } from 'react-toastify';
@@ -14,6 +14,7 @@ import { createClient } from '@/src/utils/supabase/client';
 type AddPatientModalProps = {
   isOpen: boolean;
   onClose: () => void;
+  refetch: () => void;
 };
 
 const initialValues = {
@@ -23,7 +24,7 @@ const initialValues = {
   status: { label: '', value: '' },
 };
 
-export default function AddPatientModal({ isOpen, onClose }: AddPatientModalProps) {
+export default function AddPatientModal({ isOpen, onClose, refetch }: AddPatientModalProps) {
   const [selectedValue, setSelectedValue] = useState<{ label: string; value: string } | null>(null);
   const supabase = createClient();
   const { control, handleSubmit } = useForm<inputType>({
@@ -45,6 +46,7 @@ export default function AddPatientModal({ isOpen, onClose }: AddPatientModalProp
       console.log(response);
       toast.success('Patient added successfully');
       onClose();
+      refetch();
     } catch (error) {
       console.log(error);
       toast.error('Error adding patient');

@@ -15,7 +15,7 @@ type CustomSelectProps = {
   onChange?: (value: Option | null) => void;
   placeholder?: string;
   className?: string;
-  label: string;
+  label?: string;
   asterisk?: boolean;
   name: string;
   /* eslint-disable  @typescript-eslint/no-explicit-any */
@@ -54,17 +54,17 @@ export default function SelectDropdown({
     setIsOpen(false);
   };
 
-  useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
-      if (!selectRef.current?.contains(e.target as Node)) {
-        setIsOpen(false);
-        field.onBlur?.();
-      }
-    };
+  // useEffect(() => {
+  //   const handleClickOutside = (e: MouseEvent) => {
+  //     if (!selectRef.current?.contains(e.target as Node)) {
+  //       setIsOpen(false);
+  //       field.onBlur?.();
+  //     }
+  //   };
 
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, [field]);
+  //   document.addEventListener('mousedown', handleClickOutside);
+  //   return () => document.removeEventListener('mousedown', handleClickOutside);
+  // }, [field]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -97,7 +97,7 @@ export default function SelectDropdown({
   }, [isOpen, highlightedIndex, options]);
 
   return (
-    <div className={`relative ${className}`} ref={selectRef}>
+    <div className={`relative`} ref={selectRef}>
       <label className="flex items-center gap-1 font-semibold mb-1">
         {label}
         {asterisk && <span className="text-red-600">*</span>}
@@ -107,7 +107,7 @@ export default function SelectDropdown({
         type="button"
         className={`w-full flex items-center justify-between p-3 border rounded-lg bg-white text-left transition-all duration-200 ${
           isOpen ? 'ring-2 ring-blue-500 border-blue-500' : 'border-gray-300 hover:border-gray-400'
-        }`}
+        } ${className}`}
         onClick={() => {
           setIsOpen(!isOpen);
           setHighlightedIndex(-1);
