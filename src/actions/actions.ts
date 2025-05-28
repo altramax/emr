@@ -61,10 +61,9 @@ export const signInAction = async (queryData: any) => {
             role: userRole?.role,
           },
         });
-
-        return 'success';
       }
     }
+    return 'success';
   } catch (error) {
     if (error) {
       encodedRedirect('error', '/', 'error signing in');

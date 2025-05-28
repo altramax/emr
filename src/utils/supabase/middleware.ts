@@ -43,6 +43,10 @@ export const updateSession = async (request: NextRequest) => {
       return NextResponse.redirect(new URL('/', request.url));
     }
 
+    if (session && pathname === '/') {
+      return NextResponse.redirect(new URL('/dashboard', request.url));
+    }
+
     // reinject role into usermetadata when token refreshes
     if (session && !user?.data?.user?.user_metadata?.role) {
       const { data: userRole } = await supabase

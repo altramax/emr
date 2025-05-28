@@ -16,7 +16,11 @@ export const useGetData = ({ roleName, select }: getDataType) => {
   const getData = async () => {
     try {
       setLoading(true);
-      const { data: response } = await supabase.from(roleName).select(select).range(0, 10);
+      const { data: response } = await supabase
+        .from(roleName)
+        .select(select)
+        .range(0, 10)
+        .order('id', { ascending: false });
       //   .order('id', { ascending: false });
       setData(response);
       setLoading(false);

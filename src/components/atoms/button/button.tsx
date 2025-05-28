@@ -1,23 +1,21 @@
-"use client";
-import Image from "next/image";
+'use client';
+import Image from 'next/image';
 
 interface buttonProp {
   readonly value: string;
   readonly icon?: string;
-  readonly variant?: "small" | "large";
-  readonly type?: "button" | "submit" | "reset";
-  readonly color?: "white" | "blue";
+  readonly variant?: 'small' | 'large';
+  readonly type?: 'button' | 'submit' | 'reset';
   readonly loading?: boolean;
   readonly width?: string;
   readonly className?: string;
-  readonly onClick?: ()=>void
+  readonly onClick?: () => void;
 }
 export default function Button({
   value,
   icon,
-  variant = "small",
-  type = "button",
-  color = "blue",
+  variant = 'small',
+  type = 'button',
   loading = false,
   width,
   className,
@@ -27,14 +25,11 @@ export default function Button({
     <button
       type={type}
       className={`${className} flex justify-center ${width} ${
-        variant === "small"
-          ? "px-6 py-2 text-base min-w-[10rem]"
-          : "px-12 py-3 text-2xl min-w-[20rem]"
-      } ${
-        color === "blue"
-          ? "text-white from-[#2393FF] to-[#0072FF] hover:from-[#4AAEFF] hover:to-[#3399FF]"
-          : "text-[#2393FF] bg-white hover:bg-[#bce1ff]"
-      } font-semibold rounded-3xl bg-gradient-to-r shadow-md transition-all duration-300`}
+        variant === 'small'
+          ? 'px-6 py-2 text-base min-w-[10rem]'
+          : 'px-12 py-3 text-2xl min-w-[20rem]'
+      }
+       font-semibold rounded-3xl `}
       disabled={loading}
       onClick={onClick}
     >
@@ -42,8 +37,8 @@ export default function Button({
         <div>
           <svg
             className={`text-white animate-spin ${
-              variant === "small" ? "w-6 h-6" : "w-10 h-10"
-            } ${color === "blue" ? "text-white" : "text-[#2393FF]"} `}
+              variant === 'small' ? 'w-6 h-6' : 'w-10 h-10'
+            } text-white `}
             viewBox="0 0 50 50"
           >
             <circle
@@ -74,8 +69,8 @@ export default function Button({
             <Image
               src={`${icon ?? icon}`}
               alt="button Icon"
-              width={`${variant === "small" ? 20 : 30}`}
-              height={`${variant === "small" ? 20 : 30}`}
+              width={`${variant === 'small' ? 20 : 30}`}
+              height={`${variant === 'small' ? 20 : 30}`}
             />
           )}
 

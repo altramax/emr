@@ -11,8 +11,6 @@ type Option = {
 
 type CustomSelectProps = {
   options: Option[];
-  value?: Option | null;
-  onChange?: (value: Option | null) => void;
   placeholder?: string;
   className?: string;
   label?: string;
@@ -24,8 +22,6 @@ type CustomSelectProps = {
 
 export default function SelectDropdown({
   options,
-  value,
-  onChange,
   placeholder = 'Select an option',
   className = '',
   label,
@@ -43,14 +39,13 @@ export default function SelectDropdown({
   } = useController({
     name,
     control,
-    defaultValue: value || null,
+    defaultValue: null,
   });
 
   const currentValue = field.value;
 
   const handleChange = (val: Option | null) => {
     field.onChange(val);
-    onChange?.(val);
     setIsOpen(false);
   };
 

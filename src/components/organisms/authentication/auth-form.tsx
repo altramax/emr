@@ -2,10 +2,12 @@ import Button from '@/src/components/atoms/button/button';
 import InputField from '@/src/components/atoms/Input/input-field';
 import { useForm } from 'react-hook-form';
 import { useRouter } from 'next/navigation';
-import { signInAction } from '@/src/app/actions/actions';
+import { signInAction } from '@/src/actions/actions';
 import { SigninInputs, LoginSchema } from '@/src/validations/login-schema';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { toast } from 'react-toastify';
+import { useUserHook } from '@/src/hooks/user-hook';
+import { useEffect } from 'react';
 
 const initialValues = {
   email: '',
@@ -37,6 +39,13 @@ export default function AuthForm() {
       return error;
     }
   };
+
+  const { user, getRole } = useUserHook();
+
+  useEffect(() => {
+    getRole();
+  }, []);
+  console.log(user);
 
   return (
     <form
