@@ -1,4 +1,5 @@
-import DispensedMeds from '@/src/components/organisms/patients/dispensed-medication';
+import PatientsTemplate from '@/src/components/templates/patient/patient-template';
+
 export default function Page() {
-  return <DispensedMeds />;
+  return <PatientsTemplate />;
 }

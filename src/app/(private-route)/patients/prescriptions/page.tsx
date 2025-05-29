@@ -1,4 +1,5 @@
-import Prescriptions from '@/src/components/organisms/patients/prescription';
+import PatientsTemplate from '@/src/components/templates/patient/patient-template';
+
 export default function Page() {
-  return <Prescriptions />;
+  return <PatientsTemplate />;
 }

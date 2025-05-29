@@ -1,5 +1,5 @@
-import Diagnosis from '@/src/components/organisms/patients/diagnosis';
+import PatientsTemplate from '@/src/components/templates/patient/patient-template';
 
 export default function Page() {
-  return <Diagnosis />;
+  return <PatientsTemplate />;
 }

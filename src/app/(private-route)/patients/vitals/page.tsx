@@ -1,5 +1,5 @@
-import Vitals from '@/src/components/organisms/patients/vitals';
+import PatientsTemplate from '@/src/components/templates/patient/patient-template';
 
 export default function Page() {
-  return <Vitals />;
+  return <PatientsTemplate />;
 }

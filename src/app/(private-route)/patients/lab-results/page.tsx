@@ -1,5 +1,5 @@
-import LabResults from '@/src/components/organisms/patients/lab-results';
+import PatientsTemplate from '@/src/components/templates/patient/patient-template';
 
 export default function Page() {
-  return <LabResults />;
+  return <PatientsTemplate />;
 }
