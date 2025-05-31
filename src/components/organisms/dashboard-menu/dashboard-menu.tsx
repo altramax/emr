@@ -2,23 +2,27 @@
 import { useRouter, usePathname } from 'next/navigation';
 import { signOutAction } from '@/src/actions/actions';
 import Avatar from '../../atoms/Avatar/Avatar';
-import { useUserHook } from '@/src/hooks/user-hook';
+import { useUser } from '@/src/hooks/user';
 import { useEffect, useState } from 'react';
 import PatientNav from '../patients/patients-nav';
 import { CreditCard, Minus, FileChartColumn } from 'lucide-react';
-import { useMedicalUpdateAlert } from '@/src/hooks/medical-update-alert-hook';
+// import { useMedicalUpdateAlert } from '@/src/hooks/medical-update-alert';
+// import { useParams } from 'next/navigation';
+import Notification from '../../molecules/notification/notification';
 
 export default function DashboardMenu() {
   const [isPatientNavOpen, setIsPatientNavOpen] = useState(true);
   const [isRecordsNavOpen, setIsRecordsNavOpen] = useState(true);
+  // const { detailsId } = useParams();
   const pathname = usePathname();
   const router = useRouter();
   const handleClick = (item: string) => {
     router.push(`/${item}`);
   };
-  const { data } = useMedicalUpdateAlert();
 
-  const { getRole, user } = useUserHook();
+  // const { data } = useMedicalUpdateAlert();
+
+  const { getRole, user } = useUser();
 
   useEffect(() => {
     getRole();
@@ -38,8 +42,6 @@ export default function DashboardMenu() {
   const recordsNavHandler = () => {
     setIsRecordsNavOpen(!isRecordsNavOpen);
   };
-
-  console.log(data);
 
   return (
     <aside className="no-scrollbar overflow-auto w-full h-full min-h-screen bg-blue-600 text-sm text-white px-6 pt-4 pb-9 space-y-4 flex flex-col justify-between">
@@ -148,7 +150,7 @@ export default function DashboardMenu() {
                 <Minus size={18} />
                 <button
                   onClick={() => handleClick('records')}
-                  className={`${pathname?.includes('/records') ? 'bg-blue-500' : ''} flex items-center hover:bg-blue-500 p-2 rounded w-full text-left`}
+                  className={`${pathname?.includes('/records') ? 'bg-blue-500' : ''} flex items-center gap-2 hover:bg-blue-500 p-2 rounded w-full text-left`}
                 >
                   <svg
                     className="w-5 h-5 mr-2"
@@ -160,6 +162,7 @@ export default function DashboardMenu() {
                     <path d="M4 4h16v16H4zM8 2v4M16 2v4M4 10h16" />
                   </svg>
                   Initiate Encounter
+                  <Notification count={3} />
                 </button>
               </div>
               <div className=" flex items-center">

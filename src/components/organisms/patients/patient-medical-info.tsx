@@ -3,17 +3,17 @@
 import Input from '../../atoms/Input/input-field';
 import SelectDropdown from '../../molecules/select-dropdown/select-dropdown';
 import { useFormContext } from 'react-hook-form';
-import { useNewPatientStore } from '@/src/store/new-patient-store';
-import Button from '../../atoms/button/button';
-import { toast } from 'react-toastify';
-import { createClient } from '@/src/utils/supabase/client';
-import { useRouter } from 'next/navigation';
+// import { useNewPatientStore } from '@/src/store/new-patient-store';
+// import Button from '../../atoms/button/button';
+// import { toast } from 'react-toastify';
+// import { createClient } from '@/src/utils/supabase/client';
+// import { useRouter } from 'next/navigation';
 
 export default function PatientMedicalInfo() {
-  const { control, getValues } = useFormContext();
-  const { currentStep, setStep } = useNewPatientStore();
-  const supabase = createClient();
-  const router = useRouter();
+  const { control } = useFormContext();
+  // const { currentStep, setStep } = useNewPatientStore();
+  // const supabase = createClient();
+  // const router = useRouter();
 
   const bloodGroupOptions = [
     { label: 'A+', value: 'A+' },
@@ -40,36 +40,36 @@ export default function PatientMedicalInfo() {
     { label: 'Discharged', value: 'discharged' },
   ];
 
-  const submitForm = async () => {
-    const submitData = getValues();
-    /* eslint-disable  @typescript-eslint/no-explicit-any */
-    const data: any = {
-      ...submitData,
-      blood_group: submitData?.blood_group?.value,
-      status: submitData?.status?.value,
-      gender: submitData?.gender?.value,
-      marital_status: submitData?.marital_status?.value,
-      genotype: submitData?.genotype?.value,
-    };
+  // const submitForm = async () => {
+  //   const submitData = getValues();
+  //   /* eslint-disable  @typescript-eslint/no-explicit-any */
+  //   const data: any = {
+  //     ...submitData,
+  //     blood_group: submitData?.blood_group?.value,
+  //     status: submitData?.status?.value,
+  //     gender: submitData?.gender?.value,
+  //     marital_status: submitData?.marital_status?.value,
+  //     genotype: submitData?.genotype?.value,
+  //   };
 
-    try {
-      const { status } = await supabase.from('patients').insert(data);
-      if (status === 201) {
-        toast.success('Patient added successfully');
-        router.push('/patients');
-      }
-      if (status >= 400) {
-        toast.error('Patient already exists');
-      }
-    } catch (error) {
-      console.log(error);
-      toast.error('Error adding patient');
-    }
-  };
+  //   try {
+  //     const { status } = await supabase.from('patients').insert(data);
+  //     if (status === 201) {
+  //       toast.success('Patient added successfully');
+  //       router.push('/patients');
+  //     }
+  //     if (status >= 400) {
+  //       toast.error('Patient already exists');
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //     toast.error('Error adding patient');
+  //   }
+  // };
 
-  const handleBackStep = () => {
-    setStep(currentStep - 1);
-  };
+  // const handleBackStep = () => {
+  //   setStep(currentStep - 1);
+  // };
 
   return (
     <div className="space-y-4">
@@ -107,17 +107,6 @@ export default function PatientMedicalInfo() {
 
       <div className="w-full">
         <Input
-          label="Religion"
-          name="religion"
-          type="text"
-          placeholder="Enter religion"
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border h-12"
-          control={control}
-        />
-      </div>
-
-      <div className="w-full">
-        <Input
           label="Allergies"
           name="allergies"
           type="text"
@@ -146,21 +135,6 @@ export default function PatientMedicalInfo() {
           placeholder="E.g. paracetamol, insulin"
           className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border h-12"
           control={control}
-        />
-      </div>
-
-      <div className="flex items-center justify-between pt-4">
-        <Button
-          type="button"
-          value="Back"
-          onClick={handleBackStep} // You need to define this function
-          className="w-[150px] text-lg bg-gray-300 text-black rounded-xl hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-300"
-        />
-        <Button
-          type="button"
-          value="Submit"
-          onClick={submitForm}
-          className="w-[150px] text-lg bg-blue-500 text-white rounded-xl hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400"
         />
       </div>
     </div>

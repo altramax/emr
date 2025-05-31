@@ -6,7 +6,7 @@ import { signInAction } from '@/src/actions/actions';
 import { SigninInputs, LoginSchema } from '@/src/validations/login-schema';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { toast } from 'react-toastify';
-import { useUserHook } from '@/src/hooks/user-hook';
+import { useUser } from '@/src/hooks/user';
 import { useEffect } from 'react';
 
 const initialValues = {
@@ -40,7 +40,7 @@ export default function AuthForm() {
     }
   };
 
-  const { user, getRole } = useUserHook();
+  const { user, getRole } = useUser();
 
   useEffect(() => {
     getRole();

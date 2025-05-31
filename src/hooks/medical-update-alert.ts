@@ -1,6 +1,5 @@
 import { createClient } from '../utils/supabase/client';
-import { useEffect, useState } from 'react';
-import { useMemo } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 
 export const useMedicalUpdateAlert = () => {
   const supabase = createClient();

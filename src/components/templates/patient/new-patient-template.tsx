@@ -6,7 +6,7 @@ import { useNewPatientStore } from '@/src/store/new-patient-store';
 import StepIndicator from '@/src/components/molecules/step-indicator/step-indicator';
 import PatientBiodata from '@/src/components/organisms/patients/patient-biodata';
 import PatientContactInfo from '@/src/components/organisms/patients/patient-contact-details';
-import PatientMedicalInfo from '@/src/components/organisms/patients/patient-medical-info';
+// import PatientMedicalInfo from '@/src/components/organisms/patients/patient-medical-info';
 import { useRouter } from 'next/navigation';
 
 const initialValues = {
@@ -16,19 +16,13 @@ const initialValues = {
   gender: { label: '', value: '' },
   marital_status: { label: '', value: '' },
   occupation: '',
-  blood_group: { label: '', value: '' },
   email: '',
   phone_number: '',
-  status: { label: '', value: '' },
   religion: '',
   address: '',
   emergency_contact_name: '',
   emergency_contact_number: '',
   emergency_contact_relationship: '',
-  genotype: { label: '', value: '' },
-  allergies: '',
-  existing_conditions: '',
-  current_medications: '',
 };
 
 export default function NewPatientTemplate() {
@@ -47,24 +41,22 @@ export default function NewPatientTemplate() {
         return <PatientBiodata />;
       case 2:
         return <PatientContactInfo />;
-      case 3:
-        return <PatientMedicalInfo />;
       default:
         return <PatientBiodata />;
     }
   };
 
   return (
-    <div className="w-full h-[100vh] py-6 flex flex-col justify-center items-center">
+    <div className="text-sm w-full h-[100vh] py-6 flex flex-col justify-center items-center">
       <div className="w-[700px] rounded-xl shadow-xl bg-white py-4  relative overflow-auto no-scrollbar">
         <div className="px-8 flex items-center justify-start gap-4 pb-4 border-b">
           <button
-            onClick={() => router.push('/patients')}
-            className=" text-lg flex items-center gap-2 text-black px-4 py-1 rounded-lg  hover:bg-gray-200 transition"
+            onClick={() => router.push('/records')}
+            className=" text-lg flex items-center gap-1 text-black px-4 py-1 rounded-lg  hover:text-blue-500 transition"
           >
             <svg
-              width="30"
-              height="30"
+              width="20"
+              height="20"
               viewBox="0 0 16 16"
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
@@ -78,12 +70,12 @@ export default function NewPatientTemplate() {
                 strokeLinejoin="round"
               />
             </svg>
-            Patient
+            back
           </button>
         </div>
 
-        <div className="py-4 px-8">
-          <StepIndicator steps={3} currentStep={currentStep} />
+        <div className="py-4 px-8 w-[50%] m-auto">
+          <StepIndicator steps={2} currentStep={currentStep} />
         </div>
 
         <FormProvider {...methods}>

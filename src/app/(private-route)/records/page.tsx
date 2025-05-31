@@ -1,5 +1,5 @@
-import PatientTemplate from '@/src/components/templates/patient/patient-template';
+import RecordsTemplate from '@/src/components/templates/records/records-template';
 
 export default function Page() {
-  return <PatientTemplate />;
+  return <RecordsTemplate />;
 }

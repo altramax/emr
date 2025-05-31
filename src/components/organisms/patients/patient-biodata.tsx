@@ -34,6 +34,7 @@ export default function PatientBiodata() {
       'gender',
       'marital_status',
       'occupation',
+      'religion',
     ]);
     if (isValid) {
       setStep(currentStep + 1);
@@ -98,6 +99,16 @@ export default function PatientBiodata() {
           placeholder="Select Marital Status"
           asterisk
           options={maritalStatusOptions}
+          control={control}
+        />
+      </div>
+      <div className="w-full">
+        <Input
+          label="Religion"
+          name="religion"
+          type="text"
+          placeholder="Enter religion"
+          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border h-12"
           control={control}
         />
       </div>

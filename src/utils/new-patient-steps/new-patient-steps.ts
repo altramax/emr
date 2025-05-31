@@ -2,7 +2,15 @@ const newPatientSteps = [
   {
     step: 1,
     title: 'patient biodata',
-    fields: ['first_name', 'last_name', 'date_of_birth', 'gender', 'marital_status', 'occupation'],
+    fields: [
+      'first_name',
+      'last_name',
+      'date_of_birth',
+      'gender',
+      'marital_status',
+      'occupation',
+      'religion',
+    ],
     show: true,
   },
   {
@@ -17,20 +25,6 @@ const newPatientSteps = [
       'emergency_contact_relationship',
     ],
     show: false,
-  },
-  {
-    step: 3,
-    title: 'patient medical details',
-    fields: [
-      'blood_group',
-      'religion',
-      'status',
-      'allergies',
-      'existing_conditions',
-      'current_medications',
-      'genotype',
-    ],
-    show: true,
   },
 ];
 

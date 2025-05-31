@@ -28,7 +28,7 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    "src/app/(private-route)/patients/new-patient",
+    "src/app/(private-route)/records/new-patient",
     "src/components/molecules/step-indicator"
   ],
   "exclude": ["node_modules"]

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { createClient } from '../utils/supabase/client';
 
-export function useUserHook() {
+export function useUser() {
   const supabase = createClient();
   const [loading, setLoading] = useState<boolean>(false);
   const [user, setUser] = useState<Record<string, string | undefined>>({

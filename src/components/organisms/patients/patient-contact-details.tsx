@@ -4,12 +4,17 @@ import Input from '../../atoms/Input/input-field';
 import { useFormContext } from 'react-hook-form';
 import { useNewPatientStore } from '@/src/store/new-patient-store';
 import Button from '../../atoms/button/button';
+import { toast } from 'react-toastify';
+import { createClient } from '@/src/utils/supabase/client';
+import { useRouter } from 'next/navigation';
 
 export default function PatientContactInfo() {
-  const { control, trigger } = useFormContext();
+  const { control, getValues, trigger } = useFormContext();
   const { currentStep, setStep } = useNewPatientStore();
+  const supabase = createClient();
+  const router = useRouter();
 
-  const handleNextStep = async () => {
+  const triggerValidation = async () => {
     const isValid = await trigger([
       'email',
       'phone_number',
@@ -18,8 +23,38 @@ export default function PatientContactInfo() {
       'emergency_contact_number',
       'emergency_contact_relationship',
     ]);
+    if (!isValid) {
+      return false;
+    } else {
+      return true;
+    }
+  };
+
+  const submitForm = async () => {
+    const isValid = await triggerValidation();
     if (isValid) {
-      setStep(currentStep + 1);
+      const submitData = getValues();
+      /* eslint-disable  @typescript-eslint/no-explicit-any */
+      const data: any = {
+        ...submitData,
+        status: 'active',
+        gender: submitData?.gender?.value,
+        marital_status: submitData?.marital_status?.value,
+      };
+
+      try {
+        const { status, error } = await supabase.from('patients').insert(data);
+        if (status === 201) {
+          toast.success('Patient added successfully');
+          router.push('/records');
+        }
+        if (status >= 400) {
+          toast.error(error?.message);
+        }
+      } catch (error) {
+        console.log(error);
+        toast.error('Error adding patient');
+      }
     }
   };
 
@@ -117,8 +152,8 @@ export default function PatientContactInfo() {
         />
         <Button
           type="button"
-          value="Next"
-          onClick={handleNextStep}
+          value="Submit"
+          onClick={submitForm}
           className="w-[150px] text-lg bg-blue-500 text-white rounded-xl hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400"
         />
       </div>
