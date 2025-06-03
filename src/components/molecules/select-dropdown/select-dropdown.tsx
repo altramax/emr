@@ -93,14 +93,14 @@ export default function SelectDropdown({
 
   return (
     <div className={`relative`} ref={selectRef}>
-      <label className="flex items-center gap-1 font-semibold mb-1">
+      <label className="flex items-center gap-1 font-medium text-xs mb-1">
         {label}
         {asterisk && <span className="text-red-600">*</span>}
       </label>
 
       <button
         type="button"
-        className={`w-full flex items-center justify-between p-3 border rounded-lg bg-white text-left transition-all duration-200 ${
+        className={`text-xs w-full flex items-center justify-between p-2 border rounded-lg bg-white text-left transition-all duration-200 ${
           isOpen ? 'ring-2 ring-blue-500 border-blue-500' : 'border-gray-300 hover:border-gray-400'
         } ${className}`}
         onClick={() => {

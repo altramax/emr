@@ -7,7 +7,6 @@ interface buttonProp {
   readonly variant?: 'small' | 'large';
   readonly type?: 'button' | 'submit' | 'reset';
   readonly loading?: boolean;
-  readonly width?: string;
   readonly className?: string;
   readonly onClick?: () => void;
 }
@@ -17,19 +16,13 @@ export default function Button({
   variant = 'small',
   type = 'button',
   loading = false,
-  width,
   className,
   onClick,
 }: buttonProp) {
   return (
     <button
       type={type}
-      className={`${className} flex justify-center ${width} ${
-        variant === 'small'
-          ? 'px-6 py-2 text-base min-w-[10rem]'
-          : 'px-12 py-3 text-2xl min-w-[20rem]'
-      }
-       font-semibold rounded-3xl `}
+      className={`${className} flex justify-center`}
       disabled={loading}
       onClick={onClick}
     >

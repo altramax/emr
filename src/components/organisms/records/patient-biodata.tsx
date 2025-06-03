@@ -43,8 +43,6 @@ export default function PatientBiodata() {
 
   return (
     <div className="space-y-4 ">
-      <h1 className="text-xl font-semibold text-gray-800 pt-1">Patient Biodata</h1>
-
       <div className="w-full">
         <Input
           label="First name"
@@ -53,7 +51,7 @@ export default function PatientBiodata() {
           id="first_name"
           type="text"
           placeholder="First Name"
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border h-12"
+          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border h-9 text-xs"
           control={control}
         />
       </div>
@@ -65,7 +63,7 @@ export default function PatientBiodata() {
           id="last_name"
           type="text"
           placeholder="Last Name"
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border h-12"
+          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border h-9 text-xs"
           control={control}
         />
       </div>
@@ -77,7 +75,7 @@ export default function PatientBiodata() {
           name="date_of_birth"
           type="date"
           placeholder="Date of Birth"
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border h-12"
+          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border h-9 text-xs"
           control={control}
         />
       </div>
@@ -108,7 +106,7 @@ export default function PatientBiodata() {
           name="religion"
           type="text"
           placeholder="Enter religion"
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border h-12"
+          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border h-9 text-xs"
           control={control}
         />
       </div>
@@ -119,17 +117,17 @@ export default function PatientBiodata() {
           name="occupation"
           type="text"
           placeholder="Occupation"
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border h-12"
+          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border h-9 text-xs"
           control={control}
         />
       </div>
 
-      <div className="flex items-center justify-end pt-4">
+      <div className="flex items-center justify-end py-4">
         <Button
           type="button"
           value="Next"
           onClick={handleNextStep}
-          className="w-[150px] text-lg bg-blue-700  text-white rounded-xl hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400"
+          className="text-sm bg-blue-500 w-[100px] py-2  text-white rounded-lg hover:bg-blue-600 focus:outline-none "
         />
       </div>
     </div>

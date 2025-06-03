@@ -4,10 +4,11 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { NewPatientSchema, inputType } from '@/src/validations/new-patient-schema';
 import { useNewPatientStore } from '@/src/store/new-patient-store';
 import StepIndicator from '@/src/components/molecules/step-indicator/step-indicator';
-import PatientBiodata from '@/src/components/organisms/patients/patient-biodata';
-import PatientContactInfo from '@/src/components/organisms/patients/patient-contact-details';
-// import PatientMedicalInfo from '@/src/components/organisms/patients/patient-medical-info';
+import PatientBiodata from '@/src/components/organisms/records/patient-biodata';
+import PatientContactInfo from '@/src/components/organisms/records/patient-contact-details';
+import PatientReviewStep from '../../organisms/records/patient-form-review-step';
 import { useRouter } from 'next/navigation';
+import { XCircleIcon } from 'lucide-react';
 
 const initialValues = {
   first_name: '',
@@ -41,41 +42,38 @@ export default function NewPatientTemplate() {
         return <PatientBiodata />;
       case 2:
         return <PatientContactInfo />;
+      case 3:
+        return <PatientReviewStep />;
       default:
         return <PatientBiodata />;
     }
   };
 
   return (
-    <div className="text-sm w-full h-[100vh] py-6 flex flex-col justify-center items-center">
-      <div className="w-[700px] rounded-xl shadow-xl bg-white py-4  relative overflow-auto no-scrollbar">
-        <div className="px-8 flex items-center justify-start gap-4 pb-4 border-b">
+    <div className="text-sm w-full h-[100vh] p-8 flex flex-col justify-center items-center">
+      <div className="w-[550px] rounded-xl shadow-xl bg-white py-4  relative overflow-auto no-scrollbar">
+        <div className="px-4 flex items-center justify-start gap-2 pb-4 border-b">
           <button
             onClick={() => router.push('/records')}
-            className=" text-lg flex items-center gap-1 text-black px-4 py-1 rounded-lg  hover:text-blue-500 transition"
+            className=" text-sm flex items-center gap-1 text-red-400 px-2 py-1 rounded-md"
           >
-            <svg
-              width="20"
-              height="20"
-              viewBox="0 0 16 16"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-              aria-hidden="true"
-            >
-              <path
-                d="M10 12L6 8L10 4"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-            back
+            <XCircleIcon size={20} />
           </button>
+          <div>
+            {currentStep === 1 && (
+              <h1 className="text-lg font-semibold text-gray-800 ">Patient biodata</h1>
+            )}
+            {currentStep === 2 && (
+              <h1 className="text-lg font-semibold text-gray-800 ">Patient contact information</h1>
+            )}
+            {currentStep === 3 && (
+              <h1 className="text-lg font-semibold text-gray-800 ">Review Patient Information</h1>
+            )}
+          </div>
         </div>
 
-        <div className="py-4 px-8 w-[50%] m-auto">
-          <StepIndicator steps={2} currentStep={currentStep} />
+        <div className="py-4 px-4">
+          <StepIndicator steps={3} currentStep={currentStep} />
         </div>
 
         <FormProvider {...methods}>

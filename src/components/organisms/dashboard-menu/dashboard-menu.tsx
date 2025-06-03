@@ -4,7 +4,7 @@ import { signOutAction } from '@/src/actions/actions';
 import Avatar from '../../atoms/Avatar/Avatar';
 import { useUser } from '@/src/hooks/user';
 import { useEffect, useState } from 'react';
-import PatientNav from '../patients/patients-nav';
+import PatientNav from './patients-nav';
 import { CreditCard, Minus, FileChartColumn, UserRoundPlusIcon, CirclePlay } from 'lucide-react';
 
 import { useVitalsAlertStore } from '@/src/store/vitals-alert-store';
@@ -46,11 +46,11 @@ export default function DashboardMenu() {
   return (
     <aside className="no-scrollbar overflow-auto w-full h-full min-h-screen bg-blue-600 text-sm text-white px-6 pt-4 pb-9 space-y-4 flex flex-col justify-between">
       <div>
-        <div className="flex items-center space-x-2 mb-6">
+        <div className="flex items-center space-x-2 mt-2 mb-6">
           <div className="bg-white text-blue-600 rounded flex items-center justify-center p-2 pt-0 px-1">
             <svg
-              width="40"
-              height="40"
+              width="30"
+              height="30"
               viewBox="0 0 24 24"
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
@@ -61,7 +61,7 @@ export default function DashboardMenu() {
               />
             </svg>
           </div>
-          <h1 className="text-xl font-bold">LiLy HealthCare</h1>
+          <h1 className="text-lg font-bold">LiLy HealthCare</h1>
         </div>
 
         <nav className="space-y-2">
@@ -85,7 +85,7 @@ export default function DashboardMenu() {
           <div className="border-b mb-6 pb-6 border-gray-500 w-full">
             <button
               onClick={patientNavHandler}
-              className={`mb-2 flex items-center justify-between hover:bg-blue-500 p-2 rounded w-full text-left text-base`}
+              className={`mb-2 flex items-center justify-between hover:bg-blue-500 p-2 rounded w-full text-left text-sm`}
             >
               <div className="flex items-center">
                 <svg
@@ -122,7 +122,7 @@ export default function DashboardMenu() {
           <div className="border-b mb-6 pb-6 border-gray-500 w-full">
             <button
               onClick={recordsNavHandler}
-              className={`mb-2 flex items-center justify-between hover:bg-blue-500 p-2 rounded w-full text-left text-base`}
+              className={`mb-2 flex items-center justify-between hover:bg-blue-500 p-2 rounded w-full text-left text-sm`}
             >
               <div className="flex items-center gap-2">
                 <FileChartColumn size={18} />
@@ -145,7 +145,9 @@ export default function DashboardMenu() {
               </svg>
             </button>
 
-            <div className={`${!isRecordsNavOpen && 'hidden'} flex flex-col gap-3 border-l ml-4`}>
+            <div
+              className={`${!isRecordsNavOpen && 'hidden'} flex flex-col gap-3 border-l ml-4 text-xs`}
+            >
               <div className=" flex items-center">
                 <Minus size={18} />
                 <button
@@ -210,7 +212,7 @@ export default function DashboardMenu() {
 
           <button
             onClick={() => handleClick('departments')}
-            className={`${pathname?.includes('/departments') ? 'bg-blue-500' : ''} flex items-center hover:bg-blue-500 p-2 rounded w-full text-left`}
+            className={`${pathname?.includes('/departments') ? 'bg-blue-500' : ''} flex items-center hover:bg-blue-500 p-2 rounded w-full text-left text-sm`}
           >
             <svg
               className="w-5 h-5 mr-2"
@@ -226,7 +228,7 @@ export default function DashboardMenu() {
 
           <button
             onClick={() => handleClick('staff')}
-            className={`${pathname?.includes('/staff') ? 'bg-blue-500' : ''} flex items-center hover:bg-blue-500 p-2 rounded w-full text-left`}
+            className={`${pathname?.includes('/staff') ? 'bg-blue-500' : ''} flex items-center hover:bg-blue-500 p-2 rounded w-full text-left text-sm`}
           >
             <svg
               className="w-5 h-5 mr-2"
@@ -242,7 +244,7 @@ export default function DashboardMenu() {
 
           <button
             onClick={() => handleClick('billing')}
-            className={`${pathname?.includes('/billing') ? 'bg-blue-500' : ''} flex items-center hover:bg-blue-500 p-2 rounded w-full text-left`}
+            className={`${pathname?.includes('/billing') ? 'bg-blue-500' : ''} flex items-center hover:bg-blue-500 p-2 rounded w-full text-left text-sm`}
           >
             <CreditCard size={18} className="w-5 h-5 mr-2" />
             Billing
@@ -250,7 +252,7 @@ export default function DashboardMenu() {
 
           <button
             onClick={() => handleClick('analytics')}
-            className={`${pathname?.includes('/analytics') ? 'bg-blue-500' : ''} flex items-center hover:bg-blue-500 p-2 rounded w-full text-left`}
+            className={`${pathname?.includes('/analytics') ? 'bg-blue-500' : ''} flex items-center hover:bg-blue-500 p-2 rounded w-full text-left text-sm`}
           >
             <svg
               className="w-5 h-5 mr-2"
@@ -265,10 +267,10 @@ export default function DashboardMenu() {
           </button>
         </nav>
 
-        <h2 className="text-sm text-blue-200 uppercase font-semibold mt-8 mb-4">Administration</h2>
+        <h2 className="text-sm text-blue-200 uppercase font-semibold mt-8 mb-4 ">Administration</h2>
         <button
           onClick={() => handleClick('Settings')}
-          className="flex items-center hover:bg-blue-500 p-2 rounded w-full text-left"
+          className="flex items-center hover:bg-blue-500 p-2 rounded w-full text-left text-sm"
         >
           <svg
             className="w-5 h-5 mr-2"
@@ -284,7 +286,7 @@ export default function DashboardMenu() {
 
         <button
           onClick={logout}
-          className="flex items-center hover:bg-blue-500 p-2 rounded w-full text-left text-white mt-4"
+          className="flex items-center hover:bg-blue-500 p-2 rounded w-full text-left text-white mt-4 text-sm"
         >
           <svg
             className="w-5 h-5 mr-2"
@@ -300,7 +302,7 @@ export default function DashboardMenu() {
       </div>
 
       <div className="flex text-sm text-gray-300  border-t border-gray-500 gap-2 pt-4">
-        <Avatar firstname="Doe" lastname="John" size={50} />
+        <Avatar firstname="Doe" lastname="John" size={35} />
         <div className="">
           <div className="mt-2">{user?.name}</div>
           <div>{user?.role}</div>

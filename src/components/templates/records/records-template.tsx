@@ -8,12 +8,12 @@ import { useDebounce } from '@/src/hooks/debounce/use-debounce';
 
 export default function RecordsTemplate() {
   const [name, setName] = useState('');
+  const debouncedName = useDebounce(name, 500);
   const { queryPatient, data, loading, clearData } = useQueryPatient({
     tableName: 'patients',
     select: 'first_name,last_name,id,gender,date_of_birth,status',
-    name,
+    name: debouncedName,
   });
-  const debouncedName = useDebounce(name, 500);
 
   useEffect(() => {
     if (debouncedName) {
@@ -35,14 +35,14 @@ export default function RecordsTemplate() {
   };
 
   return (
-    <div className="p-6 bg-white min-h-screen">
-      <Header title="Patients" subTitle="Search for a patient or add a new patient" />
-      <div className="flex justify-between items-start mt-12 w-full border-b border-gray-200 pb-4">
-        <div className="flex items-center justify-between mb-4 gap-8 w-[50%] relative">
+    <div className="p-8 bg-white min-h-screen">
+      <Header title="Patients" subTitle="Search for patients here to begin consultation" />
+      <div className="flex justify-between items-start mt-8 w-full ">
+        <div className="flex items-center justify-between mb-2 gap-8 w-[50%] relative">
           <input
             type="text"
             placeholder="Search for patient by name or id"
-            className="w-full px-4 py-2 border rounded-lg"
+            className="w-full px-4 py-2 border rounded-lg text-sm"
             onChange={(e) => inputHandler(e)}
             value={name}
           />
@@ -66,6 +66,7 @@ export default function RecordsTemplate() {
           )}
         </div>
       </div>
+      <div className=" w-[800px] border-b border-gray-200 pb-4"></div>
       <div className="overflow-x-auto mt-6">
         <RecordTable patients={data} />
       </div>

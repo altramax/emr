@@ -8,20 +8,7 @@ import { useInsertVisit } from '@/src/hooks/visits/use-insert-visit';
 import { useGetVisit } from '@/src/hooks/visits/use-get-visit';
 import Button from '../../atoms/button/button';
 import LoadingBar from '../../atoms/loading-bar/loading-bar';
-// import { useGetTasks } from '@/src/hooks/use-get-tasks';
-// import { useGetData } from '@/src/hooks/use-get-data';
-
-type PatientInfoRowProps = {
-  label: string;
-  value: string | undefined;
-};
-
-const PatientInfoRow = ({ label, value }: PatientInfoRowProps) => (
-  <div className="flex justify-between items-center gap-6 border-b border-gray-200 pb-2">
-    <p className="text-gray-500 text-sm">{label}</p>
-    <p className="font-medium text-gray-700 text-wrap text-end">{value ?? 'Not specified'}</p>
-  </div>
-);
+import PatientInfoRow from '../../molecules/record/patient-info-row';
 
 const StartConsultationTemplate = () => {
   const router = useRouter();
@@ -86,7 +73,7 @@ const StartConsultationTemplate = () => {
 
         {visit?.status !== 'open' && (
           <Button
-            className="flex items-center gap-2 text-sm px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md shadow-sm transition-all"
+            className="flex items-center gap-2 text-xs px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md shadow-sm transition-all"
             onClick={StartConsultationHandler}
             loading={loading}
             value="Start Consultation"
@@ -94,7 +81,7 @@ const StartConsultationTemplate = () => {
         )}
 
         {visit?.status === 'open' && (
-          <div className="flex items-center gap-2 text-sm px-5 py-2 bg-green-600 text-white rounded-md shadow-sm transition-all">
+          <div className="flex items-center gap-2 text-xs px-5 py-2 bg-green-600 text-white rounded-md shadow-sm transition-all">
             Consultation in Progress
           </div>
         )}
@@ -102,9 +89,9 @@ const StartConsultationTemplate = () => {
       <div className="border-t border-gray-200"></div>
 
       <div className="flex justify-between items-start gap-6 mt-6">
-        <div className="flex flex-col items-center gap-3 w-[20%]">
-          <div className="w-[150px] h-[150px] rounded-full bg-gray-100 border border-gray-300 flex items-center justify-center text-gray-400 shadow-sm">
-            <User2 size={48} />
+        <div className="flex flex-col items-center gap-3 w-[15%]">
+          <div className="w-[100px] h-[100px] rounded-full bg-gray-100 border border-gray-300 flex items-center justify-center text-gray-400 shadow-sm">
+            <User2 size={38} />
           </div>
           <span
             className={`px-4 py-1 rounded-full text-sm font-medium shadow-sm ${
@@ -118,33 +105,33 @@ const StartConsultationTemplate = () => {
         </div>
 
         {/* Personal Information Section */}
-        <div className="flex flex-col gap-2 border rounded-lg border-gray-100 p-4 bg-gray-50 shadow-sm w-[35%]">
-          <h3 className="font-semibold text-gray-700 mb-2 border-b border-gray-200 py-2">
-            Personal Information
+        <div className="flex flex-col border rounded-lg border-gray-100 p-4 bg-gray-50 shadow-sm w-[35%]">
+          <h3 className="text-sm font-semibold text-gray-700 border-b border-gray-200 py-2">
+            Personal information
           </h3>
           <PatientInfoRow
             label="Name"
             value={`${patientInfo?.first_name} ${patientInfo?.last_name}`}
           />
           <PatientInfoRow label="Gender" value={patientInfo?.gender} />
-          <PatientInfoRow label="Date of Birth" value={patientInfo?.date_of_birth} />
-          <PatientInfoRow label="Marital Status" value={patientInfo?.marital_status} />
+          <PatientInfoRow label="Date of birth" value={patientInfo?.date_of_birth} />
+          <PatientInfoRow label="Marital status" value={patientInfo?.marital_status} />
           <PatientInfoRow label="Occupation" value={patientInfo?.occupation} />
           <PatientInfoRow label="Religion" value={patientInfo?.religion} />
         </div>
 
         {/* Contact Information Section */}
-        <div className="flex flex-col gap-2 border rounded-lg border-gray-100 p-4 bg-gray-50 shadow-sm w-[35%]">
-          <h3 className="font-semibold text-gray-700 mb-2 border-b border-gray-200 py-2">
-            Contact Information
+        <div className="flex flex-col border rounded-lg border-gray-100 p-4 bg-gray-50 shadow-sm w-[40%]">
+          <h3 className="text-sm font-semibold text-gray-700 border-b border-gray-200 py-2">
+            Contact information
           </h3>
-          <PatientInfoRow label="Phone Number" value={patientInfo?.phone_number} />
+          <PatientInfoRow label="Phone number" value={patientInfo?.phone_number} />
           <PatientInfoRow label="Email" value={patientInfo?.email} />
           <PatientInfoRow label="Address" value={patientInfo?.address} />
-          <PatientInfoRow label="Emergency Contact" value={patientInfo?.emergency_contact_name} />
-          <PatientInfoRow label="Emergency Phone" value={patientInfo?.emergency_contact_number} />
+          <PatientInfoRow label="Emergency contact" value={patientInfo?.emergency_contact_name} />
+          <PatientInfoRow label="Emergency phone" value={patientInfo?.emergency_contact_number} />
           <PatientInfoRow
-            label="Relationship"
+            label="Emergency contact relationship"
             value={patientInfo?.emergency_contact_relationship}
           />
         </div>

@@ -24,7 +24,7 @@ const StepIndicator = ({ steps, currentStep }: StepIndicatorProps) => {
   return (
     <div className="relative w-full max-w-4xl mx-auto px-4">
       <div
-        className="absolute top-1/2 left-0 right-0 h-1 bg-gray-200 transform -translate-y-1/2 z-0"
+        className="absolute top-1/2 left-0 right-0 h-0.5 bg-gray-200 transform -translate-y-1/2 z-0"
         style={{
           width: 'calc(100% - 40px)',
           margin: '0 20px',
@@ -32,7 +32,7 @@ const StepIndicator = ({ steps, currentStep }: StepIndicatorProps) => {
       />
 
       <div
-        className="absolute top-1/2 left-0 h-1 bg-blue-600 transform -translate-y-1/2 z-0 transition-all duration-300"
+        className="absolute top-1/2 left-0 h-0.5 bg-blue-600 transform -translate-y-1/2 z-0 transition-all duration-300"
         style={{
           width: `${(currentStep / (steps - 1)) * 100}%`,
           marginLeft: '20px',
@@ -47,7 +47,7 @@ const StepIndicator = ({ steps, currentStep }: StepIndicatorProps) => {
           const isCurrent = index === currentStep;
 
           const circleClasses = [
-            'w-10 h-10 rounded-full flex items-center justify-center font-semibold transition-all duration-200',
+            'w-8 h-8 rounded-full flex items-center justify-center font-semibold transition-all duration-200',
             'relative z-10',
             isCompleted
               ? 'bg-blue-600 text-white'

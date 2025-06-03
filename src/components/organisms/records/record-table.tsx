@@ -9,7 +9,6 @@ type recordTableProps = {
 
 export default function RecordTable({ patients }: recordTableProps) {
   const router = useRouter();
-  // const pathname = usePathname();
 
   const navigateToPatientDetails = (id: string) => {
     router.push(`records/${id}`);
@@ -32,7 +31,7 @@ export default function RecordTable({ patients }: recordTableProps) {
             </div>
           ))
         ) : (
-          <EmptyState title="No Patient Records" message="No patient records found" />
+          <EmptyState title="No Patient found" message="No record found for this patient" />
         ))}
     </div>
   );

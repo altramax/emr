@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 
-export default function DiagnosisComponent() {
+export default function Diagnose() {
   const [patientName, setPatientName] = useState('');
   const [symptoms, setSymptoms] = useState('');
   const [observations, setObservations] = useState('');

@@ -10,7 +10,7 @@ export default function EmptyState({
       <svg
         width="800px"
         height="800px"
-        className="w-[200px] h-[200px] mb-6"
+        className="w-[150px] h-[150px] mb-6"
         viewBox="0 0 24 24"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
@@ -38,8 +38,8 @@ export default function EmptyState({
         />
       </svg>
 
-      <h2 className="text-xl font-semibold text-gray-700">{title}</h2>
-      <p className="text-gray-500 mt-1">{message}</p>
+      <h2 className="text-sm font-semibold text-gray-700">{title}</h2>
+      <p className="text-gray-500 mt-1 text-xs">{message}</p>
     </div>
   );
 }

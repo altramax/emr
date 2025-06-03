@@ -28,12 +28,12 @@ const PatientNav = ({ isOpen, params }: PatientNavProps) => {
 
   const tabs = [
     {
-      name: 'Vitals',
-      path: '/patients/vitals',
+      name: 'Add-Vitals',
+      path: '/patients/add-vitals',
       icon: <HeartPulse size={18} />,
       Notification: <Notification count={vitalState?.vitals?.length} />,
     },
-    { name: 'Diagnosis', path: '/patients/diagnosis', icon: <Stethoscope size={18} /> },
+    { name: 'Diagnose', path: '/patients/diagnose', icon: <Stethoscope size={18} /> },
     { name: 'Prescriptions', path: '/patients/prescriptions', icon: <ClipboardList size={18} /> },
     { name: 'Lab Orders', path: '/patients/lab-orders', icon: <FlaskConical size={18} /> },
     { name: 'Lab Results', path: '/patients/lab-results', icon: <TestTube2 size={18} /> },
@@ -49,6 +49,9 @@ const PatientNav = ({ isOpen, params }: PatientNavProps) => {
 
   useEffect(() => {
     getTask();
+  }, []);
+
+  useEffect(() => {
     if (vitalState?.called === false) {
       vitalState?.setVitals(data);
     }
@@ -65,7 +68,7 @@ const PatientNav = ({ isOpen, params }: PatientNavProps) => {
 
   return (
     <div className=" text-white">
-      <div className="flex flex-col gap-3 border-l border-gray-200 pb-3 ml-4">
+      <div className="flex flex-col gap-3 border-l border-gray-200 pb-3 ml-4 text-xs">
         {tabs.map((tab) => {
           return (
             <div className={` flex items-center justify-start `} key={tab.name}>

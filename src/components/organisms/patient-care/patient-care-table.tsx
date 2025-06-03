@@ -1,6 +1,6 @@
 import CalculateAge from '../../atoms/calculate-age/calculate-age';
 import Avatar from '../../atoms/Avatar/Avatar';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 
 interface PatientCareTableProps {
   /* eslint-disable  @typescript-eslint/no-explicit-any */
@@ -9,34 +9,35 @@ interface PatientCareTableProps {
 
 export default function PatientCareTable({ patients }: PatientCareTableProps) {
   const router = useRouter();
+  const pathname = usePathname();
 
   const navigateToPatientDetails = (id: string) => {
-    router.push(`/records/${id}`);
+    router.push(`${pathname}/${id}`);
   };
 
   const renderStatus = (status: string) => {
     switch (status) {
       case 'completed':
         return (
-          <div className="bg-green-100 text-green-600 rounded-full  px-1 py-1 text-sm font-semibold text-center">
+          <div className="bg-green-100 text-green-600 rounded-full  px-2 py-1 text-xs w-fit font-base">
             completed
           </div>
         );
       case 'pending':
         return (
-          <div className="bg-yellow-100 text-yellow-600 rounded-full text-center px-1 py-1 text-sm font-semibold">
+          <div className="bg-yellow-100 text-yellow-600 rounded-full text-center px-2 py-1 text-xs w-fit font-base">
             Pending
           </div>
         );
       case 'cancelled':
         return (
-          <div className="bg-red-100 text-red-600 rounded-full text-center px-1 py-1 text-sm font-semibold">
+          <div className="bg-red-100 text-red-600 rounded-full text-center px-2 py-1 text-xs w-fit font-base">
             Cancelled
           </div>
         );
       default:
         return (
-          <div className="bg-gray-100 text-black rounded-full text-center px-1 py-1 text-sm font-semibold">
+          <div className="bg-gray-100 text-black rounded-full text-center px-2 py-1 text-xs w-fit font-base">
             unavailable
           </div>
         );
@@ -46,7 +47,7 @@ export default function PatientCareTable({ patients }: PatientCareTableProps) {
   return (
     <table className="w-full border-collapse">
       <thead>
-        <tr className="bg-gray-100 text-left text-sm text-gray-600">
+        <tr className="bg-gray-100 text-left text-xs text-gray-600">
           <th className="px-4 py-2">Name</th>
           <th className="px-4 py-2">Patient id</th>
           <th className="px-4 py-2">Age</th>
@@ -55,33 +56,31 @@ export default function PatientCareTable({ patients }: PatientCareTableProps) {
         </tr>
       </thead>
       <tbody>
-        {patients
-          ? patients?.map((patient: any) => (
-              <tr
-                key={patient?.patient?.id}
-                className="border-b text-sm cursor-pointer"
-                onClick={() => navigateToPatientDetails(patient?.patient?.id)}
-              >
-                <td className="p-4 flex items-center gap-4 text-base">
-                  {patients && (
-                    <Avatar
-                      firstname={patient?.patient?.first_name}
-                      lastname={patient?.patient?.last_name}
-                    />
-                  )}
-                  {`${patient?.patient?.first_name.charAt(0).toUpperCase() + patient?.patient?.first_name.slice(1)} ${patient?.patient?.last_name.charAt(0).toUpperCase() + patient?.patient?.last_name.slice(1)}`}
-                </td>
+        {patients?.map((patient: any) => (
+          <tr
+            key={patient?.patient?.id}
+            className="border-b text-xs cursor-pointer"
+            onClick={() => navigateToPatientDetails(patient?.patient?.id)}
+          >
+            <td className="p-4 flex items-center gap-4">
+              {patients && (
+                <Avatar
+                  firstname={patient?.patient?.first_name}
+                  lastname={patient?.patient?.last_name}
+                  size={2}
+                />
+              )}
+              {`${patient?.patient?.first_name.charAt(0).toUpperCase() + patient?.patient?.first_name.slice(1)} ${patient?.patient?.last_name.charAt(0).toUpperCase() + patient?.patient?.last_name.slice(1)}`}
+            </td>
 
-                <td className="p-4">{patient?.patient?.id}</td>
-                <td className="p-4">{CalculateAge(patient?.patient?.date_of_birth)}</td>
-                <td className="p-4">
-                  {patient?.patient?.gender.charAt(0).toUpperCase() +
-                    patient?.patient?.gender.slice(1)}
-                </td>
-                <td className="p-4">{renderStatus(patient?.status)}</td>
-              </tr>
-            ))
-          : null}
+            <td className="p-4">{patient?.patient?.id}</td>
+            <td className="p-4">{CalculateAge(patient?.patient?.date_of_birth)}</td>
+            <td className="p-4">
+              {patient?.patient?.gender.charAt(0).toUpperCase() + patient?.patient?.gender.slice(1)}
+            </td>
+            <td className="p-4">{renderStatus(patient?.status)}</td>
+          </tr>
+        ))}
       </tbody>
     </table>
   );

@@ -7,9 +7,10 @@ type getDataType = {
   id?: any;
   status?: string;
   name?: string;
+  filter?: any;
 };
 
-export const useGetTasks = ({ select, id, status, name }: getDataType) => {
+export const useGetTasks = ({ select, id, status, name, filter }: getDataType) => {
   const supabase = createClient();
   /* eslint-disable  @typescript-eslint/no-explicit-any */
   const [data, setData] = useState<any>(null);
@@ -29,6 +30,9 @@ export const useGetTasks = ({ select, id, status, name }: getDataType) => {
       }
       if (name !== undefined) {
         query = query.eq('task_name', name);
+      }
+      if (filter !== undefined) {
+        query = query.filter('patient->>id', 'eq', filter);
       }
 
       const { data: response } = await query;

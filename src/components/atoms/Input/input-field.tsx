@@ -38,7 +38,7 @@ const Input = (props: InputFieldProp) => {
   return (
     <>
       {label && (
-        <label htmlFor={name} className="flex items-center justify-start gap-1 font-semibold">
+        <label htmlFor={name} className="flex items-center justify-start gap-1 font-medium text-xs">
           {label}
           {asterisk && <span className="text-[#DB1813]">*</span>}
         </label>
