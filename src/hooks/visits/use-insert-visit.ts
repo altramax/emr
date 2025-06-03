@@ -1,31 +1,29 @@
-import { createClient } from '../utils/supabase/client';
+import { createClient } from '../../utils/supabase/client';
 import { useState } from 'react';
+
+// type dataType = Record<string, string>;
 
 type getDataType = {
   tableName: string;
-  select: string;
   /* eslint-disable  @typescript-eslint/no-explicit-any */
-  id: any;
-  status?: string;
+  columns: any;
+
+  /* eslint-disable  @typescript-eslint/no-explicit-any */
+  id?: any;
 };
 
-export const useGetMedicalRecord = ({ tableName, select, id, status }: getDataType) => {
+export const useInsertVisit = ({ tableName, columns }: getDataType) => {
   const supabase = createClient();
   /* eslint-disable  @typescript-eslint/no-explicit-any */
   const [data, setData] = useState<any>(null);
   const [error, setError] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
-  const getMedicalData = async () => {
+  const insertVisit = async () => {
     try {
       setLoading(true);
-      const { data: response } = await supabase
-        .from(tableName)
-        .select(select)
-        .range(0, 10)
-        .order('id', { ascending: false })
-        .eq('patient_id', id)
-        .eq('status', status);
+
+      const { data: response } = await supabase.from(tableName).insert([columns]).select();
 
       setData(response);
       setLoading(false);
@@ -36,8 +34,8 @@ export const useGetMedicalRecord = ({ tableName, select, id, status }: getDataTy
   };
 
   const refetch = () => {
-    getMedicalData();
+    insertVisit();
   };
 
-  return { getMedicalData, error, loading, data, refetch };
+  return { insertVisit, error, loading, data, refetch };
 };

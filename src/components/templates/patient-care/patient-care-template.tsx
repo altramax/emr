@@ -1,28 +1,26 @@
 'use client';
 import React, { useEffect } from 'react';
-import PatientTable from '@/src/components/organisms/patients/patient-table';
+import PatientCareTable from '@/src/components/organisms/patient-care/patient-care-table';
 import Header from '@/src/components/organisms/patients/header';
-import { useGetPatients } from '@/src/hooks/patient/use-get-patients';
 import { useGetTasks } from '@/src/hooks/task/use-get-tasks';
+import { usePathname } from 'next/navigation';
 
-export default function PatientTemplate() {
-  const { data } = useGetPatients({
-    select: 'id,first_name,last_name,date_of_birth,status,gender',
-  });
+export default function PatientCareTemplate() {
+  const pathname = usePathname();
+  const title = pathname?.split('/')[2].charAt(0).toUpperCase() + pathname?.split('/')[2].slice(1);
 
-  const { getTask, data: taskData } = useGetTasks({
+  const { getTask, data } = useGetTasks({
     select: '*',
+    name: 'vitals',
   });
 
   useEffect(() => {
     getTask();
   }, []);
 
-  console.log(taskData);
-
   return (
     <div className="p-6 bg-white min-h-screen">
-      <Header title="Patients" subTitle="Click to select a patient" />
+      <Header title={title} subTitle="Click to select a patient" />
       <div className="flex justify-between items-start mt-12">
         <div className="flex items-center justify-between mb-4 gap-8">
           <input
@@ -33,7 +31,7 @@ export default function PatientTemplate() {
         </div>
       </div>
       <div className="overflow-x-auto mt-4">
-        <PatientTable patients={data} />
+        <PatientCareTable patients={data} />
       </div>
     </div>
   );

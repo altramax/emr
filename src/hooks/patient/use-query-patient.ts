@@ -1,4 +1,4 @@
-import { createClient } from '../utils/supabase/client';
+import { createClient } from '../../utils/supabase/client';
 import { useState } from 'react';
 
 type GetDataType = {
@@ -7,7 +7,7 @@ type GetDataType = {
   name: string;
 };
 
-export const useGetPatient = ({ tableName, select, name }: GetDataType) => {
+export const useQueryPatient = ({ tableName, select, name }: GetDataType) => {
   const supabase = createClient();
   /* eslint-disable  @typescript-eslint/no-explicit-any */
   const [data, setData] = useState<any>(null);
@@ -15,7 +15,7 @@ export const useGetPatient = ({ tableName, select, name }: GetDataType) => {
   const [error, setError] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
-  const getPatient = async () => {
+  const queryPatient = async () => {
     try {
       setLoading(true);
 
@@ -41,5 +41,5 @@ export const useGetPatient = ({ tableName, select, name }: GetDataType) => {
     setData(null);
   };
 
-  return { getPatient, error, loading, data, clearData };
+  return { queryPatient, error, loading, data, clearData };
 };

@@ -5,34 +5,34 @@ import Avatar from '../../atoms/Avatar/Avatar';
 import { useUser } from '@/src/hooks/user';
 import { useEffect, useState } from 'react';
 import PatientNav from '../patients/patients-nav';
-import { CreditCard, Minus, FileChartColumn } from 'lucide-react';
-// import { useMedicalUpdateAlert } from '@/src/hooks/medical-update-alert';
-// import { useParams } from 'next/navigation';
-import Notification from '../../molecules/notification/notification';
+import { CreditCard, Minus, FileChartColumn, UserRoundPlusIcon, CirclePlay } from 'lucide-react';
+
+import { useVitalsAlertStore } from '@/src/store/vitals-alert-store';
 
 export default function DashboardMenu() {
   const [isPatientNavOpen, setIsPatientNavOpen] = useState(true);
   const [isRecordsNavOpen, setIsRecordsNavOpen] = useState(true);
-  // const { detailsId } = useParams();
+  const vitalState = useVitalsAlertStore((state) => state);
   const pathname = usePathname();
   const router = useRouter();
-  const handleClick = (item: string) => {
-    router.push(`/${item}`);
-  };
-
-  // const { data } = useMedicalUpdateAlert();
-
-  const { getRole, user } = useUser();
 
   useEffect(() => {
     getRole();
   }, []);
 
+  const { getRole, user } = useUser();
+
   const logout = async () => {
+    vitalState?.clear();
+    vitalState?.setCalled(false);
     const logout = await signOutAction();
     if (logout === 'success') {
       router.replace('/');
     }
+  };
+
+  const handleClick = (item: string) => {
+    router.push(`/${item}`);
   };
 
   const patientNavHandler = () => {
@@ -150,22 +150,25 @@ export default function DashboardMenu() {
                 <Minus size={18} />
                 <button
                   onClick={() => handleClick('records')}
-                  className={`${pathname?.includes('/records') ? 'bg-blue-500' : ''} flex items-center gap-2 hover:bg-blue-500 p-2 rounded w-full text-left`}
+                  className={`${pathname?.includes('/records') && !pathname?.includes('/records/new-patient') ? 'bg-blue-500' : ''} flex items-center gap-2 hover:bg-blue-500 p-2 rounded w-full text-left`}
                 >
-                  <svg
-                    className="w-5 h-5 mr-2"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    viewBox="0 0 24 24"
-                  >
-                    <path d="M4 4h16v16H4zM8 2v4M16 2v4M4 10h16" />
-                  </svg>
-                  Initiate Encounter
-                  <Notification count={3} />
+                  <CirclePlay size={18} />
+                  Start Consultation
+                  {/* <Notification count={3} /> */}
                 </button>
               </div>
               <div className=" flex items-center">
+                <Minus size={18} />
+                <button
+                  onClick={() => handleClick('records/new-patient')}
+                  className={`${pathname?.includes('/records/new-patient') ? 'bg-blue-500' : ''} flex items-center gap-2 hover:bg-blue-500 p-2 rounded w-full text-left`}
+                >
+                  <UserRoundPlusIcon size={18} />
+                  Add Patient
+                  {/* <Notification count={3} /> */}
+                </button>
+              </div>
+              {/* <div className=" flex items-center">
                 <Minus size={18} />
                 <button
                   onClick={() => handleClick('medical-records')}
@@ -182,7 +185,7 @@ export default function DashboardMenu() {
                   </svg>
                   Medical Records
                 </button>
-              </div>
+              </div> */}
               <div className="flex items-center">
                 <Minus size={18} />
 

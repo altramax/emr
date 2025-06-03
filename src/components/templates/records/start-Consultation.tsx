@@ -2,12 +2,14 @@
 
 import { useRouter, useParams } from 'next/navigation';
 import { ArrowLeft, User2 } from 'lucide-react';
-import { useGetData } from '@/src/hooks/get-data';
+import { useGetPatients } from '@/src/hooks/patient/use-get-patients';
 import { useEffect } from 'react';
-import { useInsertData } from '@/src/hooks/insert-data';
+import { useInsertVisit } from '@/src/hooks/visits/use-insert-visit';
+import { useGetVisit } from '@/src/hooks/visits/use-get-visit';
 import Button from '../../atoms/button/button';
-import { useGetMedicalRecord } from '@/src/hooks/get-medical-record';
 import LoadingBar from '../../atoms/loading-bar/loading-bar';
+// import { useGetTasks } from '@/src/hooks/use-get-tasks';
+// import { useGetData } from '@/src/hooks/use-get-data';
 
 type PatientInfoRowProps = {
   label: string;
@@ -21,44 +23,53 @@ const PatientInfoRow = ({ label, value }: PatientInfoRowProps) => (
   </div>
 );
 
-const InitiateEncounterTemplate = () => {
+const StartConsultationTemplate = () => {
   const router = useRouter();
   const param = useParams();
   const id = param?.detailsId ?? '';
 
-  const { getData, data, loading } = useGetData({
-    tableName: 'patients',
+  const { getPatient, data, loading } = useGetPatients({
     select: '*',
     id: id,
   });
+  const patientInfo = data ? data[0] : '';
 
   const {
-    getMedicalData,
-    data: recordRole,
-    refetch,
-  } = useGetMedicalRecord({
-    tableName: 'medical_records',
-    select: 'patient_id, status',
-    id: id,
+    getVisit,
+    data: visitData,
+    refetch: refetchVisit,
+  } = useGetVisit({
+    select: '*',
+    id: patientInfo?.patient_id,
     status: 'open',
   });
 
-  const { insertData } = useInsertData({
-    tableName: 'medical_records',
+  const visit = visitData ? visitData[0] : null;
+
+  const { insertVisit, loading: insertLoading } = useInsertVisit({
+    tableName: 'visits',
     columns: {
-      patient_id: id,
+      patient_id: patientInfo?.patient_id,
       status: 'open',
     },
   });
 
   useEffect(() => {
-    getData();
-    getMedicalData();
+    getPatient();
   }, []);
 
-  const patientInfo = data ? data[0] : null;
+  useEffect(() => {
+    if (data) {
+      getVisit();
+    }
+  }, [data]);
 
-  console.log(recordRole);
+  const StartConsultationHandler = async () => {
+    await insertVisit();
+    if (!insertLoading) {
+      refetchVisit();
+    }
+  };
 
   if (loading) return <LoadingBar />;
 
@@ -73,23 +84,20 @@ const InitiateEncounterTemplate = () => {
           <span className="text-sm font-medium">Back</span>
         </button>
 
-        {recordRole &&
-          (recordRole[0]?.status !== 'open' ? (
-            <Button
-              className="flex items-center gap-2 text-sm px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md shadow-sm transition-all"
-              onClick={() => {
-                insertData();
-                refetch();
-              }}
-              loading={loading}
-              value=" Start Encounter"
-            />
-          ) : (
-            <div className="flex items-center gap-2 text-sm px-5 py-2 bg-green-600 text-white rounded-md shadow-sm transition-all">
-              {' '}
-              Visit in Progress
-            </div>
-          ))}
+        {visit?.status !== 'open' && (
+          <Button
+            className="flex items-center gap-2 text-sm px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md shadow-sm transition-all"
+            onClick={StartConsultationHandler}
+            loading={loading}
+            value="Start Consultation"
+          />
+        )}
+
+        {visit?.status === 'open' && (
+          <div className="flex items-center gap-2 text-sm px-5 py-2 bg-green-600 text-white rounded-md shadow-sm transition-all">
+            Consultation in Progress
+          </div>
+        )}
       </div>
       <div className="border-t border-gray-200"></div>
 
@@ -145,4 +153,4 @@ const InitiateEncounterTemplate = () => {
   );
 };
 
-export default InitiateEncounterTemplate;
+export default StartConsultationTemplate;

@@ -2,15 +2,13 @@
 import React, { useEffect, useState } from 'react';
 import RecordTable from '../../organisms/records/record-table';
 import Header from '@/src/components/organisms/patients/header';
-import { useGetPatient } from '@/src/hooks/get-patient';
-import { useRouter } from 'next/navigation';
-import { UserRoundPlus, Search, Loader, XIcon } from 'lucide-react';
-import { useDebounce } from '@/src/hooks/use-debounce';
+import { useQueryPatient } from '@/src/hooks/patient/use-query-patient';
+import { Search, Loader, XIcon } from 'lucide-react';
+import { useDebounce } from '@/src/hooks/debounce/use-debounce';
 
 export default function RecordsTemplate() {
-  const router = useRouter();
   const [name, setName] = useState('');
-  const { getPatient, data, loading, clearData } = useGetPatient({
+  const { queryPatient, data, loading, clearData } = useQueryPatient({
     tableName: 'patients',
     select: 'first_name,last_name,id,gender,date_of_birth,status',
     name,
@@ -19,9 +17,17 @@ export default function RecordsTemplate() {
 
   useEffect(() => {
     if (debouncedName) {
-      getPatient();
+      queryPatient();
     }
   }, [debouncedName]);
+
+  /* eslint-disable  @typescript-eslint/no-explicit-any */
+  const inputHandler = (e: any) => {
+    setName(e.target.value);
+    if (e.target.value.length < 1) {
+      resetField();
+    }
+  };
 
   const resetField = () => {
     setName('');
@@ -37,7 +43,7 @@ export default function RecordsTemplate() {
             type="text"
             placeholder="Search for patient by name or id"
             className="w-full px-4 py-2 border rounded-lg"
-            onChange={(e) => setName(e.target.value)}
+            onChange={(e) => inputHandler(e)}
             value={name}
           />
           {name && (
@@ -59,13 +65,6 @@ export default function RecordsTemplate() {
             />
           )}
         </div>
-        <button
-          onClick={() => router.push('/records/new-patient')}
-          className=" bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition flex justify-center gap-2 items-center"
-        >
-          <UserRoundPlus size={18} />
-          Add Patient
-        </button>
       </div>
       <div className="overflow-x-auto mt-6">
         <RecordTable patients={data} />

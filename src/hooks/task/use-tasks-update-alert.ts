@@ -1,7 +1,7 @@
-import { createClient } from '../utils/supabase/client';
+import { createClient } from '../../utils/supabase/client';
 import { useEffect, useState, useMemo } from 'react';
 
-export const useMedicalUpdateAlert = () => {
+export const useTasksUpdateAlert = () => {
   const supabase = createClient();
   /* eslint-disable  @typescript-eslint/no-explicit-any */
   const [data, setData] = useState<any>(null);
@@ -12,7 +12,7 @@ export const useMedicalUpdateAlert = () => {
       .channel('custom-insert-channel')
       .on(
         'postgres_changes',
-        { event: 'INSERT', schema: 'public', table: 'medical_records' },
+        { event: 'UPDATE', schema: 'public', table: 'medical_records' },
         (payload) => {
           setData(payload.new);
         }

@@ -21,13 +21,15 @@ export default function RecordTable({ patients }: recordTableProps) {
         (patients?.length > 0 ? (
           /* eslint-disable  @typescript-eslint/no-explicit-any */
           patients.map((patient: any) => (
-            <PatientCard
-              {...patient}
-              onChange={() => {
-                navigateToPatientDetails(patient?.id);
-              }}
-              key={patient?.id}
-            />
+            <div key={patient?.id}>
+              <PatientCard
+                {...patient}
+                onChange={() => {
+                  navigateToPatientDetails(patient?.id);
+                }}
+                key={patient?.id}
+              />
+            </div>
           ))
         ) : (
           <EmptyState title="No Patient Records" message="No patient records found" />

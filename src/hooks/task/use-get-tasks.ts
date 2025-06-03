@@ -1,31 +1,34 @@
-import { createClient } from '../utils/supabase/client';
+import { createClient } from '../../utils/supabase/client';
 import { useState } from 'react';
 
 type getDataType = {
-  tableName: string;
   select: string;
   /* eslint-disable  @typescript-eslint/no-explicit-any */
   id?: any;
+  status?: string;
+  name?: string;
 };
 
-export const useGetData = ({ tableName, select, id }: getDataType) => {
+export const useGetTasks = ({ select, id, status, name }: getDataType) => {
   const supabase = createClient();
   /* eslint-disable  @typescript-eslint/no-explicit-any */
   const [data, setData] = useState<any>(null);
   const [error, setError] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
-  const getData = async () => {
+  const getTask = async () => {
     try {
       setLoading(true);
-      let query = supabase
-        .from(tableName)
-        .select(select)
-        .range(0, 10)
-        .order('id', { ascending: false });
+      let query = supabase.from('tasks').select(select).range(0, 10);
 
-      if (id) {
-        query = query.eq('id', id);
+      if (id !== undefined) {
+        query = query.eq('patient_id', id);
+      }
+      if (status !== undefined) {
+        query = query.eq('status', status);
+      }
+      if (name !== undefined) {
+        query = query.eq('task_name', name);
       }
 
       const { data: response } = await query;
@@ -39,8 +42,8 @@ export const useGetData = ({ tableName, select, id }: getDataType) => {
   };
 
   const refetch = () => {
-    getData();
+    getTask();
   };
 
-  return { getData, error, loading, data, refetch };
+  return { getTask, error, loading, data, refetch };
 };

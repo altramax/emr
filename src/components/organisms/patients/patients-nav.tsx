@@ -11,6 +11,11 @@ import {
   Syringe,
   Minus,
 } from 'lucide-react';
+import Notification from '../../molecules/notification/notification';
+import { useVitalsAlertStore } from '@/src/store/vitals-alert-store';
+import { useTasksAlert } from '@/src/hooks/task/use-tasks-alert';
+import { useGetTasks } from '@/src/hooks/task/use-get-tasks';
+import { useEffect } from 'react';
 
 type PatientNavProps = {
   isOpen: boolean;
@@ -19,8 +24,15 @@ type PatientNavProps = {
 
 const PatientNav = ({ isOpen, params }: PatientNavProps) => {
   const router = useRouter();
+  const vitalState = useVitalsAlertStore((state) => state);
+
   const tabs = [
-    { name: 'Vitals', path: '/patients/vitals', icon: <HeartPulse size={18} /> },
+    {
+      name: 'Vitals',
+      path: '/patients/vitals',
+      icon: <HeartPulse size={18} />,
+      Notification: <Notification count={vitalState?.vitals?.length} />,
+    },
     { name: 'Diagnosis', path: '/patients/diagnosis', icon: <Stethoscope size={18} /> },
     { name: 'Prescriptions', path: '/patients/prescriptions', icon: <ClipboardList size={18} /> },
     { name: 'Lab Orders', path: '/patients/lab-orders', icon: <FlaskConical size={18} /> },
@@ -28,6 +40,26 @@ const PatientNav = ({ isOpen, params }: PatientNavProps) => {
     { name: 'Dispensed Meds', path: '/patients/dispensed-meds', icon: <Pill size={18} /> },
     { name: 'Administered Meds', path: '/patients/administered-meds', icon: <Syringe size={18} /> },
   ];
+
+  const { data: taskAlert } = useTasksAlert();
+  const { getTask, data } = useGetTasks({
+    select: '*',
+    name: 'vitals',
+  });
+
+  useEffect(() => {
+    getTask();
+    if (vitalState?.called === false) {
+      vitalState?.setVitals(data);
+    }
+    vitalState?.setCalled(true);
+  }, [data]);
+
+  useEffect(() => {
+    if (taskAlert) {
+      vitalState.updateVital(taskAlert);
+    }
+  }, [taskAlert]);
 
   if (!isOpen) return null;
 
@@ -39,13 +71,13 @@ const PatientNav = ({ isOpen, params }: PatientNavProps) => {
             <div className={` flex items-center justify-start `} key={tab.name}>
               <Minus size={18} />
               <button
-                key={tab.name}
                 className={`w-full px-4 py-2 flex items-center hover:bg-blue-500 rounded-md gap-2
                 ${params.includes(tab.name.toLowerCase()) && 'bg-blue-500 text-white'}`}
                 onClick={() => router.push(tab.path)}
               >
                 {tab.icon}
                 {tab.name}
+                <div className="ml-2">{tab.Notification}</div>
               </button>
             </div>
           );
