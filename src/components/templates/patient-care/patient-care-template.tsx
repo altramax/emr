@@ -10,7 +10,8 @@ import EmptyState from '../../molecules/empty-state/empty-state';
 
 export default function PatientCareTemplate() {
   const pathname = usePathname();
-  const title = pathname?.split('/')[2].charAt(0).toUpperCase() + pathname?.split('/')[2].slice(1);
+  const title =
+    pathname?.split('/')[2]?.charAt(0).toUpperCase() + pathname?.split('/')[2]?.slice(1);
   const [name, setName] = useState('');
   const debouncedName = useDebounce(name, 500);
   const taskName =
