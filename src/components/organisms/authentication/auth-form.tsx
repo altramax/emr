@@ -6,7 +6,7 @@ import { signInAction } from '@/src/actions/actions';
 import { SigninInputs, LoginSchema } from '@/src/validations/login-schema';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { toast } from 'react-toastify';
-import { useUser } from '@/src/hooks/user';
+import { useUser } from '@/src/hooks/user/user';
 import { useEffect } from 'react';
 
 const initialValues = {
@@ -65,7 +65,7 @@ export default function AuthForm() {
           type="text"
           name="email"
           placeholder="Enter your email"
-          className="w-[400px] h-[50px] px-4 rounded-lg outline-none border-none"
+          className="w-[400px] px-4 py-2 rounded-lg outline-none border-none"
           control={control}
         />
       </div>
@@ -79,7 +79,7 @@ export default function AuthForm() {
           type="password"
           name="password"
           placeholder="Enter your password"
-          className="w-[400px] h-[50px] px-4 rounded-lg outline-none border-none"
+          className="w-[400px] px-4 py-2 rounded-lg outline-none border-none"
           control={control}
         />
       </div>

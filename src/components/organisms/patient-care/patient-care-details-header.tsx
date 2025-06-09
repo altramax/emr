@@ -7,9 +7,10 @@ import CalculateAge from '../../atoms/calculate-age/calculate-age';
 type PatientInfoRowProps = {
   /* eslint-disable  @typescript-eslint/no-explicit-any */
   data: any;
+  back_path?: string;
 };
 
-const PatientDetailsHeader = ({ data }: PatientInfoRowProps) => {
+const PatientDetailsHeader = ({ data, back_path }: PatientInfoRowProps) => {
   const router = useRouter();
 
   const renderStatus = (status: string) => {
@@ -41,16 +42,24 @@ const PatientDetailsHeader = ({ data }: PatientInfoRowProps) => {
     }
   };
 
+  const backHandler = () => {
+    if (back_path) {
+      return router.push(back_path);
+    }
+    return router.back();
+  };
+
   return (
     <div className="px-10 py-4 flex flex-col gap-4 bg-white rounded-xl shadow-md border border-gray-100">
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-start gep-4">
         <button
           className="flex items-center text-blue-600 hover:text-blue-700 gap-2 transition-colors"
-          onClick={() => router.back()}
+          onClick={backHandler}
         >
           <ArrowLeft size={18} />
           <span className="text-xs font-medium">Back</span>
         </button>
+        <p className="px-4 text-blue-600 text-sm font-medium ">{data?.patient?.id}</p>
       </div>
 
       <div className="border-t border-gray-200"></div>
@@ -60,7 +69,6 @@ const PatientDetailsHeader = ({ data }: PatientInfoRowProps) => {
           <div className="w-[100px] h-[100px] rounded-full bg-gray-100 border border-gray-300 flex items-center justify-center text-gray-400 shadow-sm">
             <User2 size={38} />
           </div>
-          <p className="px-4 text-blue-600 text-sm font-medium ">{data?.patient?.id}</p>
 
           {renderStatus(data?.patient?.status)}
         </div>
@@ -75,10 +83,7 @@ const PatientDetailsHeader = ({ data }: PatientInfoRowProps) => {
         </div>
 
         <div className="flex flex-col border rounded-lg border-gray-100 px-4 py-2 bg-gray-50 shadow-sm w-[35%]">
-          <PatientInfoRow
-            label="Date of Birth"
-            value={CalculateAge(data?.patient?.date_of_birth)}
-          />
+          <PatientInfoRow label="Age" value={CalculateAge(data?.patient?.date_of_birth)} />
           <PatientInfoRow label="Email" value={data?.patient?.email} />
         </div>
       </div>

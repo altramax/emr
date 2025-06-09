@@ -27,7 +27,7 @@ const StartConsultationTemplate = () => {
     refetch: refetchVisit,
   } = useGetVisit({
     select: '*',
-    id: patientInfo?.patient_id,
+    patient_id: patientInfo?.patient_id,
     status: 'open',
   });
 

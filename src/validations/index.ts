@@ -88,26 +88,6 @@ export const ArraySchemaOptional = () =>
     )
     .nullable();
 
-export const LoanAmount = () =>
-  yup
-    .string()
-    .required('Amount is required')
-    .test('is-valid-number', 'Amount must be a number between 1,000 and 99,999,999.99', (value) => {
-      if (!value) return false;
-      const numberValue = Number(value);
-      return !isNaN(numberValue) && numberValue >= 1000 && numberValue <= 99999999.99;
-    });
-
-export const DepositAmount = () =>
-  yup
-    .string()
-    .required('Amount is required')
-    .test('is-valid-number', 'Amount must be a number between 1,000 and 99,999,999.99', (value) => {
-      if (!value) return false; // Handle the required case
-      const numberValue = Number(value);
-      return !isNaN(numberValue) && numberValue >= 1000 && numberValue <= 99999999.99;
-    });
-
 export const createNumberValidator = ({
   fieldName = 'Amount',
   min = 0,

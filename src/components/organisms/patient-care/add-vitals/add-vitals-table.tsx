@@ -1,18 +1,17 @@
-import CalculateAge from '../../atoms/calculate-age/calculate-age';
-import Avatar from '../../atoms/Avatar/Avatar';
-import { useRouter, usePathname } from 'next/navigation';
+import CalculateAge from '@/src/components/atoms/calculate-age/calculate-age';
+import Avatar from '@/src/components/atoms/Avatar/Avatar';
+import { useRouter } from 'next/navigation';
 
 interface PatientCareTableProps {
   /* eslint-disable  @typescript-eslint/no-explicit-any */
   patients: Record<string, any>[];
 }
 
-export default function PatientCareTable({ patients }: PatientCareTableProps) {
+export default function AddVitalsTable({ patients }: PatientCareTableProps) {
   const router = useRouter();
-  const pathname = usePathname();
 
   const navigateToPatientDetails = (id: string) => {
-    router.push(`${pathname}/${id}`);
+    router.push(`/patients/add-vitals/${id}`);
   };
 
   const renderStatus = (status: string) => {

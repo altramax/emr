@@ -44,7 +44,7 @@ const PatientNav = ({ isOpen, params }: PatientNavProps) => {
   const { data: taskAlert } = useTasksAlert();
   const { getTask, data } = useGetTasks({
     select: '*',
-    name: 'vitals',
+    task_name: 'vitals',
   });
 
   useEffect(() => {
@@ -55,7 +55,9 @@ const PatientNav = ({ isOpen, params }: PatientNavProps) => {
     if (vitalState?.called === false) {
       vitalState?.setVitals(data);
     }
-    vitalState?.setCalled(true);
+    if (data?.length > 0) {
+      vitalState?.setCalled(true);
+    }
   }, [data]);
 
   useEffect(() => {

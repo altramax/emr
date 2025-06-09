@@ -2,7 +2,8 @@
 import Image from 'next/image';
 
 interface buttonProp {
-  readonly value: string;
+  /* eslint-disable  @typescript-eslint/no-explicit-any */
+  readonly value: any;
   readonly icon?: string;
   readonly variant?: 'small' | 'large';
   readonly type?: 'button' | 'submit' | 'reset';
@@ -67,7 +68,7 @@ export default function Button({
             />
           )}
 
-          <p>{value}</p>
+          {value}
         </div>
       )}
     </button>

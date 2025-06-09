@@ -1,37 +1,29 @@
 'use client';
 import React, { useEffect, useState } from 'react';
-import PatientCareTable from '@/src/components/organisms/patient-care/patient-care-table';
+import AddDiagnosesTable from '@/src/components/organisms/patient-care/add-diagnoses/add-diagnoses-table';
 import Header from '@/src/components/organisms/patients/header';
-import { usePathname } from 'next/navigation';
 import { Search, Loader, XIcon } from 'lucide-react';
 import { useDebounce } from '@/src/hooks/debounce/use-debounce';
-import { useQueryTask } from '@/src/hooks/task/use-query-task';
-import EmptyState from '../../molecules/empty-state/empty-state';
+import { useQueryDiagnoses } from '@/src/hooks/diagnoses/use-query-diagnoses';
+import EmptyState from '@/src/components/molecules/empty-state/empty-state';
 
-export default function PatientCareTemplate() {
-  const pathname = usePathname();
-  const title =
-    pathname?.split('/')[2]?.charAt(0).toUpperCase() + pathname?.split('/')[2]?.slice(1);
+export default function AddDiagnoseTemplate() {
   const [name, setName] = useState('');
   const debouncedName = useDebounce(name, 500);
-  const taskName =
-    pathname?.split('/')[2].toLowerCase() === 'add-vitals'
-      ? 'vitals'
-      : pathname?.split('/')[2].toLowerCase();
 
   const {
-    queryTask,
+    queryDiagnoses,
     data: queryData,
     loading,
     clearData,
-  } = useQueryTask({
+  } = useQueryDiagnoses({
     select: '*',
     name: debouncedName,
-    task_name: taskName,
+    status: 'pending',
   });
 
   useEffect(() => {
-    queryTask();
+    queryDiagnoses();
   }, [debouncedName]);
 
   /* eslint-disable  @typescript-eslint/no-explicit-any */
@@ -47,9 +39,10 @@ export default function PatientCareTemplate() {
     clearData();
   };
 
+  console.log(queryData);
   return (
     <div className="p-8 bg-white min-h-screen">
-      <Header title={title} subTitle={`Select patient to ${taskName}`} />
+      <Header title=" Diagnose patient" subTitle="Select patient to add diagnoses" />
       <div className="flex justify-between items-start mt-6 w-full border-gray-200 pb-4">
         <div className="flex items-center justify-between mb-4 gap-8 w-[50%] relative">
           <input
@@ -82,7 +75,7 @@ export default function PatientCareTemplate() {
       <div className="overflow-x-auto mt-4">
         {!loading &&
           (queryData?.length > 0 ? (
-            <PatientCareTable patients={queryData} />
+            <AddDiagnosesTable patients={queryData} />
           ) : (
             <EmptyState title="No task found" message="No task found for this patient" />
           ))}

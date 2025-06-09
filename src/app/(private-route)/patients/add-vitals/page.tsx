@@ -1,5 +1,5 @@
-import PatientsCareTemplate from '@/src/components/templates/patient-care/patient-care-template';
+import AddVitalsTemplate from '@/src/components/templates/patient-care/add-vitals/add-vitals-template';
 
 export default function Page() {
-  return <PatientsCareTemplate />;
+  return <AddVitalsTemplate />;
 }

@@ -5,11 +5,10 @@ type GetDataType = {
   select: string;
   name?: string;
   filter?: string;
-  task_name: string;
   status?: string;
 };
 
-export const useQueryTask = ({ select, name, filter, task_name, status }: GetDataType) => {
+export const useQueryDiagnoses = ({ select, name, filter, status }: GetDataType) => {
   const supabase = createClient();
   /* eslint-disable  @typescript-eslint/no-explicit-any */
   const [data, setData] = useState<any>(null);
@@ -17,19 +16,10 @@ export const useQueryTask = ({ select, name, filter, task_name, status }: GetDat
   const [error, setError] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(true);
 
-  const queryTask = async () => {
+  const queryDiagnoses = async () => {
     try {
-      const query = supabase
-        .from('tasks')
-        .select(select)
-        .range(0, 10)
-        .eq('task_name', task_name)
-        .eq('status', status);
+      const query = supabase.from('diagnoses').select(select).range(0, 10).eq('status', status);
 
-      if (status !== undefined) {
-        const { data: response } = await query.eq('status', status);
-        return setData(response);
-      }
       if (!name && filter === undefined && status === undefined) {
         const { data: response } = await query;
         return setData(response);
@@ -55,5 +45,5 @@ export const useQueryTask = ({ select, name, filter, task_name, status }: GetDat
     setData(null);
   };
 
-  return { queryTask, error, loading, data, clearData };
+  return { queryDiagnoses, error, loading, data, clearData };
 };
