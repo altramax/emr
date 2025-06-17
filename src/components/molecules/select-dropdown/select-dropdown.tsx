@@ -1,8 +1,11 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Control, useController } from 'react-hook-form';
 import { ErrorMessage } from '@hookform/error-message';
+import { XCircleIcon, ChevronDown } from 'lucide-react';
+import SingleSelect from './single-select';
+import MultiSelect from './multi-select';
 
 type Option = {
   value: string;
@@ -18,6 +21,8 @@ type CustomSelectProps = {
   name: string;
   /* eslint-disable  @typescript-eslint/no-explicit-any */
   control?: Control<any>; // optional
+  isMulti?: boolean;
+  defaultValue?: Option;
 };
 
 export default function SelectDropdown({
@@ -28,10 +33,10 @@ export default function SelectDropdown({
   asterisk,
   name,
   control,
+  defaultValue,
+  isMulti = false,
 }: CustomSelectProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const [highlightedIndex, setHighlightedIndex] = useState(-1);
-  const selectRef = useRef<HTMLDivElement>(null);
 
   const {
     field,
@@ -44,117 +49,115 @@ export default function SelectDropdown({
 
   const currentValue = field.value;
 
-  const handleChange = (val: Option | null) => {
+  useEffect(() => {
+    if (defaultValue) {
+      field.onChange(defaultValue);
+    }
+  }, [defaultValue]);
+
+  const handleChangesingle = (val: Option | null) => {
     field.onChange(val);
     setIsOpen(false);
   };
 
-  // useEffect(() => {
-  //   const handleClickOutside = (e: MouseEvent) => {
-  //     if (!selectRef.current?.contains(e.target as Node)) {
-  //       setIsOpen(false);
-  //       field.onBlur?.();
-  //     }
-  //   };
-
-  //   document.addEventListener('mousedown', handleClickOutside);
-  //   return () => document.removeEventListener('mousedown', handleClickOutside);
-  // }, [field]);
-
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (!isOpen) return;
-
-      switch (e.key) {
-        case 'ArrowDown':
-          e.preventDefault();
-          setHighlightedIndex((i) => Math.min(i + 1, options.length - 1));
-          break;
-        case 'ArrowUp':
-          e.preventDefault();
-          setHighlightedIndex((i) => Math.max(i - 1, 0));
-          break;
-        case 'Enter':
-          e.preventDefault();
-          if (highlightedIndex >= 0) {
-            handleChange(options[highlightedIndex]);
-          }
-          break;
-        case 'Escape':
-          e.preventDefault();
-          setIsOpen(false);
-          break;
+  const handleChangeMulti = (val: Option | null) => {
+    const exist = field.value
+      ? field.value?.filter((item: Option) => item?.value === val?.value)
+      : [];
+    if (exist?.length > 0) return;
+    field.onChange(() => {
+      if (field.value?.length > 0) {
+        field.onChange([...field.value, val]);
+      } else {
+        field.onChange([val]);
       }
-    };
+    });
+  };
 
-    document.addEventListener('keydown', handleKeyDown);
-    return () => document.removeEventListener('keydown', handleKeyDown);
-  }, [isOpen, highlightedIndex, options]);
+  const removeSelectedMulti = (val: Option | null) => {
+    field.onChange(field.value.filter((item: Option) => item.value !== val?.value));
+  };
 
   return (
-    <div className={`relative`} ref={selectRef}>
-      <label className={`flex items-center gap-1 font-medium text-xs ${label && 'mb-1'}`}>
+    <div className={`relative`}>
+      <label
+        className={`text-gray-500 flex items-center gap-1 font-medium text-xs ${label && 'mb-1'}`}
+      >
         {label}
         {asterisk && <span className="text-red-600">*</span>}
       </label>
 
       <button
         type="button"
-        className={`h-[32px] text-xs w-full flex items-center justify-between p-2 border rounded-lg bg-white text-left transition-all duration-200 ${
-          isOpen ? 'ring-2 ring-blue-500 border-blue-500' : 'border-blue-300 hover:border-blue-400'
+        className={`no-scrollbar overflow-x-scroll h-[32px] text-xs w-full flex items-center justify-between p-2 border rounded-lg bg-white text-left transition-all duration-200 ${
+          isOpen ? 'ring-1 ring-blue-500 border-blue-500' : 'border-blue-300 hover:border-blue-400'
         } ${className}`}
         onClick={() => {
           setIsOpen(!isOpen);
-          setHighlightedIndex(-1);
         }}
         aria-haspopup="listbox"
         aria-expanded={isOpen}
       >
-        <span className={!currentValue ? 'text-gray-400' : 'text-blue-500'}>
-          {currentValue?.label ?? placeholder}
-        </span>
-        <svg
+        {!isMulti ? (
+          <span
+            className={!currentValue ? 'text-gray-400' : 'text-blue-500 flex items-center gap-2'}
+          >
+            {currentValue?.label ?? placeholder}
+          </span>
+        ) : (
+          <span
+            className={
+              !currentValue
+                ? 'text-gray-400'
+                : 'relative text-blue-500 gap-2 flex items-center justify-start no-scrollbar  overflow-x-scroll w-full'
+            }
+          >
+            {currentValue
+              ? currentValue?.map((item: Option) => {
+                  return (
+                    <div
+                      key={item.value}
+                      className="flex justify-between items-center border rounded-sm px-3 py-1 w-full "
+                    >
+                      <span key={item.value} className="w-full text-nowrap">
+                        {item.label}
+                      </span>
+                      <XCircleIcon
+                        size={16}
+                        className="text-red-500 w-fit"
+                        onClick={(evt: any) => {
+                          evt.stopPropagation();
+                          removeSelectedMulti(item);
+                        }}
+                      />
+                    </div>
+                  );
+                })
+              : placeholder}
+          </span>
+        )}
+
+        <ChevronDown
+          size={12}
           className={`h-5 w-5 text-gray-500 transition-transform ${isOpen ? 'rotate-180' : ''}`}
-          viewBox="0 0 20 20"
-          fill="currentColor"
-        >
-          <path
-            fillRule="evenodd"
-            d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-            clipRule="evenodd"
-          />
-        </svg>
+        />
       </button>
 
-      {isOpen && (
-        <ul
-          className="absolute z-10 mt-1 w-full max-h-60 overflow-auto bg-white rounded-lg shadow-lg border border-gray-200"
-          role="listbox"
-        >
-          {options.map((option, index) => (
-            <li
-              key={option.value}
-              className={`px-3 py-2 cursor-pointer flex justify-between ${
-                currentValue?.value === option.value ? 'bg-blue-50 text-blue-700' : 'text-gray-900'
-              } ${highlightedIndex === index ? 'bg-gray-100' : ''} hover:bg-gray-100`}
-              onClick={() => handleChange(option)}
-              onMouseEnter={() => setHighlightedIndex(index)}
-              role="option"
-              aria-selected={currentValue?.value === option.value}
-            >
-              <span>{option.label}</span>
-              {currentValue?.value === option.value && (
-                <svg className="h-5 w-5 text-blue-500" viewBox="0 0 20 20" fill="currentColor">
-                  <path
-                    fillRule="evenodd"
-                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-              )}
-            </li>
-          ))}
-        </ul>
+      {!isMulti && (
+        <SingleSelect
+          isOpen={isOpen}
+          options={options}
+          selected={currentValue}
+          onChange={handleChangesingle}
+        />
+      )}
+      {isMulti && (
+        <MultiSelect
+          isOpen={isOpen}
+          options={options}
+          selected={currentValue}
+          onChange={handleChangeMulti}
+        />
       )}
 
       {error && (

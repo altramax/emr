@@ -31,8 +31,8 @@ export default function AuthForm() {
     try {
       const res = await signInAction(form);
       if (res === 'success') {
-        toast.success('Signin Successful');
         router.replace('/dashboard');
+        toast.success('Signin Successful');
       }
     } catch (error) {
       console.log(error);
@@ -50,14 +50,12 @@ export default function AuthForm() {
   return (
     <form
       onSubmit={handleSubmit(submitForm)}
-      className="bg-cyan-700 rounded-lg flex flex-col items-start justify-start gap-5 p-10"
+      className="bg-slate-300 rounded-lg flex flex-col items-start justify-start gap-5 px-10 py-5 text-black"
     >
-      <h1 className="text-white text-center w-full my-2 text-2xl font-semibold">
-        Lily Hospital M.S
-      </h1>
+      <h1 className=" text-center w-full text-xl font-bold">Lily Health Care</h1>
 
-      <div className="flex flex-col items-start justify-start gap-2">
-        <label htmlFor="email" className="text-white">
+      <div className="text-xs flex flex-col items-start justify-start gap-1">
+        <label htmlFor="email" className="">
           Email
         </label>
         <InputField
@@ -65,13 +63,13 @@ export default function AuthForm() {
           type="text"
           name="email"
           placeholder="Enter your email"
-          className="w-[400px] px-4 py-2 rounded-lg outline-none border-none"
+          className="w-[300px] px-2 py-2 rounded-md outline-none border-none"
           control={control}
         />
       </div>
 
-      <div className="flex flex-col items-start justify-start gap-2">
-        <label htmlFor="password" className="text-white">
+      <div className="text-xs flex flex-col items-start justify-start gap-1">
+        <label htmlFor="password" className="">
           Password
         </label>
         <InputField
@@ -79,7 +77,7 @@ export default function AuthForm() {
           type="password"
           name="password"
           placeholder="Enter your password"
-          className="w-[400px] px-4 py-2 rounded-lg outline-none border-none"
+          className="w-[300px] px-2 py-2 rounded-md outline-none border-none"
           control={control}
         />
       </div>
@@ -87,7 +85,7 @@ export default function AuthForm() {
       <Button
         value="Signin"
         type="submit"
-        className="bg-white text-black hover:bg-cyan-300 hover:text-white font-medium text-sm text-center no-underline px-4 py-2 rounded-2xl mt-2 mx-auto w-[30%]"
+        className="bg-white text-black hover:bg-gray-600 hover:text-white font-medium text-xs text-center no-underline px-4 py-1 rounded-md mt-2 mx-auto w-[30%]"
       />
     </form>
   );

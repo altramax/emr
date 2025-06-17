@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 import { useGetTasks } from '@/src/hooks/task/use-get-tasks';
 import Loading from '@/src/components/atoms/loading-bar/loading-bar';
 
-import VitalsDropdown from '@/src/components/organisms/patient-care/add-diagnoses/vitals_dropdown';
+import VitalsDropdown from '@/src/components/molecules/vitals-dropdown/vitals_dropdown';
 
 interface PatientCareTableProps {
   /* eslint-disable  @typescript-eslint/no-explicit-any */
@@ -11,7 +11,7 @@ interface PatientCareTableProps {
   id: string;
 }
 
-export default function ViewVitals({ visit_id, id }: PatientCareTableProps) {
+export default function ViewVitalsTab({ visit_id, id }: PatientCareTableProps) {
   // const [isSelectedVitalsOpen, setIsSelectedVitalsOpen] = useState<boolean>(false);
   const router = useRouter();
   // const sampleVitals = {

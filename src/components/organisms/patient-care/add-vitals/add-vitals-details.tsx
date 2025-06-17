@@ -5,11 +5,11 @@ import { HeartPulse, Thermometer, Activity, Droplets, Wind, Ruler } from 'lucide
 import { useForm } from 'react-hook-form';
 import Input from '@/src/components/atoms/Input/input-field';
 import { inputType } from '@/src/validations/add-vitals-schema';
-import ConfirmationModal from '@/src/components/molecules/confirmation-modal/confirmation-modal';
 import { useUpdateTask } from '@/src/hooks/task/use-update-task';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
 import { useInsertTask } from '@/src/hooks/task/use-insert-task';
+import ConfirmationReviewModal from '@/src/components/molecules/confirmation-review-modal/confirmation-review-modal';
 
 type vitalsType = {
   /* eslint-disable  @typescript-eslint/no-explicit-any */
@@ -109,12 +109,12 @@ const AddVitals = ({ data, from }: vitalsType) => {
   const renderModal = () => {
     if (isConfirmationModalOpen) {
       return (
-        <ConfirmationModal
+        <ConfirmationReviewModal
           isOpen={isConfirmationModalOpen}
           onCancel={closeConfirmationModal}
           onConfirm={submitVitals}
-          title="Are you sure?"
-          description="You are about to submit your vitals. Please confirm that you have recorded your vitals correctly."
+          title="Confirm Vitals Submission"
+          formdata={values}
         />
       );
     }
@@ -316,35 +316,3 @@ const AddVitals = ({ data, from }: vitalsType) => {
 };
 
 export default AddVitals;
-
-// const createData = [
-//   { status: 'completed' },
-//   { patient_id: data?.patient_id },
-//   { task_name: 'vitals' },
-//   { visit_id: data?.id },
-//   {
-//     task_result: {
-//       blood_pressure: { systolic: values.systolic, diastolic: values.diastolic },
-//       heart_rate: values.heartRate,
-//       respiratory_rate: values.respiration,
-//       temperature: values.temperature,
-//       oxygen_saturation: values.oxygenSaturation,
-//       weight: values.weight,
-//       height: values.height,
-//     },
-//   },
-//   {
-//     task_data: [
-//       'blood_pressure',
-//       'heart_rate',
-//       'respiratory_rate',
-//       'temperature',
-//       'oxygen_saturation',
-//       'weight',
-//       'height',
-//     ],
-//   },
-// ];
-
-// const { updateTask, error } = useUpdateTask({ columns: submitData, id: `${data?.id}` });
-// const { insertTask } = useInsertTask({ tableName: 'tasks', columns: createData });

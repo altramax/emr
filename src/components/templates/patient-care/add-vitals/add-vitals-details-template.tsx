@@ -44,8 +44,6 @@ export default function AddVitalsDetailsTemplate() {
 
   if (loading || visitLoading) return <LoadingBar />;
 
-  console.log(visitData);
-
   return (
     <div className="min-h-screen bg-gray-100 p-8">
       <PatientDetailsHeader data={pageData} />

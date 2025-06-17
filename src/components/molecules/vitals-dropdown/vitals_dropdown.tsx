@@ -31,14 +31,12 @@ export default function VitalsDropdown({ data }: vitalsType) {
           ? vitalsArray.map((item: Record<string, any>) => {
               if (item[0] === 'blood_pressure') {
                 return (
-                  <>
-                    <div>
-                      <VitalCard label={'Systolic'} value={item[1]?.systolic} />
-                    </div>
-                    <div>
-                      <VitalCard label={'diastolic'} value={item[1]?.diastolic} />
-                    </div>
-                  </>
+                  <div key={item[0]}>
+                    <VitalCard
+                      label="Blood pressure"
+                      value={`${item[1]?.systolic} / ${item[1]?.diastolic} mmHg`}
+                    />
+                  </div>
                 );
               }
               return (

@@ -2,7 +2,7 @@
 import { useRouter, usePathname } from 'next/navigation';
 import { useEffect } from 'react';
 import Button from '../../atoms/button/button';
-import { Minus, Activity, CirclePlay, User, Stethoscope } from 'lucide-react';
+import { Minus, Activity, CirclePlay, User, Stethoscope, FlaskConical } from 'lucide-react';
 import Notification from '../../molecules/notification/notification';
 import { useDiagnosesAlertStore } from '@/src/store/diagnoses-alert-store copy';
 import { useGetDiagnoses } from '@/src/hooks/diagnoses/use-get-diagnoses';
@@ -46,8 +46,6 @@ export default function DoctorsDashboard({ isOpen }: nursesDashboardType) {
       diagnosesState.updateVital(alert);
     }
   }, [alert]);
-
-  console.log(alert);
 
   return (
     <nav className={` ${isOpen ? 'w-[80%]' : ''}`}>
@@ -100,6 +98,44 @@ export default function DoctorsDashboard({ isOpen }: nursesDashboardType) {
               {diagnosesState?.diagnoses?.length > 0 && (
                 <Notification count={diagnosesState?.diagnoses?.length} />
               )}
+            </span>
+          </button>
+        </div>
+
+        <div className="flex items-center ">
+          <span className={` ${isOpen ? '' : 'hidden lg:block'}`}>
+            <Minus size={18} />
+          </span>
+
+          <button
+            onClick={() => handleClick('patients/inpatient')}
+            className={`relative ${pathname?.includes('patients/inpatient') ? 'bg-blue-500' : ''} flex items-center gap-2 hover:bg-blue-500 p-2 rounded w-full text-left`}
+          >
+            <Activity size={18} />
+            <span className={` ${isOpen ? '' : 'hidden lg:block'}`}> Inpatients</span>
+            <span
+              className={` ${isOpen ? '' : 'absolute bottom-8 left-4 lg:relative lg:bottom-0 lg:left-0'}`}
+            >
+              {/* <Notification count={3} />{' '} */}
+            </span>
+          </button>
+        </div>
+
+        <div className="flex items-center ">
+          <span className={` ${isOpen ? '' : 'hidden lg:block'}`}>
+            <Minus size={18} />
+          </span>
+
+          <button
+            onClick={() => handleClick('patients/lab-order')}
+            className={`relative ${pathname?.includes('patients/lab-order') ? 'bg-blue-500' : ''} flex items-center gap-2 hover:bg-blue-500 p-2 rounded w-full text-left`}
+          >
+            <FlaskConical size={18} />
+            <span className={` ${isOpen ? '' : 'hidden lg:block'}`}> Lab order</span>
+            <span
+              className={` ${isOpen ? '' : 'absolute bottom-8 left-4 lg:relative lg:bottom-0 lg:left-0'}`}
+            >
+              {/* <Notification count={3} />{' '} */}
             </span>
           </button>
         </div>

@@ -19,14 +19,10 @@ export const useQueryTask = ({ select, name, filter, task_name, status }: GetDat
 
   const queryTask = async () => {
     try {
-      const query = supabase
-        .from('tasks')
-        .select(select)
-        .range(0, 10)
-        .eq('task_name', task_name)
-        .eq('status', status);
+      const query = supabase.from('tasks').select(select).range(0, 10).eq('task_name', task_name);
+      // .eq('status', status);
 
-      if (status !== undefined) {
+      if (status !== 'all') {
         const { data: response } = await query.eq('status', status);
         return setData(response);
       }

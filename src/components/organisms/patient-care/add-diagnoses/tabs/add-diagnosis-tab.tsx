@@ -5,12 +5,12 @@ import Button from '@/src/components/atoms/button/button';
 import SelectDropdown from '@/src/components/molecules/select-dropdown/select-dropdown';
 import { useForm } from 'react-hook-form';
 
-// type vitalsType = {
-//   /* eslint-disable  @typescript-eslint/no-explicit-any */
-//   data: any;
-// };
+type dataType = {
+  /* eslint-disable  @typescript-eslint/no-explicit-any */
+  data: any;
+};
 
-export default function AddDiagnoses() {
+export default function AddDiagnosisTab({ data }: dataType) {
   const [symptoms, setSymptoms] = useState('');
   const [observations, setObservations] = useState('');
   /* eslint-disable  @typescript-eslint/no-explicit-any */
@@ -25,6 +25,8 @@ export default function AddDiagnoses() {
     { label: 'in progress', value: 'in progress' },
     { label: 'completed', value: 'completed' },
   ];
+
+  console.log(data);
 
   return (
     <div className="w-full">

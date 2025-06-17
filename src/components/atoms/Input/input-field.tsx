@@ -18,11 +18,6 @@ interface InputFieldProp
 
 const Input = (props: InputFieldProp) => {
   const {
-    field: { onChange, onBlur, value },
-    formState: { errors },
-  } = useController(props);
-
-  const {
     name,
     type,
     placeholder,
@@ -32,13 +27,22 @@ const Input = (props: InputFieldProp) => {
     asterisk,
     label,
     disabled,
+    control,
     ...others
   } = props;
+
+  const {
+    field,
+    formState: { errors },
+  } = useController({ name, control, defaultValue: '' });
 
   return (
     <>
       {label && (
-        <label htmlFor={name} className="flex items-center justify-start gap-1 font-medium text-xs">
+        <label
+          htmlFor={name}
+          className="text-gray-500 flex items-center justify-start gap-1 font-medium text-xs"
+        >
           {label}
           {asterisk && <span className="text-[#DB1813]">*</span>}
         </label>
@@ -58,14 +62,11 @@ const Input = (props: InputFieldProp) => {
         )}
         <input
           type={type}
-          name={name}
           placeholder={placeholder}
-          className={className}
-          value={value}
-          onChange={onChange}
-          onBlur={onBlur}
+          className={`border-blue-300 text-black ${className}`}
           disabled={disabled}
           {...others}
+          {...field}
         />
       </div>
       <ErrorMessage

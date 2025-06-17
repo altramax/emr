@@ -26,13 +26,17 @@ export const useGetTasks = ({
   const getTask = async () => {
     try {
       setLoading(true);
-      let query = supabase.from('tasks').select(select).range(0, 10).eq('status', status);
+      let query = supabase.from('tasks').select(select).range(0, 10);
+
+      if (status) {
+        query = query.eq('status', status);
+      }
 
       if (visit_id !== undefined) {
         query = query.eq('visit_id', visit_id);
       }
 
-      if (task_name !== undefined) {
+      if (task_name) {
         query = query.eq('task_name', task_name);
       }
 
@@ -40,12 +44,15 @@ export const useGetTasks = ({
         query = query.filter('patient->>id', 'eq', patient_lhc_id);
       }
 
-      const { data: response } = await query;
-
-      setData(response);
-      setLoading(false);
+      const { data: response, error: fetchError } = await query;
+      if (fetchError) {
+        setError(fetchError);
+      } else {
+        setData(response);
+      }
     } catch (err) {
       setError(err);
+    } finally {
       setLoading(false);
     }
   };

@@ -9,6 +9,7 @@ interface buttonProp {
   readonly type?: 'button' | 'submit' | 'reset';
   readonly loading?: boolean;
   readonly className?: string;
+  readonly disabled?: boolean;
   readonly onClick?: () => void;
 }
 export default function Button({
@@ -17,14 +18,15 @@ export default function Button({
   variant = 'small',
   type = 'button',
   loading = false,
+  disabled = false,
   className,
   onClick,
 }: buttonProp) {
   return (
     <button
       type={type}
-      className={`${className} flex justify-center`}
-      disabled={loading}
+      className={`${className} ${disabled && 'opacity-50'} flex justify-center`}
+      disabled={loading || disabled}
       onClick={onClick}
     >
       {loading === true ? (
