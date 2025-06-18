@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { TestTubeDiagonal } from 'lucide-react';
+import { TestTubeDiagonal, MessageCircleWarning } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import ConfirmationReviewModal from '@/src/components/molecules/confirmation-review-modal/confirmation-review-modal';
 import { toast } from 'react-toastify';
@@ -13,6 +13,7 @@ import { useQueryLabResult } from '@/src/hooks/lab-test-result/use-query-lab-res
 import dayjs from 'dayjs';
 import Loading from '@/src/components/atoms/loading-bar/loading-bar';
 import StatusBar from '@/src/components/molecules/status-bar/status-bar';
+import { useUpdateLabResult } from '@/src/hooks/lab-test-result/use-update-lab-result';
 import {
   cbcDefaultValue,
   basicmetabolicpanelDefaultValue,
@@ -25,13 +26,15 @@ import {
   bloodglucoseDefaultValue,
   hba1cDefaultValue,
 } from '@/src/utils/test-initial-values';
+import PriorityBar from '@/src/components/molecules/priority-bar/priority-bar';
 
 type vitalsType = {
   /* eslint-disable  @typescript-eslint/no-explicit-any */
   data: any;
+  refetch: () => void;
 };
 
-const LabOrderDetails = ({ data }: vitalsType) => {
+const LabOrderDetails = ({ data, refetch }: vitalsType) => {
   const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState<boolean>(false);
   const [currentForm, setCurrentForm] = useState('');
   const [testName, setTestName] = useState('');
@@ -40,14 +43,15 @@ const LabOrderDetails = ({ data }: vitalsType) => {
     queryLabResult,
     data: queryData,
     loading: isResultLoading,
+    refetch: refetchLabResult,
   } = useQueryLabResult({
     select: '*',
     test_name: testName,
+    task_id: data ? data?.id : '',
   });
 
   useEffect(() => {
     if (testName) {
-      console.log('ran');
       queryLabResult();
     }
   }, [testName]);
@@ -66,7 +70,7 @@ const LabOrderDetails = ({ data }: vitalsType) => {
     hba1c: hba1cDefaultValue,
   };
 
-  const { control, getValues, reset, handleSubmit } = useForm({
+  const { control, getValues, reset, handleSubmit, setValue } = useForm({
     defaultValues: { status: { label: '', value: '' } },
     mode: 'onChange',
   });
@@ -83,21 +87,57 @@ const LabOrderDetails = ({ data }: vitalsType) => {
     result: result,
   };
 
+  const selectedData = queryData
+    ? queryData.filter((item: any) => item.test_name === testName)[0]
+    : null;
+
   const { insertLabResult, error, loading } = useInsertLabResult({ columns: submitData });
+  const {
+    updateLabResult,
+    error: updateError,
+    loading: updateLoading,
+  } = useUpdateLabResult({
+    columns: submitData,
+    id: queryData ? queryData[0]?.id : '',
+  });
+
+  // console.log(queryData, selectdData);
 
   const submitForm = async () => {
-    console.log(submitData);
+    if (!submitData?.status) {
+      toast.error('Please select a status before submitting');
+      return;
+    }
+    // console.log(queryData, { submi: submitData });
+
     try {
-      await insertLabResult();
-      if (error) {
-        toast.error('error saving test results');
+      if (selectedData?.status === 'In Progress') {
+        await updateLabResult();
+        if (updateError) {
+          toast.error('error saving test results');
+        } else {
+          toast.success('Test results updated successfully');
+          handleIsConfirmationModalOpen();
+        }
+        console.log('enter update');
       } else {
-        toast.success('Test results saved successfully');
-        handleIsConfirmationModalOpen();
+        console.log('enter insert');
+        await insertLabResult();
+        if (error) {
+          toast.error('error saving test results');
+        } else {
+          toast.success('Test results saved successfully');
+          handleIsConfirmationModalOpen();
+        }
       }
+
+      console.log(submitData);
     } catch (err) {
       toast.error('Error saving test results');
       console.error(err, error);
+    } finally {
+      refetch();
+      refetchLabResult();
     }
   };
 
@@ -137,15 +177,32 @@ const LabOrderDetails = ({ data }: vitalsType) => {
     setCurrentForm(formKey);
   };
 
-  // console.log(queryData);
-
   return (
     <div className="flex flex-col md:flex-row gap-6 max-w-7xl mx-auto">
       {renderConfirmationModal()}
       <div className="w-full md:w-1/4 bg-white rounded-lg shadow-sm px-4 pt-4 py-5  border border-gray-100 h-[400px] overflow-auto no-scrollbar">
-        <h2 className="text-sm font-semibold mb-4 text-blue-600">Lab Test Requests</h2>
-        <div className="space-y-3">
+        <div className="flex items-center gap-2 justify-between">
+          <h2 className="text-sm font-semibold mb-4 text-blue-600">Lab Test Requests</h2>
+          {data?.note && (
+            <Button
+              value={
+                <>
+                  <MessageCircleWarning size={18} className="text-red-600" />
+
+                  <span
+                    className={`group-hover:block hidden text-xs absolute bg-gray-800 text-white top-5 p-2 rounded-lg right-0 text-wrap w-[170px]`}
+                  >
+                    {data?.note}
+                  </span>
+                </>
+              }
+              className="relative text-sm font-semibold mb-4 text-blue-600 group"
+            />
+          )}
+        </div>
+        <div className="space-y-4">
           {data?.task_data.map((item: string, index: number) => {
+            console.log(item);
             const formKey = item.replace(/\s+/g, '').toLowerCase();
             const status: any =
               data?.task_result && Object.entries(data?.task_result).find(([key]) => key === item);
@@ -153,7 +210,7 @@ const LabOrderDetails = ({ data }: vitalsType) => {
             return (
               <button
                 key={`${formKey}-${index}`}
-                className={`w-full flex items-center gap-3 p-3 rounded-lg transition-all 
+                className={`w-full flex flex-col justify-center gap-2 p-3 rounded-lg transition-all 
                   ${
                     currentForm === formKey
                       ? 'bg-blue-50 border border-blue-200 shadow-xs'
@@ -164,15 +221,18 @@ const LabOrderDetails = ({ data }: vitalsType) => {
                   setTestName(item);
                 }}
               >
-                <TestTubeDiagonal size={18} className="text-blue-500 flex-shrink-0" />
-                <div className="text-left overflow-hidden">
-                  <p className="font-medium text-gray-800 truncate text-sm">{item}</p>
-                  <p className="text-xs text-gray-500 mb-4">
-                    {dayjs(data?.created_at).format('h:mm A · DD-MM-YY')}
-                  </p>
-                  <div className="">
-                    {<StatusBar status={status ? status[1]?.toLowerCase() : 'pending'} />}
+                <div className="w-full flex items-top gap-2">
+                  <TestTubeDiagonal size={18} className="text-blue-500 flex-shrink-0" />
+                  <div className="text-left overflow-hidden">
+                    <p className="font-medium text-gray-800 truncate text-sm">{item}</p>
+                    <p className="text-xs text-gray-500 mb-4">
+                      {dayjs(data?.created_at).format('h:mm A · DD-MM-YY')}
+                    </p>
                   </div>
+                  <div className="">{<PriorityBar priority={data?.priority ?? 'N/A'} />}</div>
+                </div>
+                <div className="">
+                  {<StatusBar status={status ? status[1]?.toLowerCase() : 'pending'} />}
                 </div>
               </button>
             );
@@ -215,18 +275,26 @@ const LabOrderDetails = ({ data }: vitalsType) => {
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  <RenderForm control={control} form={currentForm} />
+                  <RenderForm
+                    control={control}
+                    form={currentForm}
+                    initialValue={
+                      initialStatus?.value !== 'Pending' && queryData ? queryData[0]?.result : null
+                    }
+                    setValue={setValue}
+                    disabled={initialStatus?.value === 'Completed'}
+                  />
                 </div>
 
                 <div className="w-full">
                   <Button
                     type="button"
                     onClick={handleIsConfirmationModalOpen}
-                    disabled={loading}
+                    disabled={loading || updateLoading || initialStatus?.value === 'Completed'}
                     className={`absolute bottom-6 right-6 mt-auto px-6 py-2 text-xs bg-blue-600 text-white rounded-md hover:bg-blue-700 transition 
                     focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2
-                    ${loading ? 'opacity-70 cursor-not-allowed' : ''}`}
-                    loading={loading}
+                    ${loading || updateLoading ? 'opacity-70 cursor-not-allowed' : ''}`}
+                    loading={loading || updateLoading}
                     value={'Save'}
                   />
                 </div>

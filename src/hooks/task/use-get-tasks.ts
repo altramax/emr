@@ -8,6 +8,7 @@ type getDataType = {
   status?: string;
   task_name?: string;
   patient_lhc_id?: any;
+  task_id?: any;
 };
 
 export const useGetTasks = ({
@@ -16,6 +17,7 @@ export const useGetTasks = ({
   status,
   task_name,
   patient_lhc_id,
+  task_id,
 }: getDataType) => {
   const supabase = createClient();
   /* eslint-disable  @typescript-eslint/no-explicit-any */
@@ -38,6 +40,10 @@ export const useGetTasks = ({
 
       if (task_name) {
         query = query.eq('task_name', task_name);
+      }
+
+      if (task_id) {
+        query = query.eq('id', task_id);
       }
 
       if (patient_lhc_id !== undefined) {

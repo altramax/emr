@@ -40,7 +40,7 @@ export default function LabOrders({ data }: dataType) {
     select: '*',
     task_name: 'lab_order',
     visit_id: data?.visit_id,
-    status: 'pending',
+    // status: 'pending',
   });
 
   useEffect(() => {
@@ -59,7 +59,7 @@ export default function LabOrders({ data }: dataType) {
     { label: 'Blood Glucose', value: 'Blood glucose', status: 'pending' },
     { label: 'Hemoglobin A1C', value: 'Hemoglobin A1C', status: 'pending' },
   ];
-  const routineOptions = [
+  const priorityOptions = [
     { label: 'Routine', value: 'routine' },
     { label: 'Urgent', value: 'urgent' },
     { label: 'Stat', value: 'stat' },
@@ -71,7 +71,7 @@ export default function LabOrders({ data }: dataType) {
     task_name: 'lab_order',
     visit_id: data?.visit_id,
     task_data: testArr,
-    priority: formData?.priority?.value,
+    priority: formData?.priority?.value ?? 'routine',
     note: formData?.notes,
   };
 
@@ -168,9 +168,10 @@ export default function LabOrders({ data }: dataType) {
         <div className="w-[32%]">
           <SelectDropdown
             name="priority"
-            options={routineOptions}
+            options={priorityOptions}
             control={control}
             label="Priority"
+            defaultValue={priorityOptions[0]}
           />
         </div>
 

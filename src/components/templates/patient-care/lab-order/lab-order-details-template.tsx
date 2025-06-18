@@ -11,10 +11,10 @@ export default function LabOrderDetailsTemplate() {
   const param = useParams();
   const id = param?.detailsId ?? '';
 
-  const { getTask, data, loading } = useGetTasks({
+  const { getTask, data, loading, refetch } = useGetTasks({
     select: '*',
-    patient_lhc_id: id,
     task_name: 'lab_order',
+    task_id: id,
   });
 
   useEffect(() => {
@@ -34,7 +34,9 @@ export default function LabOrderDetailsTemplate() {
             <HeartPulse size={18} /> Lab Orders
           </h2>
         </div> */}
-        <div className={``}>{pageData && <LabOrderDetails data={pageData} />}</div>
+        <div className={``}>
+          {pageData && <LabOrderDetails data={pageData} refetch={refetch} />}
+        </div>
       </div>
     </div>
   );

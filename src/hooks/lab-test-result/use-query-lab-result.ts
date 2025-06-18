@@ -18,20 +18,20 @@ export const useQueryLabResult = ({ select, test_name, task_id }: GetDataType) =
   const queryLabResult = async () => {
     setLoading(true);
     try {
-      const query = supabase.from('lab_test_results').select(select).range(0, 10);
+      let query = supabase.from('lab_test_results').select(select).range(0, 10);
 
-      if (!test_name && task_id === undefined) {
-        const { data: response } = await query;
-        return setData(response);
-      }
-      if (test_name !== undefined) {
-        const { data: response } = await query.eq('test_name', test_name);
-        return setData(response);
+      if (test_name) {
+        query = query.eq('test_name', test_name);
       }
 
-      if (task_id !== undefined) {
-        const { data: response } = await query.eq('task_id', task_id);
-        return setData(response);
+      if (task_id) {
+        query = query.eq('task_id', task_id);
+      }
+      const { data: response, error } = await query;
+      if (error) {
+        setError(error);
+      } else {
+        setData(response);
       }
     } catch (err) {
       setError(err);
@@ -44,5 +44,9 @@ export const useQueryLabResult = ({ select, test_name, task_id }: GetDataType) =
     setData(null);
   };
 
-  return { queryLabResult, error, loading, data, clearData };
+  const refetch = () => {
+    queryLabResult();
+  };
+
+  return { queryLabResult, error, loading, data, clearData, refetch };
 };

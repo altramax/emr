@@ -7,27 +7,34 @@ type getDataType = {
   id: string;
 };
 
-export const useUpdateTask = ({ columns, id }: getDataType) => {
+export const useUpdateLabResult = ({ columns, id }: getDataType) => {
   const supabase = createClient();
   /* eslint-disable  @typescript-eslint/no-explicit-any */
   const [data, setData] = useState<any>(null);
   const [error, setError] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
-  const updateTask = async () => {
-    console.log(id);
+  const updateLabResult = async () => {
     try {
       setLoading(true);
 
-      const { data: response } = await supabase.from('tasks').update(columns).eq('id', id).select();
+      const { data: response, error } = await supabase
+        .from('lab_test_results')
+        .update(columns)
+        .eq('id', id)
+        .select();
 
-      setData(response);
-      setLoading(false);
+      if (error) {
+        setError(error);
+      } else {
+        setData(response);
+      }
     } catch (err) {
       setError(err);
+    } finally {
       setLoading(false);
     }
   };
 
-  return { updateTask, error, loading, data };
+  return { updateLabResult, error, loading, data };
 };
