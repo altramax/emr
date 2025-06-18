@@ -10,6 +10,7 @@ import Button from '@/src/components/atoms/button/button';
 import OrdersTab from '@/src/components/organisms/patient-care/add-diagnoses/tabs/orders-tab';
 import VitalsViewTab from '@/src/components/organisms/patient-care/add-diagnoses/tabs/view-vitals-tab';
 import { Stethoscope, ClipboardList, HeartPulse, MessageCircleReply, Plus } from 'lucide-react';
+import Results from '@/src/components/organisms/patient-care/add-diagnoses/tabs/results-tab';
 
 export default function AddDiagnosesDetailsTemplate() {
   const param = useParams();
@@ -53,13 +54,15 @@ export default function AddDiagnosesDetailsTemplate() {
       case 'Orders':
         return <OrdersTab data={data ? data[0] : null} />;
       case 'Results':
-        return <div>Results</div>;
+        return <Results results={data ? data[0] : null} />;
       case 'History':
         return <div>History</div>;
       default:
         return;
     }
   };
+
+  console.log(data);
 
   return (
     <div className="min-h-screen bg-gray-100 p-8">
