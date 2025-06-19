@@ -48,8 +48,8 @@ export default function RecordsDashboard({ isOpen }: nursesDashboardType) {
   }, [alert]);
 
   return (
-    <nav className={` ${isOpen ? 'w-[80%]' : ''}`}>
-      <span className={` ${isOpen ? '' : 'hidden lg:block'}`}>
+    <nav className={` ${isOpen ? 'w-full' : ''}`}>
+      <span className={` ${isOpen ? '' : 'hidden'}`}>
         <Button
           value={
             <>
@@ -62,10 +62,10 @@ export default function RecordsDashboard({ isOpen }: nursesDashboardType) {
       </span>
 
       <div
-        className={` w-fit flex flex-col   ${isOpen ? 'border-l ml-4 gap-3' : 'gap-8 lg:gap-3 mt-12 lg:border-l lg:ml-4 lg:mt-2 '} border-gray-200 pb-3 text-xs`}
+        className={` w-fit flex flex-col   ${isOpen ? 'border-l ml-4 gap-3' : 'gap-8 mt-12 lg:mt-2 '} border-gray-200 pb-3 text-xs`}
       >
         <div className="flex items-center ">
-          <span className={` ${isOpen ? '' : 'hidden lg:block'}`}>
+          <span className={` ${isOpen ? '' : 'hidden'}`}>
             <Minus size={18} />
           </span>
 
@@ -75,9 +75,9 @@ export default function RecordsDashboard({ isOpen }: nursesDashboardType) {
           >
             <CirclePlay size={18} />
 
-            <span className={` ${isOpen ? '' : 'hidden lg:block'}`}> Start Consultation</span>
+            <span className={` ${isOpen ? '' : 'hidden'}`}> Start Consultation</span>
             <span
-              className={` ${isOpen ? '' : 'absolute bottom-8 left-4 lg:relative lg:bottom-0 lg:left-0'}`}
+              className={` ${isOpen ? 'relative bottom-0 left-0' : 'absolute bottom-8 left-4 '} `}
             >
               {/* <Notification count={3} />{' '} */}
             </span>
@@ -85,7 +85,7 @@ export default function RecordsDashboard({ isOpen }: nursesDashboardType) {
         </div>
 
         <div className="flex items-center ">
-          <span className={` ${isOpen ? '' : 'hidden lg:block'}`}>
+          <span className={` ${isOpen ? '' : 'hidden'}`}>
             <Minus size={18} />
           </span>
 
@@ -95,9 +95,9 @@ export default function RecordsDashboard({ isOpen }: nursesDashboardType) {
           >
             <UserRoundPlusIcon size={18} />
 
-            <span className={` ${isOpen ? '' : 'hidden lg:block'}`}> Add Patient</span>
+            <span className={` ${isOpen ? '' : 'hidden'}`}> Add Patient</span>
             <span
-              className={` ${isOpen ? '' : 'absolute bottom-8 left-4 lg:relative lg:bottom-0 lg:left-0'}`}
+              className={` ${isOpen ? 'relative bottom-0 left-0' : 'absolute bottom-8 left-4 '} `}
             >
               {/* <Notification count={3} />{' '} */}
             </span>
@@ -105,7 +105,7 @@ export default function RecordsDashboard({ isOpen }: nursesDashboardType) {
         </div>
 
         <div className="flex items-center ">
-          <span className={` ${isOpen ? '' : 'hidden lg:block'}`}>
+          <span className={` ${isOpen ? '' : 'hidden'}`}>
             <Minus size={18} />
           </span>
 
@@ -115,9 +115,9 @@ export default function RecordsDashboard({ isOpen }: nursesDashboardType) {
           >
             <FolderHeart size={18} />
 
-            <span className={` ${isOpen ? '' : 'hidden lg:block'}`}> Medical Records</span>
+            <span className={` ${isOpen ? '' : 'hidden'}`}> Medical Records</span>
             <span
-              className={` ${isOpen ? '' : 'absolute bottom-8 left-4 lg:relative lg:bottom-0 lg:left-0'}`}
+              className={` ${isOpen ? 'relative bottom-0 left-0' : 'absolute bottom-8 left-4 '} `}
             >
               {/* <Notification count={3} />{' '} */}
             </span>

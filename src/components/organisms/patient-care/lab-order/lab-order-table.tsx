@@ -49,14 +49,16 @@ export default function LabOrderTable({ patients }: PatientCareTableProps) {
             <td className="p-4">{CalculateAge(patient?.patient?.date_of_birth)}</td>
             <td className="p-4">
               {patient?.patient?.gender.charAt(0).toUpperCase() + patient?.patient?.gender.slice(1)}
-            </td>{' '}
+            </td>
             <td className="p-4 ">
               <div className="flex justify-center">
                 {<PriorityBar priority={patient?.priority ?? 'N/A'} />}
               </div>
             </td>
             <td className="p-4 ">
-              <div className="flex justify-center">{<StatusBar status={patient?.status} />}</div>
+              <div className="flex justify-center">
+                {<StatusBar status={patient?.status ?? 'N/A'} />}
+              </div>
             </td>
           </tr>
         ))}

@@ -2,7 +2,7 @@
 
 import Avatar from '../../atoms/Avatar/Avatar';
 import { useUser } from '@/src/hooks/user/user';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import Button from '../../atoms/button/button';
 import DoctorsDashboard from '../../organisms/dashboard-menu/doctors-dashboard';
 import RecordsDashboard from '../../organisms/dashboard-menu/records-dashboard';
@@ -10,16 +10,15 @@ import { Expand, Minimize, LogOut } from 'lucide-react';
 
 import { Logout } from '@/src/hooks/user/logout';
 
-export default function DashboardMenu() {
-  const [isNavOpen, setIsNavOpen] = useState(false);
+type dashboardType = {
+  isNavOpen: boolean;
+  expandNavHandler: () => void;
+};
 
+export default function DashboardMenu({ isNavOpen, expandNavHandler }: dashboardType) {
   const { getRole, user } = useUser();
 
   const { signOut } = Logout();
-
-  const expandNavHandler = () => {
-    setIsNavOpen(!isNavOpen);
-  };
 
   useEffect(() => {
     getRole();
@@ -27,13 +26,13 @@ export default function DashboardMenu() {
 
   return (
     <aside
-      className={`${isNavOpen ? 'w-full px-6' : 'w-14'} transition-all duration-300 ease-in-out no-scrollbar overflow-auto lg:w-full h-full min-h-screen bg-blue-600 text-sm text-white pt-4 pb-9 flex flex-col justify-start items-center`}
+      className={`${isNavOpen ? 'w-full px-5  items-start' : 'w-14  items-center'} transition-all duration-400 ease-in-out no-scrollbar overflow-auto h-full min-h-screen bg-blue-600 text-sm text-white pt-4 pb-9 flex flex-col justify-start`}
     >
       <div className="relative flex gap-2 items-center mt-2 mb-6">
         <div className="bg-white text-blue-600 rounded flex items-center justify-center p-2 pt-0 px-1">
           <svg
-            width="30"
-            height="30"
+            width="25"
+            height="25"
             viewBox="0 0 24 24"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
@@ -44,17 +43,15 @@ export default function DashboardMenu() {
             />
           </svg>
         </div>
-        <h1 className={`text-lg font-bold ${isNavOpen ? '' : 'hidden lg:block'}`}>
-          LiLy HealthCare
-        </h1>
+        <h1 className={`text-base font-bold ${isNavOpen ? '' : 'hidden'}`}>LiLy HealthCare</h1>
         <Button
           value={
             <>
-              {!isNavOpen && <Expand size={24} />}
-              {isNavOpen && <Minimize size={24} />}
+              {!isNavOpen && <Expand size={23} />}
+              {isNavOpen && <Minimize size={23} />}
             </>
           }
-          className={`w-fit hover:bg-blue-500 p-2 rounded lg:hidden ${isNavOpen ? 'top-0' : 'absolute top-10'}`}
+          className={`w-fit hover:bg-blue-500 p-1 rounded ${isNavOpen ? 'top-0' : 'absolute top-12 '}`}
           onClick={expandNavHandler}
         />
       </div>
@@ -70,12 +67,12 @@ export default function DashboardMenu() {
           className="flex items-center hover:bg-blue-500 p-2 rounded w-full text-left text-white mt-4 text-sm"
         >
           <LogOut size={18} className=" mr-2" />
-          <span className={`${isNavOpen ? '' : 'hidden lg:block'}`}>Logout</span>
+          <span className={`${isNavOpen ? '' : 'hidden'}`}>Logout</span>
         </button>
         <div className=" flex justify-start items-center text-sm text-gray-300 gap-4 pt-4">
           <Avatar firstname="Doe" lastname="John" size={10} />
 
-          <div className={`${isNavOpen ? '' : 'hidden lg:block'}`}>
+          <div className={`${isNavOpen ? '' : 'hidden'}`}>
             <div className="mt-2">{user?.name}</div>
             <div>{user?.role}</div>
           </div>
