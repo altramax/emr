@@ -62,8 +62,6 @@ export default function AddDiagnosesDetailsTemplate() {
     }
   };
 
-  console.log(data);
-
   return (
     <div className="min-h-screen bg-gray-100 p-8">
       <PatientDetailsHeader data={data ? data[0] : null} back_path="/patients/add-diagnoses" />

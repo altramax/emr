@@ -139,8 +139,6 @@ export default function LabOrders({ data }: dataType) {
     }
   };
 
-  console.log(orderData);
-
   return (
     <form onSubmit={handleSubmit(submitForm)}>
       {renderConfirmationModal()}

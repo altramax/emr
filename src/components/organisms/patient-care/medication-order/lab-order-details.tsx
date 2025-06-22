@@ -116,6 +116,7 @@ const LabOrderDetails = ({ data, refetch }: vitalsType) => {
           toast.success('Test results updated successfully');
           handleIsConfirmationModalOpen();
         }
+        console.log('enter update');
       } else {
         await insertLabResult();
         if (error) {
@@ -163,6 +164,9 @@ const LabOrderDetails = ({ data, refetch }: vitalsType) => {
     : { label: 'Pending', value: 'pending' };
 
   const changeFormInView = (formKey: string) => {
+    // if(values?.submit_status !== 'pending')
+
+    //change this status to pick the actual status
     reset({ ...formDefaultObj[formKey], status: initialStatus });
     setCurrentForm(formKey);
   };
@@ -197,7 +201,6 @@ const LabOrderDetails = ({ data, refetch }: vitalsType) => {
             const formKey = item.replace(/\s+/g, '').toLowerCase();
             const status: any =
               data?.task_result && Object.entries(data?.task_result).find(([key]) => key === item);
-
             return (
               <button
                 key={`${formKey}-${index}`}

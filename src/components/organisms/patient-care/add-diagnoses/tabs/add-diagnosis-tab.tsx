@@ -27,7 +27,6 @@ export default function AddDiagnosisTab({ data }: dataType) {
   ];
 
   console.log(data);
-
   return (
     <div className="w-full">
       <div className="flex gap-4 items-center justify-start w-[50%] mb-4">

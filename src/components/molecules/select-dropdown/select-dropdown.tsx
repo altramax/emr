@@ -113,10 +113,10 @@ export default function SelectDropdown({
             }
           >
             {currentValue
-              ? currentValue?.map((item: Option) => {
+              ? currentValue?.map((item: Option, index: number) => {
                   return (
                     <div
-                      key={item.value}
+                      key={index + 1}
                       className="flex justify-between items-center border rounded-sm px-3 py-1 w-full "
                     >
                       <span key={item.value} className="w-full text-nowrap">

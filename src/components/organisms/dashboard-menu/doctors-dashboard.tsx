@@ -2,7 +2,16 @@
 import { useRouter, usePathname } from 'next/navigation';
 import { useEffect } from 'react';
 import Button from '../../atoms/button/button';
-import { Minus, Activity, CirclePlay, User, Stethoscope, FlaskConical } from 'lucide-react';
+import {
+  Minus,
+  Activity,
+  CirclePlay,
+  User,
+  Stethoscope,
+  Microscope,
+  Pill,
+  HandCoins,
+} from 'lucide-react';
 import Notification from '../../molecules/notification/notification';
 import { useDiagnosesAlertStore } from '@/src/store/diagnoses-alert-store copy';
 import { useGetDiagnoses } from '@/src/hooks/diagnoses/use-get-diagnoses';
@@ -130,7 +139,7 @@ export default function DoctorsDashboard({ isOpen }: nursesDashboardType) {
             onClick={() => handleClick('patients/lab-order')}
             className={`relative ${pathname?.includes('patients/lab-order') ? 'bg-blue-500' : ''} flex items-center gap-2 hover:bg-blue-500 p-2 rounded w-full text-left`}
           >
-            <FlaskConical size={18} />
+            <Microscope size={18} />
             <span className={` ${isOpen ? '' : 'hidden '}`}> Lab order</span>
             <span
               className={` ${isOpen ? 'relative bottom-0 left-0' : 'absolute bottom-8 left-4 '} `}
@@ -146,11 +155,29 @@ export default function DoctorsDashboard({ isOpen }: nursesDashboardType) {
           </span>
 
           <button
-            onClick={() => handleClick('patients/inpatient')}
-            className={`relative ${pathname?.includes('patients/inpatient') ? 'bg-blue-500' : ''} flex items-center gap-2 hover:bg-blue-500 p-2 rounded w-full text-left`}
+            onClick={() => handleClick('patients/medication-order')}
+            className={`relative ${pathname?.includes('patients/medication-order') ? 'bg-blue-500' : ''} flex items-center gap-2 hover:bg-blue-500 p-2 rounded w-full text-left`}
           >
-            <Activity size={18} />
-            <span className={` ${isOpen ? '' : 'hidden '}`}> Inpatients</span>
+            <Pill size={18} />
+            <span className={` ${isOpen ? '' : 'hidden '}`}> Medication order</span>
+            <span
+              className={` ${isOpen ? 'relative bottom-0 left-0' : 'absolute bottom-8 left-4 '} `}
+            >
+              {/* <Notification count={3} />{' '} */}
+            </span>
+          </button>
+        </div>
+        <div className="flex items-center ">
+          <span className={` ${isOpen ? '' : 'hidden '}`}>
+            <Minus size={18} />
+          </span>
+
+          <button
+            onClick={() => handleClick('bill-payment')}
+            className={`relative ${pathname?.includes('bill-payment') ? 'bg-blue-500' : ''} flex items-center gap-2 hover:bg-blue-500 p-2 rounded w-full text-left`}
+          >
+            <HandCoins size={18} />
+            <span className={` ${isOpen ? '' : 'hidden '}`}>Bill Payment</span>
             <span
               className={` ${isOpen ? 'relative bottom-0 left-0' : 'absolute bottom-8 left-4 '} `}
             >

@@ -6,6 +6,7 @@ import { useEffect } from 'react';
 import Button from '../../atoms/button/button';
 import DoctorsDashboard from '../../organisms/dashboard-menu/doctors-dashboard';
 import RecordsDashboard from '../../organisms/dashboard-menu/records-dashboard';
+import AdminDashboard from '../../organisms/dashboard-menu/admin-dashboard';
 import { Expand, Minimize, LogOut } from 'lucide-react';
 
 import { Logout } from '@/src/hooks/user/logout';
@@ -59,6 +60,7 @@ export default function DashboardMenu({ isNavOpen, expandNavHandler }: dashboard
       {/* <NursesDashboard isOpen={isNavOpen} /> */}
       <DoctorsDashboard isOpen={isNavOpen} />
       <RecordsDashboard isOpen={isNavOpen} />
+      <AdminDashboard isOpen={isNavOpen} />
       {/* <DashboardMen /> */}
 
       <div className={`${isNavOpen ? 'w-[80%]' : ''} border-t border-gray-500 mt-auto`}>
