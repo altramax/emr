@@ -1,4 +1,4 @@
-import AddVitalsTemplate from '@/src/components/templates/patient-care/add-vitals/add-vitals-template';
+import AddVitalsTemplate from '@/src/components/templates/add-vitals/add-vitals-template';
 
 export default function Page() {
   return <AddVitalsTemplate />;

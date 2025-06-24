@@ -1,6 +1,6 @@
 'use client';
 
-import { Minus, UserRoundPlusIcon, Shield, UserSearch } from 'lucide-react';
+import { Minus, UserRoundPlusIcon, Shield, UserSearch, Users } from 'lucide-react';
 import { useRouter, usePathname } from 'next/navigation';
 import { useEffect } from 'react';
 import { useDiagnosesAlertStore } from '@/src/store/diagnoses-alert-store copy';
@@ -104,25 +104,25 @@ export default function AdminDashboard({ isOpen }: nursesDashboardType) {
           </button>
         </div>
 
-        {/* <div className="flex items-center ">
+        <div className="flex items-center ">
           <span className={` ${isOpen ? '' : 'hidden'}`}>
             <Minus size={18} />
           </span>
 
           <button
-            onClick={() => handleClick('medical-records')}
-            className={`relative ${pathname?.includes('/medical-records') ? 'bg-blue-500' : ''} flex items-center gap-2 hover:bg-blue-500 p-2 rounded w-full text-left`}
+            onClick={() => handleClick('admin/departments')}
+            className={`relative ${pathname?.includes('/admin/departments') ? 'bg-blue-500' : ''} flex items-center gap-2 hover:bg-blue-500 p-2 rounded w-full text-left`}
           >
-            <FolderHeart size={18} />
+            <Users size={18} />
 
-            <span className={` ${isOpen ? '' : 'hidden'}`}> Medical Records</span>
+            <span className={` ${isOpen ? '' : 'hidden'}`}> Departments</span>
             <span
               className={` ${isOpen ? 'relative bottom-0 left-0' : 'absolute bottom-8 left-4 '} `}
             >
-              <Notification count={3} />{' '}
+              {/* <Notification count={3} />{' '} */}
             </span>
           </button>
-        </div> */}
+        </div>
       </div>
     </nav>
   );

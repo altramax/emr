@@ -53,7 +53,7 @@ export default function SelectDropdown({
     if (defaultValue) {
       field.onChange(defaultValue);
     }
-  }, [defaultValue]);
+  }, []);
 
   const handleChangesingle = (val: Option | null) => {
     field.onChange(val);

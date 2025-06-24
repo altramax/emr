@@ -7,8 +7,8 @@ import { useEffect } from 'react';
 import { useInsertVisit } from '@/src/hooks/visits/use-insert-visit';
 import { useGetVisit } from '@/src/hooks/visits/use-get-visit';
 import Button from '../../atoms/button/button';
-import LoadingBar from '../../atoms/loading-bar/loading-bar';
-import PatientInfoRow from '../../molecules/record/patient-info-row';
+import Loading from '@/src/components/atoms/loading-bar/loading-bar-page';
+import PatientInfoRow from '../../molecules/patient-info-row/patient-info-row';
 
 const StartConsultationTemplate = () => {
   const router = useRouter();
@@ -58,7 +58,7 @@ const StartConsultationTemplate = () => {
     }
   };
 
-  if (loading) return <LoadingBar />;
+  if (loading) return <Loading />;
 
   return (
     <div className="px-10 py-4 flex flex-col gap-4 bg-white rounded-xl shadow-md border border-gray-100">

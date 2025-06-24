@@ -1,5 +1,5 @@
 import { useGetLabResults } from '@/src/hooks/lab-test-result/use-get-lab-result';
-import Loading from '@/src/components/atoms/loading-bar/loading-bar';
+import Loading from '@/src/components/atoms/loading-bar/loading-bar-page';
 import { useEffect } from 'react';
 import ResultsDropdown from '@/src/components/molecules/results-dropdown/results_dropdown';
 

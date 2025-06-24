@@ -1,7 +1,7 @@
 import { useRouter } from 'next/navigation';
 
 import { ArrowLeft, User2 } from 'lucide-react';
-import PatientInfoRow from '../../molecules/record/patient-info-row';
+import PatientInfoRow from '../../molecules/patient-info-row/patient-info-row';
 import CalculateAge from '../../atoms/calculate-age/calculate-age';
 
 type PatientInfoRowProps = {

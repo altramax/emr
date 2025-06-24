@@ -4,7 +4,7 @@ import { useEffect } from 'react';
 import PatientDetailsHeader from '@/src/components/organisms/patient-care/patient-care-details-header';
 import { useGetTasks } from '@/src/hooks/task/use-get-tasks';
 import { useParams } from 'next/navigation';
-import LoadingBar from '@/src/components/atoms/loading-bar/loading-bar';
+import Loading from '@/src/components/atoms/loading-bar/loading-bar-page';
 import LabOrderDetails from '@/src/components/organisms/patient-care/lab-order/lab-order-details';
 
 export default function LabOrderDetailsTemplate() {
@@ -23,7 +23,7 @@ export default function LabOrderDetailsTemplate() {
 
   const pageData = data ? data[0] : null;
 
-  if (loading) return <LoadingBar />;
+  if (loading) return <Loading />;
 
   return (
     <div className="min-h-screen bg-gray-100 p-4">

@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import PatientDetailsHeader from '@/src/components/organisms/patient-care/patient-care-details-header';
 import { useGetDiagnoses } from '@/src/hooks/diagnoses/use-get-diagnoses';
 import { useParams } from 'next/navigation';
-import LoadingBar from '@/src/components/atoms/loading-bar/loading-bar';
+import Loading from '@/src/components/atoms/loading-bar/loading-bar-page';
 import AddDiagnosisTab from '@/src/components/organisms/patient-care/add-diagnoses/tabs/add-diagnosis-tab';
 import Button from '@/src/components/atoms/button/button';
 import OrdersTab from '@/src/components/organisms/patient-care/add-diagnoses/tabs/orders-tab';
@@ -27,7 +27,7 @@ export default function AddDiagnosesDetailsTemplate() {
     getDiagnoses();
   }, []);
 
-  if (loading) return <LoadingBar />;
+  if (loading) return <Loading />;
 
   const tabs = [
     { name: 'Add Diagnosis', icon: <Stethoscope size={18} /> },

@@ -1,7 +1,7 @@
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import { useGetTasks } from '@/src/hooks/task/use-get-tasks';
-import Loading from '@/src/components/atoms/loading-bar/loading-bar';
+import Loading from '@/src/components/atoms/loading-bar/loading-bar-page';
 
 import VitalsDropdown from '@/src/components/molecules/vitals-dropdown/vitals_dropdown';
 

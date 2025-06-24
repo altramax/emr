@@ -11,7 +11,7 @@ export default function StaffTable({ patients }: StaffTableProps) {
   const router = useRouter();
 
   const navigateToPatientDetails = (id: string) => {
-    router.push(`records/${id}`);
+    router.push(`/admin/staff/${id}`);
   };
 
   return (

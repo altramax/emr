@@ -2,29 +2,28 @@ import { createClient } from '../../utils/supabase/client';
 import { useState } from 'react';
 
 type getDataType = {
-  select: string;
   /* eslint-disable  @typescript-eslint/no-explicit-any */
-  patient_id?: any;
-  visit_id?: any;
+  staff_id?: any;
+  select?: string;
 };
 
-export const useGetLabResults = ({ select, patient_id, visit_id }: getDataType) => {
+export const useGetStaff = ({ staff_id, select }: getDataType) => {
   const supabase = createClient();
   /* eslint-disable  @typescript-eslint/no-explicit-any */
   const [data, setData] = useState<any>(null);
   const [error, setError] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
-  const getLabResult = async () => {
+  const getStaff = async () => {
     try {
       setLoading(true);
-      let query = supabase.from('lab_test_results').select(select).range(0, 10);
+      let query = supabase
+        .from('staff')
+        .select(select ?? '*')
+        .range(0, 10);
 
-      if (patient_id) {
-        query = query.eq('patient_id', patient_id);
-      }
-      if (visit_id) {
-        query = query.eq('visit_id', visit_id);
+      if (staff_id) {
+        query = query.eq('id', staff_id);
       }
 
       const { data: response, error: fetchError } = await query;
@@ -33,16 +32,18 @@ export const useGetLabResults = ({ select, patient_id, visit_id }: getDataType) 
       } else {
         setData(response);
       }
+      return;
     } catch (err) {
       setError(err);
+      return;
     } finally {
       setLoading(false);
     }
   };
 
   const refetch = () => {
-    getLabResult();
+    getStaff();
   };
 
-  return { getLabResult, error, loading, data, refetch };
+  return { getStaff, error, loading, data, refetch };
 };

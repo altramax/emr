@@ -4,7 +4,7 @@ import { useEffect } from 'react';
 import PatientDetailsHeader from '@/src/components/organisms/patient-care/patient-care-details-header';
 import { useGetTasks } from '@/src/hooks/task/use-get-tasks';
 import { useParams, useSearchParams } from 'next/navigation';
-import LoadingBar from '@/src/components/atoms/loading-bar/loading-bar';
+import LoadingBar from '@/src/components/atoms/loading-bar/loading-bar-page';
 import AddVitals from '@/src/components/organisms/patient-care/add-vitals/add-vitals-details';
 import { HeartPulse } from 'lucide-react';
 import { useGetVisit } from '@/src/hooks/visits/use-get-visit';

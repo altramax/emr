@@ -11,7 +11,7 @@ import RenderForm from './test/render-test-form';
 import { useInsertLabResult } from '@/src/hooks/lab-test-result/use-insert-lab-result';
 import { useQueryLabResult } from '@/src/hooks/lab-test-result/use-query-lab-result';
 import dayjs from 'dayjs';
-import Loading from '@/src/components/atoms/loading-bar/loading-bar';
+import Loading from '@/src/components/atoms/loading-bar/loading-bar-section';
 import StatusBar from '@/src/components/molecules/status-bar/status-bar';
 import { useUpdateLabResult } from '@/src/hooks/lab-test-result/use-update-lab-result';
 import {
@@ -167,7 +167,7 @@ const LabOrderDetails = ({ data, refetch }: vitalsType) => {
     setCurrentForm(formKey);
   };
 
-  console.log(queryData);
+  // console.log(queryData);
 
   return (
     <div className="flex flex-col md:flex-row gap-6 max-w-7xl mx-auto">

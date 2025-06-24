@@ -1,29 +1,28 @@
 import { createClient } from '../../utils/supabase/client';
 import { useState } from 'react';
 
-type getDataType = {
-  /* eslint-disable  @typescript-eslint/no-explicit-any */
-  columns: any;
-  id: string;
+type GetDataType = {
+  name?: string;
 };
 
-export const useUpdateLabResult = ({ columns, id }: getDataType) => {
+export const useQueryDepartment = ({ name }: GetDataType) => {
   const supabase = createClient();
   /* eslint-disable  @typescript-eslint/no-explicit-any */
   const [data, setData] = useState<any>(null);
+  /* eslint-disable  @typescript-eslint/no-explicit-any */
   const [error, setError] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
-  const updateLabResult = async () => {
+  const queryDepartment = async () => {
     try {
       setLoading(true);
+      let query = supabase.from('departments').select('*');
 
-      const { data: response, error } = await supabase
-        .from('lab_test_results')
-        .update(columns)
-        .eq('id', id)
-        .select();
+      if (name) {
+        query = query.or(`name.ilike.%${name}%`);
+      }
 
+      const { data: response, error } = await query;
       if (error) {
         setError(error);
       } else {
@@ -36,5 +35,13 @@ export const useUpdateLabResult = ({ columns, id }: getDataType) => {
     }
   };
 
-  return { updateLabResult, error, loading, data };
+  const clearData = () => {
+    setData(null);
+  };
+
+  const refetch = () => {
+    queryDepartment();
+  };
+
+  return { queryDepartment, error, loading, data, clearData, refetch };
 };

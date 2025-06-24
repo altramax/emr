@@ -1,41 +1,41 @@
 import { createClient } from '../../utils/supabase/client';
 import { useState } from 'react';
 
-// type dataType = Record<string, string>;
-
 type getDataType = {
-  tableName: string;
   /* eslint-disable  @typescript-eslint/no-explicit-any */
   columns: any;
-
-  /* eslint-disable  @typescript-eslint/no-explicit-any */
-  id?: any;
 };
 
-export const useInsertTask = ({ tableName, columns }: getDataType) => {
+export const useInsertDepartment = ({ columns }: getDataType) => {
   const supabase = createClient();
   /* eslint-disable  @typescript-eslint/no-explicit-any */
   const [data, setData] = useState<any>(null);
   const [error, setError] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
-  const insertTask = async () => {
+  const insertDepartment = async () => {
     try {
       setLoading(true);
 
-      const { data: response } = await supabase.from(tableName).insert([columns]).select();
+      const {
+        data: response,
+        error: insertError,
+        status,
+      } = await supabase.from('departments').insert([columns]);
 
-      setData(response);
-      setLoading(false);
+      console.log(status);
+      console.log(error);
+      if (insertError || status >= 400) {
+        setError(insertError);
+      } else {
+        setData(response);
+      }
     } catch (err) {
       setError(err);
+    } finally {
       setLoading(false);
     }
   };
 
-  const refetch = () => {
-    insertTask();
-  };
-
-  return { insertTask, error, loading, data, refetch };
+  return { insertDepartment, error, loading, data };
 };

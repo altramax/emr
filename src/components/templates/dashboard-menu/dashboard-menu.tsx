@@ -27,9 +27,9 @@ export default function DashboardMenu({ isNavOpen, expandNavHandler }: dashboard
 
   return (
     <aside
-      className={`${isNavOpen ? 'w-full px-5  items-start' : 'w-14  items-center'} transition-all duration-400 ease-in-out no-scrollbar overflow-auto h-full min-h-screen bg-blue-600 text-sm text-white pt-4 pb-9 flex flex-col justify-start`}
+      className={`${isNavOpen ? 'w-full px-5  items-start' : 'w-14  items-center'} transition-all duration-400 ease-in-out no-scrollbar overflow-auto h-full min-h-screen bg-blue-600 text-sm text-white pb-9 flex flex-col justify-start`}
     >
-      <div className="relative flex gap-2 items-center mt-2 mb-6">
+      <div className="bg-blue-600 z-50 sticky top-0 pt-5  flex gap-2 items-center mt-2 mb-6">
         <div className="bg-white text-blue-600 rounded flex items-center justify-center p-2 pt-0 px-1">
           <svg
             width="25"
@@ -52,7 +52,7 @@ export default function DashboardMenu({ isNavOpen, expandNavHandler }: dashboard
               {isNavOpen && <Minimize size={23} />}
             </>
           }
-          className={`w-fit hover:bg-blue-500 p-1 rounded ${isNavOpen ? 'top-0' : 'absolute top-12 '}`}
+          className={`w-fit hover:bg-blue-500 p-1 rounded ${isNavOpen ? 'top-0' : 'absolute top-16 bg-blue-600 z-50'}`}
           onClick={expandNavHandler}
         />
       </div>

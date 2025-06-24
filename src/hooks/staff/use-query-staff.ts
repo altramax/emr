@@ -4,9 +4,10 @@ import { useState } from 'react';
 type GetDataType = {
   select: string;
   name?: string;
+  staff_id?: string;
 };
 
-export const useQueryStaff = ({ select, name }: GetDataType) => {
+export const useQueryStaff = ({ select, name, staff_id }: GetDataType) => {
   const supabase = createClient();
   /* eslint-disable  @typescript-eslint/no-explicit-any */
   const [data, setData] = useState<any>(null);
@@ -18,15 +19,21 @@ export const useQueryStaff = ({ select, name }: GetDataType) => {
     try {
       setLoading(true);
 
-      const query = supabase
+      let query = supabase
         .from('staff')
-        .select(select)
-        .or(`first_name.ilike.%${name}%,last_name.ilike.%${name}`)
+        .select(select ?? '*')
         .range(0, 10);
-
+      if (staff_id) {
+        query = query.eq('staff_id', staff_id);
+      }
       if (name) {
-        const { data: response } = await query;
-        return setData(response);
+        query.or(`first_name.ilike.%${name}%,last_name.ilike.%${name}`);
+      }
+      const { data, error } = await query;
+      if (error) {
+        setError(error);
+      } else {
+        setData(data);
       }
     } catch (err) {
       setError(err);
