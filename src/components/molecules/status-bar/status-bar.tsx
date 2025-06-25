@@ -9,7 +9,8 @@ type StatusBarProps = {
     | 'on_leave'
     | 'suspended'
     | 'resigned'
-    | 'terminated';
+    | 'terminated'
+    | 'deactivated';
 };
 
 export default function StatusBar({ status }: StatusBarProps) {
@@ -73,6 +74,12 @@ export default function StatusBar({ status }: StatusBarProps) {
           </div>
         );
 
+      case 'deactivated':
+        return (
+          <div className="bg-red-100 text-red-700 rounded-full px-2 py-1 text-xs w-fit ">
+            Deactivated
+          </div>
+        );
       default:
         return (
           <div className="bg-gray-100 text-black rounded-full px-2 py-1 text-xs w-fit ">

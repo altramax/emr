@@ -48,7 +48,7 @@ export default function StaffEmploymentInfo() {
   const validateFields = async () => {
     const isValid = await trigger([
       'role',
-      'department_id',
+      'department',
       'job_title',
       'employment_type',
       'date_hired',
@@ -71,7 +71,7 @@ export default function StaffEmploymentInfo() {
     /* eslint-disable  @typescript-eslint/no-explicit-any */
     const options = data
       ? data?.map((items: any) => {
-          return { label: items?.name, value: items?.name };
+          return { label: items?.name, value: items?.id };
         })
       : [];
 

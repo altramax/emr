@@ -2,7 +2,7 @@ import { createClient } from '../../utils/supabase/client';
 import { useState } from 'react';
 
 type GetDataType = {
-  select: string;
+  select?: string;
   name?: string;
   staff_id?: string;
 };
@@ -23,8 +23,9 @@ export const useQueryStaff = ({ select, name, staff_id }: GetDataType) => {
         .from('staff')
         .select(select ?? '*')
         .range(0, 10);
+
       if (staff_id) {
-        query = query.eq('staff_id', staff_id);
+        query = query.eq('id', staff_id);
       }
       if (name) {
         query.or(`first_name.ilike.%${name}%,last_name.ilike.%${name}`);
@@ -46,5 +47,9 @@ export const useQueryStaff = ({ select, name, staff_id }: GetDataType) => {
     setData(null);
   };
 
-  return { queryStaff, error, loading, data, clearData };
+  const refetch = () => {
+    queryStaff();
+  };
+
+  return { queryStaff, error, loading, data, clearData, refetch };
 };

@@ -1,6 +1,6 @@
 'use client';
 
-import { Minus, UserRoundPlusIcon, Shield, UserSearch, Users } from 'lucide-react';
+import { Minus, UserRoundPlusIcon, Shield, UserSearch, Boxes } from 'lucide-react';
 import { useRouter, usePathname } from 'next/navigation';
 import { useEffect } from 'react';
 import { useDiagnosesAlertStore } from '@/src/store/diagnoses-alert-store copy';
@@ -113,7 +113,7 @@ export default function AdminDashboard({ isOpen }: nursesDashboardType) {
             onClick={() => handleClick('admin/departments')}
             className={`relative ${pathname?.includes('/admin/departments') ? 'bg-blue-500' : ''} flex items-center gap-2 hover:bg-blue-500 p-2 rounded w-full text-left`}
           >
-            <Users size={18} />
+            <Boxes size={18} />
 
             <span className={` ${isOpen ? '' : 'hidden'}`}> Departments</span>
             <span

@@ -23,20 +23,21 @@ export default function StaffReviewStep() {
     marital_status: values?.marital_status?.value,
     role: values?.role?.value,
     employment_type: values?.employment_type?.value,
-    department: values?.department?.value,
+    department: values?.department?.label,
+    department_id: values?.department?.value,
   };
 
   const { insertStaff, error } = useInsertStaff({ columns: staffData });
 
   const submitForm = async () => {
-    console.log(staffData);
     try {
       await insertStaff();
       if (error) {
         toast.error(error?.message || 'Failed to add staff');
       } else {
         toast.success('Staff added successfully');
-        router.push('admin/staff');
+        setStep(1);
+        router.push('/admin/staff');
       }
     } catch (err) {
       console.error(err);

@@ -6,7 +6,7 @@ import { useEffect } from 'react';
 import Button from '../../atoms/button/button';
 import LoadingBar from '../../atoms/loading-bar/loading-bar-page';
 import StaffInfoRow from '../../molecules/staff-info-row/staff-info-row';
-import { useGetStaff } from '@/src/hooks/staff/use-get-staff';
+import { useQueryStaff } from '@/src/hooks/staff/use-query-staff';
 import { useUpdateStaff } from '@/src/hooks/staff/use-update-staff';
 import SelectDropdown from '../../molecules/select-dropdown/select-dropdown';
 import { useForm, useWatch } from 'react-hook-form';
@@ -20,7 +20,9 @@ type StaffStatusForm = {
 const StaffDetailsTemplate = () => {
   const router = useRouter();
   const param = useParams();
-  const id = param?.detailsId ?? '';
+  /* eslint-disable  @typescript-eslint/no-explicit-any */
+  const id: any = param?.detailsId ?? '';
+
   const statusOptions = [
     { label: 'Active', value: 'active' },
     { label: 'On Leave', value: 'on_leave' },
@@ -29,7 +31,7 @@ const StaffDetailsTemplate = () => {
     { label: 'Terminated', value: 'terminated' },
   ];
 
-  const { getStaff, data, loading, refetch } = useGetStaff({
+  const { queryStaff, data, loading, refetch } = useQueryStaff({
     staff_id: id,
   });
 
@@ -66,7 +68,7 @@ const StaffDetailsTemplate = () => {
   };
 
   useEffect(() => {
-    getStaff();
+    queryStaff();
   }, []);
 
   useEffect(() => {

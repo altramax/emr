@@ -3,11 +3,11 @@ import { useState } from 'react';
 
 type getDataType = {
   /* eslint-disable  @typescript-eslint/no-explicit-any */
-  staff_id?: any;
+  department_id?: any;
   select?: string;
 };
 
-export const useGetStaff = ({ staff_id, select }: getDataType) => {
+export const useGetStaff = ({ department_id, select }: getDataType) => {
   const supabase = createClient();
   /* eslint-disable  @typescript-eslint/no-explicit-any */
   const [data, setData] = useState<any>(null);
@@ -22,8 +22,8 @@ export const useGetStaff = ({ staff_id, select }: getDataType) => {
         .select(select ?? '*')
         .range(0, 10);
 
-      if (staff_id) {
-        query = query.eq('id', staff_id);
+      if (department_id) {
+        query = query.eq('department_id', department_id);
       }
 
       const { data: response, error: fetchError } = await query;

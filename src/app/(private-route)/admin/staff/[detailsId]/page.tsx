@@ -1,4 +1,4 @@
-import StaffDetailsTemplate from '@/src/components/templates/admin/staff-details-template';
+import StaffDetailsTemplate from '@/src/components/templates/staff/staff-details-template';
 
 export default function Page() {
   return (

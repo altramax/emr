@@ -3,9 +3,10 @@ import { useState } from 'react';
 
 type GetDataType = {
   name?: string;
+  id?: string;
 };
 
-export const useQueryDepartment = ({ name }: GetDataType) => {
+export const useQueryDepartment = ({ name, id }: GetDataType) => {
   const supabase = createClient();
   /* eslint-disable  @typescript-eslint/no-explicit-any */
   const [data, setData] = useState<any>(null);
@@ -20,6 +21,10 @@ export const useQueryDepartment = ({ name }: GetDataType) => {
 
       if (name) {
         query = query.or(`name.ilike.%${name}%`);
+      }
+
+      if (id) {
+        query = query.eq('id', id);
       }
 
       const { data: response, error } = await query;

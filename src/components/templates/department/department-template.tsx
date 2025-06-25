@@ -9,7 +9,7 @@ import { useQueryDepartment } from '@/src/hooks/departments/use-query-department
 import EmptyState from '@/src/components/molecules/empty-state/empty-state';
 import Button from '@/src/components/atoms/button/button';
 import DepartmentTable from '../../organisms/admin/department-table';
-import AddDepartmentModal from '../admin/add-department';
+import AddDepartmentModal from '../../organisms/admin/add-department';
 
 export default function DepartmentTemplate() {
   const [name, setName] = useState('');

@@ -1,5 +1,6 @@
 import Avatar from '@/src/components/atoms/Avatar/Avatar';
 import StatusBar from '@/src/components/molecules/status-bar/status-bar';
+import { useRouter } from 'next/navigation';
 
 interface PatientCareTableProps {
   /* eslint-disable  @typescript-eslint/no-explicit-any */
@@ -7,12 +8,19 @@ interface PatientCareTableProps {
 }
 
 export default function DepartmentTable({ departments }: PatientCareTableProps) {
+  const router = useRouter();
+
+  const navigateTodeptDetails = (id: string) => {
+    router.push(`/admin/departments/${id}`);
+  };
+
   return (
     <table className="w-full border-collapse">
       <thead>
         <tr className="bg-gray-100 text-left text-xs text-gray-600 w-full">
           <th className="px-4 py-2">Name</th>
           <th className="px-4 py-2">Description</th>
+          <th className="px-4 py-2">Staff added</th>
           <th className="px-4 py-2 text-center">Status</th>
         </tr>
       </thead>
@@ -21,7 +29,7 @@ export default function DepartmentTable({ departments }: PatientCareTableProps) 
           <tr
             key={index + 1}
             className="border-b text-xs cursor-pointer"
-            // onClick={() => navigateTodeptDetails(dept?.dept?.id)}
+            onClick={() => navigateTodeptDetails(dept?.id)}
           >
             <td className="p-4 flex items-center gap-4">
               {departments && <Avatar firstname={dept?.name} size={2} />}
@@ -29,6 +37,7 @@ export default function DepartmentTable({ departments }: PatientCareTableProps) 
             </td>
 
             <td className="p-4 truncate">{dept?.description}</td>
+            <td className="p-4">{dept?.staff_count}</td>
             <td className="p-4">
               <div className="flex item-center justify-center">
                 <StatusBar status={dept?.status} />
