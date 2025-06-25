@@ -2,7 +2,7 @@ import DepartmentDetailsPage from '@/src/components/templates/department/departm
 
 export default function Page() {
   return (
-    <div className="min-h-screen bg-white p-6">
+    <div className="min-h-screen bg-gray-100 p-6">
       <DepartmentDetailsPage />
     </div>
   );

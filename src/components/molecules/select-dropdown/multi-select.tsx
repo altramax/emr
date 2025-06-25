@@ -3,6 +3,7 @@ import { Check } from 'lucide-react';
 type Option = {
   value: string;
   label: string;
+  isDeactivated?: boolean;
 };
 
 type singleSelect = {
@@ -31,10 +32,10 @@ export default function MultiSelect({ isOpen, options, selected, onChange }: sin
           key={option.value ?? 'no-value'}
           className={`hover:bg-blue-50 px-3 py-2 cursor-pointer flex items-center justify-start mb-2 ${
             filteredOptions(option) ? 'bg-blue-50 text-blue-700' : 'text-gray-900'
-          }`}
+          } ${option?.isDeactivated ? 'text-black bg-gray-300 opacity-70' : ''}`}
         >
           <option
-            onClick={() => onChange(option)}
+            onClick={() => !option?.isDeactivated && onChange(option)}
             aria-selected={filteredOptions(option)}
             className="w-full"
           >

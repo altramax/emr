@@ -15,7 +15,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           <DashboardMenu isNavOpen={isNavOpen} expandNavHandler={expandNavHandler} />
         </div>
         <div
-          className={`${isNavOpen ? 'w-[95%] lg:w-[77%] xl:w-[82%]' : 'w-[95%] lg:w-[95%] xl:w-[96%]'} transition-all duration-400 ease-in-out relative ml-auto overflow-auto`}
+          className={`${isNavOpen ? 'w-[95%] lg:w-[77%] xl:w-[83%]' : 'w-[95%] lg:w-[95%] xl:w-[96%]'} transition-all duration-400 ease-in-out relative ml-auto overflow-auto`}
         >
           {children}
         </div>

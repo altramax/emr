@@ -71,7 +71,11 @@ export default function StaffEmploymentInfo() {
     /* eslint-disable  @typescript-eslint/no-explicit-any */
     const options = data
       ? data?.map((items: any) => {
-          return { label: items?.name, value: items?.id };
+          return {
+            label: items?.name,
+            value: items?.id,
+            isDeactivated: items?.status !== 'active',
+          };
         })
       : [];
 

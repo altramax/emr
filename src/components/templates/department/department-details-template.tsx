@@ -86,20 +86,20 @@ const DepartmentDetailsPage = () => {
   return (
     <>
       {renderEditModal()}
-      <div className="px-4 py-4 bg-white">
+      <div className=" m-auto p-5 bg-white rounded-xl shadow-sm">
         <div className="flex items-center justify-between mb-6 border-b pb-3">
           <button
             onClick={() => router.push('/admin/departments')}
             className="flex items-center text-blue-600 hover:text-blue-700 gap-2 text-sm"
           >
-            <ArrowLeft size={18} /> Back
+            <ArrowLeft size={18} /> Back to departments
           </button>
         </div>
 
         <div className="flex items-center justify-between  gap-16">
           <div className="flex items-end gap-20">
             <div>
-              <h2 className="text-lg font-semibold text-gray-800 mb-1">{deptInfo?.name}</h2>
+              <h2 className="text-xl font-semibold text-gray-900 mb-1">{deptInfo?.name}</h2>
               <p className="text-xs text-gray-500">{deptInfo?.description}</p>
             </div>
             <StatusBar status={deptInfo?.status ?? 'unavailable'} />
@@ -120,8 +120,10 @@ const DepartmentDetailsPage = () => {
           </div>
         </div>
 
-        <div className="mt-6">
-          <h3 className="text-sm font-medium text-gray-700 mb-3">Staffs</h3>
+        <div className="mt-8">
+          <h3 className="text-sm font-medium text-gray-700 mb-4">
+            Staffs assigned to this department
+          </h3>
           <div>
             {staffData && staffData.length > 0 ? (
               staffData.map((staff: Record<string, string>, index: number) => (
