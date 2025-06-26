@@ -3,9 +3,9 @@
 import { Minus, FileChartColumn, UserRoundPlusIcon, CirclePlay, FolderHeart } from 'lucide-react';
 import { useRouter, usePathname } from 'next/navigation';
 import { useEffect } from 'react';
-import { useDiagnosesAlertStore } from '@/src/store/diagnoses-alert-store copy';
-import { useGetDiagnoses } from '@/src/hooks/diagnoses/use-get-diagnoses';
-import { useDiagnosesAlert } from '@/src/hooks/diagnoses/use-diagnoses-alert';
+import { useDiagnosisAlertStore } from '@/src/store/diagnosis-alert-store';
+import { useGetDiagnosis } from '@/src/hooks/diagnosis/use-get-diagnosis';
+import { useDiagnosisAlert } from '@/src/hooks/diagnosis/use-diagnosis-alert';
 import Button from '../../atoms/button/button';
 
 type nursesDashboardType = {
@@ -13,7 +13,7 @@ type nursesDashboardType = {
 };
 
 export default function RecordsDashboard({ isOpen }: nursesDashboardType) {
-  const diagnosesState = useDiagnosesAlertStore((state) => state);
+  const diagnosisState = useDiagnosisAlertStore((state) => state);
   const pathname = usePathname();
   const router = useRouter();
 
@@ -21,29 +21,29 @@ export default function RecordsDashboard({ isOpen }: nursesDashboardType) {
     router.push(`/${item}`);
   };
 
-  const { data: alert } = useDiagnosesAlert();
+  const { data: alert } = useDiagnosisAlert();
 
-  const { getDiagnoses, data } = useGetDiagnoses({
+  const { getDiagnosis, data } = useGetDiagnosis({
     select: '*',
     status: 'pending',
   });
 
   useEffect(() => {
-    getDiagnoses();
+    getDiagnosis();
   }, []);
 
   useEffect(() => {
-    if (diagnosesState?.called === false) {
-      diagnosesState?.setDiagnoses(data);
+    if (diagnosisState?.called === false) {
+      diagnosisState?.setDiagnosis(data);
     }
     if (data?.length > 0) {
-      diagnosesState?.setCalled(true);
+      diagnosisState?.setCalled(true);
     }
   }, [data]);
 
   useEffect(() => {
     if (alert) {
-      diagnosesState.updateVital(alert);
+      diagnosisState.updateVital(alert);
     }
   }, [alert]);
 
@@ -57,7 +57,7 @@ export default function RecordsDashboard({ isOpen }: nursesDashboardType) {
               Records
             </>
           }
-          className={`mb-2 flex items-center justify-between hover:bg-blue-500 p-2 rounded w-full text-left text-sm`}
+          className={`mb-2 flex items-center justify-between p-2 rounded w-full text-left text-sm`}
         />
       </span>
 

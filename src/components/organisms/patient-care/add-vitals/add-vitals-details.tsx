@@ -85,7 +85,7 @@ const AddVitals = ({ data, from }: vitalsType) => {
       if (from) {
         response = await insertTask();
         toast.success('Vitals added successfully');
-        router.push(`/patients/add-diagnoses/${data?.patient?.id}`);
+        router.push(`/patients/add-diagnosis/${data?.patient?.id}`);
       } else {
         response = await updateTask();
         toast.success('Vitals updated successfully');

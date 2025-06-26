@@ -7,11 +7,11 @@ interface PatientCareTableProps {
   patients: Record<string, any>[];
 }
 
-export default function AddDiagnosesTable({ patients }: PatientCareTableProps) {
+export default function AddDiagnosisTable({ patients }: PatientCareTableProps) {
   const router = useRouter();
 
   const navigateToPatientDetails = (id: string) => {
-    router.push(`/patients/add-diagnoses/${id}`);
+    router.push(`/patients/add-diagnosis/${id}`);
   };
 
   const renderStatus = (status: string) => {

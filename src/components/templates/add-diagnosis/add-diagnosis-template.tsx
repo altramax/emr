@@ -1,10 +1,10 @@
 'use client';
 import React, { useEffect, useState } from 'react';
-import AddDiagnosesTable from '@/src/components/organisms/patient-care/add-diagnoses/add-diagnoses-table';
+import AddDiagnosisTable from '@/src/components/organisms/patient-care/add-diagnosis/add-diagnosis-table';
 import Header from '@/src/components/organisms/patients/header';
 import { Search, Loader, XIcon } from 'lucide-react';
 import { useDebounce } from '@/src/hooks/debounce/use-debounce';
-import { useQueryDiagnoses } from '@/src/hooks/diagnoses/use-query-diagnoses';
+import { useQueryDiagnosis } from '@/src/hooks/diagnosis/use-query-diagnosis';
 import EmptyState from '@/src/components/molecules/empty-state/empty-state';
 
 export default function AddDiagnoseTemplate() {
@@ -12,18 +12,18 @@ export default function AddDiagnoseTemplate() {
   const debouncedName = useDebounce(name, 500);
 
   const {
-    queryDiagnoses,
+    queryDiagnosis,
     data: queryData,
     loading,
     clearData,
-  } = useQueryDiagnoses({
+  } = useQueryDiagnosis({
     select: '*',
     name: debouncedName,
     status: 'pending',
   });
 
   useEffect(() => {
-    queryDiagnoses();
+    queryDiagnosis();
   }, [debouncedName]);
 
   /* eslint-disable  @typescript-eslint/no-explicit-any */
@@ -42,7 +42,7 @@ export default function AddDiagnoseTemplate() {
   console.log(queryData);
   return (
     <div className="p-8 bg-white min-h-screen">
-      <Header title=" Diagnose patient" subTitle="Select patient to add diagnoses" />
+      <Header title=" Diagnose patient" subTitle="Select patient to add diagnosis" />
       <div className="flex justify-between items-start mt-6 w-full border-gray-200 pb-4">
         <div className="flex items-center justify-between mb-4 gap-8 w-[50%] relative">
           <input
@@ -75,7 +75,7 @@ export default function AddDiagnoseTemplate() {
       <div className="overflow-x-auto mt-4">
         {!loading &&
           (queryData?.length > 0 ? (
-            <AddDiagnosesTable patients={queryData} />
+            <AddDiagnosisTable patients={queryData} />
           ) : (
             <EmptyState title="No task found" message="No task found for this patient" />
           ))}

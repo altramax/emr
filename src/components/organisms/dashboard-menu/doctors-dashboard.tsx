@@ -13,16 +13,16 @@ import {
   HandCoins,
 } from 'lucide-react';
 import Notification from '../../molecules/notification/notification';
-import { useDiagnosesAlertStore } from '@/src/store/diagnoses-alert-store copy';
-import { useGetDiagnoses } from '@/src/hooks/diagnoses/use-get-diagnoses';
-import { useDiagnosesAlert } from '@/src/hooks/diagnoses/use-diagnoses-alert';
+import { useDiagnosisAlertStore } from '@/src/store/diagnosis-alert-store';
+import { useGetDiagnosis } from '@/src/hooks/diagnosis/use-get-diagnosis';
+import { useDiagnosisAlert } from '@/src/hooks/diagnosis/use-diagnosis-alert';
 
 type nursesDashboardType = {
   isOpen: boolean;
 };
 
 export default function DoctorsDashboard({ isOpen }: nursesDashboardType) {
-  const diagnosesState = useDiagnosesAlertStore((state) => state);
+  const diagnosisState = useDiagnosisAlertStore((state) => state);
   const pathname = usePathname();
   const router = useRouter();
 
@@ -30,29 +30,29 @@ export default function DoctorsDashboard({ isOpen }: nursesDashboardType) {
     router.push(`/${item}`);
   };
 
-  const { data: alert } = useDiagnosesAlert();
+  const { data: alert } = useDiagnosisAlert();
 
-  const { getDiagnoses, data } = useGetDiagnoses({
+  const { getDiagnosis, data } = useGetDiagnosis({
     select: '*',
     status: 'pending',
   });
 
   useEffect(() => {
-    getDiagnoses();
+    getDiagnosis();
   }, []);
 
   useEffect(() => {
-    if (diagnosesState?.called === false) {
-      diagnosesState?.setDiagnoses(data);
+    if (diagnosisState?.called === false) {
+      diagnosisState?.setDiagnosis(data);
     }
     if (data?.length > 0) {
-      diagnosesState?.setCalled(true);
+      diagnosisState?.setCalled(true);
     }
   }, [data]);
 
   useEffect(() => {
     if (alert) {
-      diagnosesState.updateVital(alert);
+      diagnosisState.updateVital(alert);
     }
   }, [alert]);
 
@@ -66,7 +66,7 @@ export default function DoctorsDashboard({ isOpen }: nursesDashboardType) {
               Patient Care
             </>
           }
-          className={`mb-2 flex items-center justify-between hover:bg-blue-500 p-2 rounded w-full text-left text-sm`}
+          className={`mb-2 flex items-center justify-between p-2 rounded w-full text-left text-sm`}
         />
       </span>
 
@@ -96,16 +96,16 @@ export default function DoctorsDashboard({ isOpen }: nursesDashboardType) {
           </span>
 
           <button
-            onClick={() => handleClick('patients/add-diagnoses')}
-            className={`relative ${pathname?.includes('patients/add-diagnoses') ? 'bg-blue-500' : ''} flex items-center gap-2 hover:bg-blue-500 p-2 rounded w-full text-left`}
+            onClick={() => handleClick('patients/add-diagnosis')}
+            className={`relative ${pathname?.includes('patients/add-diagnosis') ? 'bg-blue-500' : ''} flex items-center gap-2 hover:bg-blue-500 p-2 rounded w-full text-left`}
           >
             <Stethoscope size={18} />
-            <span className={` ${isOpen ? '' : 'hidden '}`}>Add Diagnoses</span>
+            <span className={` ${isOpen ? '' : 'hidden '}`}>Add Diagnosis</span>
             <span
               className={` ${isOpen ? 'relative bottom-0 left-0' : 'absolute bottom-8 left-4 '} `}
             >
-              {diagnosesState?.diagnoses?.length > 0 && (
-                <Notification count={diagnosesState?.diagnoses?.length} />
+              {diagnosisState?.diagnosis?.length > 0 && (
+                <Notification count={diagnosisState?.diagnosis?.length} />
               )}
             </span>
           </button>

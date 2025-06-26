@@ -6,37 +6,37 @@ type VitalType = {
   status: string;
 };
 
-type DiagnosesStore = {
-  diagnoses: VitalType[];
+type DiagnosisStore = {
+  diagnosis: VitalType[];
   /* eslint-disable  @typescript-eslint/no-explicit-any */
   updateVital: (vital: any) => void;
-  setDiagnoses: (Diagnoses: VitalType[]) => void;
+  setDiagnosis: (Diagnosis: VitalType[]) => void;
   clear: () => void;
   called: boolean;
   setCalled: (called: boolean) => void;
 };
 
-export const useDiagnosesAlertStore = create(
-  persist<DiagnosesStore>(
+export const useDiagnosisAlertStore = create(
+  persist<DiagnosisStore>(
     (set, get) => ({
-      diagnoses: [],
+      diagnosis: [],
 
       updateVital: (incoming) => {
-        const existing = get().diagnoses;
+        const existing = get().diagnosis;
         const exists = existing.find((v) => v.id === incoming?.id);
 
         if (incoming?.status === 'pending' && !exists) {
           set({
-            diagnoses: [...existing, { id: incoming?.id, status: incoming?.status }],
+            diagnosis: [...existing, { id: incoming?.id, status: incoming?.status }],
           });
         } else if (exists && incoming?.status !== 'pending') {
           set({
-            diagnoses: existing.filter((v) => v.id !== incoming?.id),
+            diagnosis: existing.filter((v) => v.id !== incoming?.id),
           });
         }
       },
       /* eslint-disable  @typescript-eslint/no-explicit-any */
-      setDiagnoses: (incoming: any) => {
+      setDiagnosis: (incoming: any) => {
         /* eslint-disable  @typescript-eslint/no-explicit-any */
         const newEntry = incoming?.map((newItem: any) => {
           return {
@@ -47,16 +47,16 @@ export const useDiagnosesAlertStore = create(
 
         if (newEntry?.length > 0) {
           set({
-            diagnoses: [...newEntry],
+            diagnosis: [...newEntry],
           });
         }
       },
       called: false,
       setCalled: (called: boolean) => set({ called }),
-      clear: () => set({ diagnoses: [] }),
+      clear: () => set({ diagnosis: [] }),
     }),
     {
-      name: 'Diagnoses', // localStorage key
+      name: 'Diagnosis', // localStorage key
     }
   )
 );

@@ -1,7 +1,7 @@
 import { createClient } from '../../utils/supabase/client';
 import { useEffect, useState, useMemo } from 'react';
 
-export const useDiagnosesUpdateAlert = () => {
+export const useDiagnosisUpdateAlert = () => {
   const supabase = createClient();
   /* eslint-disable  @typescript-eslint/no-explicit-any */
   const [data, setData] = useState<any>(null);

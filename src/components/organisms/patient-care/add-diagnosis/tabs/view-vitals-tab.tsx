@@ -47,9 +47,9 @@ export default function ViewVitalsTab({ visit_id, id }: PatientCareTableProps) {
       </button>
       <div>
         {data
-          ? data.map((item: any) => {
+          ? data.map((item: any, index: number) => {
               return (
-                <div key={item?.task_result?.created_at}>
+                <div key={index + 1}>
                   <VitalsDropdown data={item} />
                 </div>
               );

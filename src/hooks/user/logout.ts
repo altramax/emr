@@ -1,13 +1,13 @@
 import { signOutAction } from '@/src/actions/actions';
 import { useRouter } from 'next/navigation';
 import { useVitalsAlertStore } from '@/src/store/vitals-alert-store';
-import { useDiagnosesAlertStore } from '@/src/store/diagnoses-alert-store copy';
+import { useDiagnosisAlertStore } from '@/src/store/diagnosis-alert-store';
 import { toast } from 'react-toastify';
 
 export const Logout = () => {
   const router = useRouter();
   const vital = useVitalsAlertStore((state) => state);
-  const diagnoses = useDiagnosesAlertStore((state) => state);
+  const diagnosis = useDiagnosisAlertStore((state) => state);
 
   const signOut = async () => {
     try {
@@ -15,8 +15,8 @@ export const Logout = () => {
       if (res === 'success') {
         vital?.clear();
         vital?.setCalled(false);
-        diagnoses?.clear();
-        diagnoses?.setCalled(false);
+        diagnosis?.clear();
+        diagnosis?.setCalled(false);
         router.replace('/');
         toast.success('Successfully logged out');
       }

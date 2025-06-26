@@ -68,7 +68,7 @@ export default function DashboardMenu() {
       icon: <HeartPulse size={18} />,
       Notification: <Notification count={vitalState?.vitals?.length} />,
     },
-    { name: 'Add Diagnoses', path: '/patients/add-diagnoses', icon: <Stethoscope size={18} /> },
+    { name: 'Add Diagnosis', path: '/patients/add-diagnosis', icon: <Stethoscope size={18} /> },
     { name: 'Prescriptions', path: '/patients/prescriptions', icon: <ClipboardList size={18} /> },
     { name: 'Lab Orders', path: '/patients/lab-orders', icon: <FlaskConical size={18} /> },
     { name: 'Lab Results', path: '/patients/lab-results', icon: <TestTube2 size={18} /> },

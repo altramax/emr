@@ -57,11 +57,13 @@ export default function DashboardMenu({ isNavOpen, expandNavHandler }: dashboard
         />
       </div>
 
-      {/* <NursesDashboard isOpen={isNavOpen} /> */}
-      <DoctorsDashboard isOpen={isNavOpen} />
-      <RecordsDashboard isOpen={isNavOpen} />
-      <AdminDashboard isOpen={isNavOpen} />
-      {/* <DashboardMen /> */}
+      <div className="flex flex-col space-y-5 ">
+        {/* <NursesDashboard isOpen={isNavOpen} /> */}
+        <DoctorsDashboard isOpen={isNavOpen} />
+        <RecordsDashboard isOpen={isNavOpen} />
+        <AdminDashboard isOpen={isNavOpen} />
+        {/* <DashboardMen /> */}
+      </div>
 
       <div className={`${isNavOpen ? 'w-[80%]' : ''} border-t border-gray-500 mt-auto`}>
         <button

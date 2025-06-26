@@ -2,29 +2,29 @@
 
 import { useEffect, useState } from 'react';
 import PatientDetailsHeader from '@/src/components/organisms/patient-care/patient-care-details-header';
-import { useGetDiagnoses } from '@/src/hooks/diagnoses/use-get-diagnoses';
+import { useGetDiagnosis } from '@/src/hooks/diagnosis/use-get-diagnosis';
 import { useParams } from 'next/navigation';
 import Loading from '@/src/components/atoms/loading-bar/loading-bar-page';
-import AddDiagnosisTab from '@/src/components/organisms/patient-care/add-diagnoses/tabs/add-diagnosis-tab';
+import AddDiagnosisTab from '@/src/components/organisms/patient-care/add-diagnosis/tabs/add-diagnosis-tab';
 import Button from '@/src/components/atoms/button/button';
-import OrdersTab from '@/src/components/organisms/patient-care/add-diagnoses/tabs/orders-tab';
-import VitalsViewTab from '@/src/components/organisms/patient-care/add-diagnoses/tabs/view-vitals-tab';
+import OrdersTab from '@/src/components/organisms/patient-care/add-diagnosis/tabs/orders-tab';
+import VitalsViewTab from '@/src/components/organisms/patient-care/add-diagnosis/tabs/view-vitals-tab';
 import { Stethoscope, ClipboardList, HeartPulse, MessageCircleReply, Plus } from 'lucide-react';
-import Results from '@/src/components/organisms/patient-care/add-diagnoses/tabs/results-tab';
+import Results from '@/src/components/organisms/patient-care/add-diagnosis/tabs/results-tab';
 
-export default function AddDiagnosesDetailsTemplate() {
+export default function AddDiagnosisDetailsTemplate() {
   const param = useParams();
   const id = param?.detailsId ?? '';
   const [currentTab, setCurrentTab] = useState('Orders');
 
-  const { getDiagnoses, data, loading } = useGetDiagnoses({
+  const { getDiagnosis, data, loading } = useGetDiagnosis({
     select: '*',
     filter: id,
     status: 'pending',
   });
 
   useEffect(() => {
-    getDiagnoses();
+    getDiagnosis();
   }, []);
 
   if (loading) return <Loading />;
@@ -64,7 +64,7 @@ export default function AddDiagnosesDetailsTemplate() {
 
   return (
     <div className="min-h-screen bg-gray-100 p-8">
-      <PatientDetailsHeader data={data ? data[0] : null} back_path="/patients/add-diagnoses" />
+      <PatientDetailsHeader data={data ? data[0] : null} back_path="/patients/add-diagnosis" />
       <div className="mt-6 text-white bg-white rounded-lg px-10 py-4">
         <div className="flex items-center gap-14 border-b border-gray-200 pb-3">
           {tabs.map((tab) => {
