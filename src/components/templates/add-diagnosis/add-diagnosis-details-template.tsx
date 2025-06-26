@@ -1,16 +1,16 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import PatientDetailsHeader from '@/src/components/organisms/patient-care/patient-care-details-header';
+import PatientDetailsHeader from '@/src/components/organisms/patient/patient-details-header';
 import { useGetDiagnosis } from '@/src/hooks/diagnosis/use-get-diagnosis';
 import { useParams } from 'next/navigation';
 import Loading from '@/src/components/atoms/loading-bar/loading-bar-page';
-import AddDiagnosisTab from '@/src/components/organisms/patient-care/add-diagnosis/tabs/add-diagnosis-tab';
+import AddDiagnosisTab from '@/src/components/organisms/add-diagnosis/tabs/add-diagnosis-tab';
 import Button from '@/src/components/atoms/button/button';
-import OrdersTab from '@/src/components/organisms/patient-care/add-diagnosis/tabs/orders-tab';
-import VitalsViewTab from '@/src/components/organisms/patient-care/add-diagnosis/tabs/view-vitals-tab';
+import OrdersTab from '@/src/components/organisms/add-diagnosis/tabs/orders-tab';
+import VitalsViewTab from '@/src/components/organisms/add-diagnosis/tabs/view-vitals-tab';
 import { Stethoscope, ClipboardList, HeartPulse, MessageCircleReply, Plus } from 'lucide-react';
-import Results from '@/src/components/organisms/patient-care/add-diagnosis/tabs/results-tab';
+import Results from '@/src/components/organisms/add-diagnosis/tabs/results-tab';
 
 export default function AddDiagnosisDetailsTemplate() {
   const param = useParams();
@@ -64,7 +64,7 @@ export default function AddDiagnosisDetailsTemplate() {
 
   return (
     <div className="min-h-screen bg-gray-100 p-8">
-      <PatientDetailsHeader data={data ? data[0] : null} back_path="/patients/add-diagnosis" />
+      <PatientDetailsHeader data={data ? data[0] : null} back_path="/add-diagnosis" />
       <div className="mt-6 text-white bg-white rounded-lg px-10 py-4">
         <div className="flex items-center gap-14 border-b border-gray-200 pb-3">
           {tabs.map((tab) => {

@@ -3,15 +3,20 @@
 import { useFormContext } from 'react-hook-form';
 import { useNewStaffStore } from '@/src/store/new-staff-store';
 import Button from '../../atoms/button/button';
-import { toast } from 'react-toastify';
+import { usePathname, useRouter } from 'next/navigation';
 import { useInsertStaff } from '@/src/hooks/staff/use-insert-staff';
-import { useRouter } from 'next/navigation';
+import { useUpdateStaff } from '@/src/hooks/staff/use-update-staff';
 
-export default function StaffReviewStep() {
+type StaffReviewStep = {
+  staff_id: string;
+};
+
+export default function StaffReviewStep({ staff_id }: StaffReviewStep) {
   const { getValues } = useFormContext();
   const values = getValues();
   const { currentStep, setStep } = useNewStaffStore();
   const router = useRouter();
+  const pathname = usePathname();
 
   const handleBackStep = () => {
     setStep(currentStep - 1);
@@ -27,21 +32,25 @@ export default function StaffReviewStep() {
     department_id: values?.department?.value,
   };
 
-  const { insertStaff, error } = useInsertStaff({ columns: staffData });
+  const { insertStaff } = useInsertStaff({ columns: staffData });
+  const { updateStaff } = useUpdateStaff({
+    columns: staffData,
+    staff_id: staff_id,
+  });
 
-  const submitForm = async () => {
-    try {
-      await insertStaff();
-      if (error) {
-        toast.error(error?.message || 'Failed to add staff');
-      } else {
-        toast.success('Staff added successfully');
-        setStep(1);
-        router.push('/admin/staff');
-      }
-    } catch (err) {
-      console.error(err);
-      toast.error('Error adding staff');
+  const insertForm = async () => {
+    const response = await insertStaff();
+    if (response === 'success') {
+      setStep(1);
+      router.push('/admin/staff');
+    }
+  };
+
+  const updateForm = async () => {
+    const response = await updateStaff();
+    if (response === 'success') {
+      setStep(1);
+      router.push('/admin/staff');
     }
   };
 
@@ -100,7 +109,7 @@ export default function StaffReviewStep() {
         <Button
           type="button"
           value="Submit"
-          onClick={submitForm}
+          onClick={pathname.includes('edit-staff') ? updateForm : insertForm}
           className="text-sm bg-blue-500 w-[100px] py-2 text-white rounded-lg hover:bg-blue-600 focus:outline-none"
         />
       </div>

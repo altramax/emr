@@ -1,7 +1,7 @@
 'use client';
 import React, { useEffect } from 'react';
-import MedicationOrderTable from '@/src/components/organisms/patient-care/medication-order/medication-order-table';
-import Header from '@/src/components/organisms/patients/header';
+import MedicationOrderTable from '@/src/components/organisms/medication-order/medication-order-table';
+import Header from '@/src/components/organisms/patient/header';
 import { Search, Loader, XIcon } from 'lucide-react';
 import { useDebounce } from '@/src/hooks/debounce/use-debounce';
 import { useQueryTask } from '@/src/hooks/task/use-query-task';

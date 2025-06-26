@@ -1,11 +1,11 @@
 'use client';
 
 import { useEffect } from 'react';
-import PatientDetailsHeader from '@/src/components/organisms/patient-care/patient-care-details-header';
+import PatientDetailsHeader from '@/src/components/organisms/patient/patient-details-header';
 import { useGetTasks } from '@/src/hooks/task/use-get-tasks';
 import { useParams } from 'next/navigation';
 import Loading from '@/src/components/atoms/loading-bar/loading-bar-page';
-import LabOrderDetails from '@/src/components/organisms/patient-care/lab-order/lab-order-details';
+import LabOrderDetails from '@/src/components/organisms/lab-order/lab-order-details';
 
 export default function LabOrderDetailsTemplate() {
   const param = useParams();

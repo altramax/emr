@@ -5,10 +5,30 @@ import { useFormContext } from 'react-hook-form';
 import SelectDropdown from '../../molecules/select-dropdown/select-dropdown';
 import Button from '../../atoms/button/button';
 import { useNewStaffStore } from '@/src/store/new-staff-store';
+import { useEffect } from 'react';
 
-export default function StaffBiodata() {
-  const { control, trigger } = useFormContext();
+type staffType = {
+  /* eslint-disable  @typescript-eslint/no-explicit-any */
+  data?: any;
+};
+
+export default function StaffBiodata({ data }: staffType) {
+  const { control, trigger, setValue } = useFormContext();
   const { currentStep, setStep } = useNewStaffStore();
+  console.log(data);
+  useEffect(() => {
+    if (data) {
+      setValue('first_name', data?.first_name);
+      setValue('last_name', data?.last_name);
+      setValue('other_names', data?.other_names);
+      setValue('date_of_birth', data?.date_of_birth);
+      setValue('gender', { label: data?.gender, value: data?.gender });
+      setValue('marital_status', { label: data?.marital_status, value: data?.marital_status });
+      setValue('nationality', data?.nationality);
+      setValue('religion', data?.religion);
+      setValue('address', data?.address);
+    }
+  }, [data]);
 
   const genderOptions = [
     { label: 'Male', value: 'male' },

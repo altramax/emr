@@ -4,10 +4,27 @@ import Input from '../../atoms/Input/input-field';
 import { useFormContext } from 'react-hook-form';
 import { useNewStaffStore } from '@/src/store/new-staff-store';
 import Button from '../../atoms/button/button';
+import { useEffect } from 'react';
 
-export default function StaffContactInfo() {
-  const { control, trigger } = useFormContext();
+type staffType = {
+  /* eslint-disable  @typescript-eslint/no-explicit-any */
+  data?: any;
+};
+
+export default function StaffContactInfo({ data }: staffType) {
+  const { control, trigger, setValue } = useFormContext();
   const { currentStep, setStep } = useNewStaffStore();
+
+  useEffect(() => {
+    if (data) {
+      setValue('email', data?.email);
+      setValue('phone_number', data?.phone_number);
+      setValue('address', data?.address);
+      setValue('emergency_contact_name', data?.emergency_contact_name);
+      setValue('emergency_contact_number', data?.emergency_contact_number);
+      setValue('emergency_contact_relationship', data?.emergency_contact_relationship);
+    }
+  }, [data]);
 
   const validateFields = async () => {
     const isValid = await trigger([

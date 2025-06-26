@@ -40,7 +40,7 @@ export default function ViewVitalsTab({ visit_id, id }: PatientCareTableProps) {
   return (
     <div>
       <button
-        onClick={() => router.push(`/patients/add-vitals/${id}?from=/diagnosis`)}
+        onClick={() => router.push(`/add-vitals/${id}?from=/diagnosis`)}
         className="bg-blue-300 ml-auto w-fit px-4 py-2 block  text-xs text-white rounded-lg hover:bg-blue-500 mb-4"
       >
         Add Vitals

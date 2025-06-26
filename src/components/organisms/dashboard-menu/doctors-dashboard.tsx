@@ -79,8 +79,8 @@ export default function DoctorsDashboard({ isOpen }: nursesDashboardType) {
           </span>
 
           <button
-            onClick={() => handleClick('patients/add-vitals')}
-            className={`relative ${pathname?.includes('patients/add-vitals') ? 'bg-blue-500' : ''} flex items-center gap-2 hover:bg-blue-500 p-2 rounded w-full text-left`}
+            onClick={() => handleClick('add-vitals')}
+            className={`relative ${pathname?.includes('add-vitals') ? 'bg-blue-500' : ''} flex items-center gap-2 hover:bg-blue-500 p-2 rounded w-full text-left`}
           >
             <CirclePlay size={18} />
             <span className={` ${isOpen ? '' : 'hidden '}`}> Add-Vitals </span>
@@ -96,8 +96,8 @@ export default function DoctorsDashboard({ isOpen }: nursesDashboardType) {
           </span>
 
           <button
-            onClick={() => handleClick('patients/add-diagnosis')}
-            className={`relative ${pathname?.includes('patients/add-diagnosis') ? 'bg-blue-500' : ''} flex items-center gap-2 hover:bg-blue-500 p-2 rounded w-full text-left`}
+            onClick={() => handleClick('add-diagnosis')}
+            className={`relative ${pathname?.includes('add-diagnosis') ? 'bg-blue-500' : ''} flex items-center gap-2 hover:bg-blue-500 p-2 rounded w-full text-left`}
           >
             <Stethoscope size={18} />
             <span className={` ${isOpen ? '' : 'hidden '}`}>Add Diagnosis</span>
@@ -136,8 +136,8 @@ export default function DoctorsDashboard({ isOpen }: nursesDashboardType) {
           </span>
 
           <button
-            onClick={() => handleClick('patients/lab-order')}
-            className={`relative ${pathname?.includes('patients/lab-order') ? 'bg-blue-500' : ''} flex items-center gap-2 hover:bg-blue-500 p-2 rounded w-full text-left`}
+            onClick={() => handleClick('lab-order')}
+            className={`relative ${pathname?.includes('lab-order') ? 'bg-blue-500' : ''} flex items-center gap-2 hover:bg-blue-500 p-2 rounded w-full text-left`}
           >
             <Microscope size={18} />
             <span className={` ${isOpen ? '' : 'hidden '}`}> Lab order</span>
@@ -155,8 +155,8 @@ export default function DoctorsDashboard({ isOpen }: nursesDashboardType) {
           </span>
 
           <button
-            onClick={() => handleClick('patients/medication-order')}
-            className={`relative ${pathname?.includes('patients/medication-order') ? 'bg-blue-500' : ''} flex items-center gap-2 hover:bg-blue-500 p-2 rounded w-full text-left`}
+            onClick={() => handleClick('medication-order')}
+            className={`relative ${pathname?.includes('medication-order') ? 'bg-blue-500' : ''} flex items-center gap-2 hover:bg-blue-500 p-2 rounded w-full text-left`}
           >
             <Pill size={18} />
             <span className={` ${isOpen ? '' : 'hidden '}`}> Medication order</span>

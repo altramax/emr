@@ -1,7 +1,6 @@
 import { createClient } from '../../utils/supabase/client';
 import { useState } from 'react';
-
-// type dataType = Record<string, string>;
+import { toast } from 'react-toastify';
 
 type getDataType = {
   /* eslint-disable  @typescript-eslint/no-explicit-any */
@@ -12,28 +11,28 @@ type getDataType = {
 
 export const useInsertStaff = ({ columns }: getDataType) => {
   const supabase = createClient();
-  /* eslint-disable  @typescript-eslint/no-explicit-any */
-  const [data, setData] = useState<any>(null);
-  const [error, setError] = useState<any>(null);
+
   const [loading, setLoading] = useState<boolean>(false);
 
   const insertStaff = async () => {
     try {
       setLoading(true);
 
-      const { data: response, error } = await supabase.from('staff').insert([columns]).select();
+      const { error } = await supabase.from('staff').insert([columns]).select();
 
       if (error) {
-        setError(error);
+        toast.error(error?.message);
       } else {
-        setData(response);
+        toast.success('Staff added successfully');
+        return 'success';
       }
     } catch (err) {
-      setError(err);
+      toast.error('Error creating staff');
+      console.log(err);
     } finally {
       setLoading(false);
     }
   };
 
-  return { insertStaff, error, loading, data };
+  return { insertStaff, loading };
 };

@@ -8,8 +8,13 @@ import { useNewStaffStore } from '@/src/store/new-staff-store';
 import { useGetDepartments } from '@/src/hooks/departments/use-get-departments';
 import { useEffect, useState } from 'react';
 
-export default function StaffEmploymentInfo() {
-  const { control, trigger } = useFormContext();
+type staffType = {
+  /* eslint-disable  @typescript-eslint/no-explicit-any */
+  defaultData?: any;
+};
+
+export default function StaffEmploymentInfo({ defaultData }: staffType) {
+  const { control, trigger, setValue } = useFormContext();
   const { currentStep, setStep } = useNewStaffStore();
   const { getDepartments, data } = useGetDepartments({ select: '*' });
   const [departmentOptions, setDepartmentOptions] = useState<{ label: string; value: string }[]>(
@@ -21,6 +26,17 @@ export default function StaffEmploymentInfo() {
       handleOptions();
     } else {
       getDepartments();
+    }
+
+    if (defaultData) {
+      setValue('role', { label: defaultData?.role, value: defaultData?.role });
+      setValue('department', { label: defaultData?.department, value: defaultData?.department_id });
+      setValue('job_title', defaultData?.job_title);
+      setValue('employment_type', {
+        label: defaultData?.employment_type,
+        value: defaultData?.employment_type,
+      });
+      setValue('date_hired', defaultData?.date_hired);
     }
   }, [data]);
 

@@ -1,5 +1,5 @@
 import { useRouter } from 'next/navigation';
-import PatientCard from '../patients/patient-card';
+import PatientCard from '../patient/patient-card';
 import EmptyState from '../../molecules/empty-state/empty-state';
 
 type recordTableProps = {

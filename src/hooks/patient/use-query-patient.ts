@@ -2,12 +2,11 @@ import { createClient } from '../../utils/supabase/client';
 import { useState } from 'react';
 
 type GetDataType = {
-  tableName: string;
-  select: string;
+  select?: string;
   name: string;
 };
 
-export const useQueryPatient = ({ tableName, select, name }: GetDataType) => {
+export const useQueryPatient = ({ select, name }: GetDataType) => {
   const supabase = createClient();
   /* eslint-disable  @typescript-eslint/no-explicit-any */
   const [data, setData] = useState<any>(null);
@@ -20,8 +19,8 @@ export const useQueryPatient = ({ tableName, select, name }: GetDataType) => {
       setLoading(true);
 
       const query = supabase
-        .from(tableName)
-        .select(select)
+        .from('patients')
+        .select(select ?? '*')
         .or(`first_name.ilike.%${name}%,last_name.ilike.%${name},id.ilike.%${name}%`)
         .range(0, 10)
         .order('id', { ascending: false });

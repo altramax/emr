@@ -1,6 +1,6 @@
 'use client';
 
-import { Minus, FileChartColumn, UserRoundPlusIcon, CirclePlay, FolderHeart } from 'lucide-react';
+import { Minus, FileChartColumn, UserRoundPlusIcon, CirclePlay, UserSearch } from 'lucide-react';
 import { useRouter, usePathname } from 'next/navigation';
 import { useEffect } from 'react';
 import { useDiagnosisAlertStore } from '@/src/store/diagnosis-alert-store';
@@ -91,7 +91,7 @@ export default function RecordsDashboard({ isOpen }: nursesDashboardType) {
 
           <button
             onClick={() => handleClick('records/new-patient')}
-            className={`relative ${pathname?.includes('/records/new-patient') ? 'bg-blue-500' : ''} flex items-center gap-2 hover:bg-blue-500 p-2 rounded w-full text-left`}
+            className={`relative ${pathname?.includes('/records/new-patient') || pathname?.includes('/records/edit-patient') ? 'bg-blue-500' : ''} flex items-center gap-2 hover:bg-blue-500 p-2 rounded w-full text-left`}
           >
             <UserRoundPlusIcon size={18} />
 
@@ -110,12 +110,12 @@ export default function RecordsDashboard({ isOpen }: nursesDashboardType) {
           </span>
 
           <button
-            onClick={() => handleClick('medical-records')}
-            className={`relative ${pathname?.includes('/medical-records') ? 'bg-blue-500' : ''} flex items-center gap-2 hover:bg-blue-500 p-2 rounded w-full text-left`}
+            onClick={() => handleClick('patients')}
+            className={`relative ${pathname?.includes('patients') ? 'bg-blue-500' : ''} flex items-center gap-2 hover:bg-blue-500 p-2 rounded w-full text-left`}
           >
-            <FolderHeart size={18} />
+            <UserSearch size={18} />
 
-            <span className={` ${isOpen ? '' : 'hidden'}`}> Medical Records</span>
+            <span className={` ${isOpen ? '' : 'hidden'}`}>Patients</span>
             <span
               className={` ${isOpen ? 'relative bottom-0 left-0' : 'absolute bottom-8 left-4 '} `}
             >

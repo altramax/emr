@@ -13,7 +13,7 @@ export default function LabOrderTable({ patients }: PatientCareTableProps) {
   const router = useRouter();
 
   const navigateToPatientDetails = (id: string) => {
-    router.push(`/patients/lab-order/${id}`);
+    router.push(`/lab-order/${id}`);
   };
 
   return (

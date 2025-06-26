@@ -2,7 +2,7 @@
 
 'use client';
 import React, { useEffect, useState } from 'react';
-import Header from '@/src/components/organisms/patients/header';
+import Header from '@/src/components/organisms/patient/header';
 import { Search, Loader, XIcon } from 'lucide-react';
 import { useDebounce } from '@/src/hooks/debounce/use-debounce';
 import { useQueryDepartment } from '@/src/hooks/departments/use-query-department';

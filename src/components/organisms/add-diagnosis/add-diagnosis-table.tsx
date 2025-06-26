@@ -11,7 +11,7 @@ export default function AddDiagnosisTable({ patients }: PatientCareTableProps) {
   const router = useRouter();
 
   const navigateToPatientDetails = (id: string) => {
-    router.push(`/patients/add-diagnosis/${id}`);
+    router.push(`/add-diagnosis/${id}`);
   };
 
   const renderStatus = (status: string) => {

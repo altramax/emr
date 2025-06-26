@@ -64,16 +64,16 @@ export default function DashboardMenu() {
   const tabs = [
     {
       name: 'Add-Vitals',
-      path: '/patients/add-vitals',
+      path: '/add-vitals',
       icon: <HeartPulse size={18} />,
       Notification: <Notification count={vitalState?.vitals?.length} />,
     },
-    { name: 'Add Diagnosis', path: '/patients/add-diagnosis', icon: <Stethoscope size={18} /> },
-    { name: 'Prescriptions', path: '/patients/prescriptions', icon: <ClipboardList size={18} /> },
-    { name: 'Lab Orders', path: '/patients/lab-orders', icon: <FlaskConical size={18} /> },
-    { name: 'Lab Results', path: '/patients/lab-results', icon: <TestTube2 size={18} /> },
-    { name: 'Dispensed Meds', path: '/patients/dispensed-meds', icon: <Pill size={18} /> },
-    { name: 'Administered Meds', path: '/patients/administered-meds', icon: <Syringe size={18} /> },
+    { name: 'Add Diagnosis', path: '/add-diagnosis', icon: <Stethoscope size={18} /> },
+    { name: 'Prescriptions', path: '/prescriptions', icon: <ClipboardList size={18} /> },
+    { name: 'Lab Orders', path: '/lab-orders', icon: <FlaskConical size={18} /> },
+    { name: 'Lab Results', path: '/lab-results', icon: <TestTube2 size={18} /> },
+    { name: 'Dispensed Meds', path: '/dispensed-meds', icon: <Pill size={18} /> },
+    { name: 'Administered Meds', path: '/administered-meds', icon: <Syringe size={18} /> },
   ];
 
   const { data: taskAlert } = useTasksAlert();

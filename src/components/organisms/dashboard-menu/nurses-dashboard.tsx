@@ -70,8 +70,8 @@ export default function NursesDashboard({ isOpen }: nursesDashboardType) {
           </span>
 
           <button
-            onClick={() => handleClick('patients/add-vitals')}
-            className={`relative ${pathname?.includes('patients/add-vitals') ? 'bg-blue-500' : ''} flex items-center gap-2 hover:bg-blue-500 p-2 rounded w-full text-left`}
+            onClick={() => handleClick('add-vitals')}
+            className={`relative ${pathname?.includes('add-vitals') ? 'bg-blue-500' : ''} flex items-center gap-2 hover:bg-blue-500 p-2 rounded w-full text-left`}
           >
             <CirclePlay size={18} />
             <span className={` ${isOpen ? '' : 'hidden lg:block'}`}> Add-Vitals </span>
@@ -89,8 +89,8 @@ export default function NursesDashboard({ isOpen }: nursesDashboardType) {
           </span>
 
           <button
-            onClick={() => handleClick('patients/add-vitals')}
-            className={`relative ${pathname?.includes('patients/add-vitals') ? 'bg-blue-500' : ''} flex items-center gap-2 hover:bg-blue-500 p-2 rounded w-full text-left`}
+            onClick={() => handleClick('add-vitals')}
+            className={`relative ${pathname?.includes('add-vitals') ? 'bg-blue-500' : ''} flex items-center gap-2 hover:bg-blue-500 p-2 rounded w-full text-left`}
           >
             <Activity size={18} />
             <span className={` ${isOpen ? '' : 'hidden lg:block'}`}> Inpatients</span>

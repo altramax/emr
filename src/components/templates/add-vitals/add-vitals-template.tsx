@@ -1,7 +1,7 @@
 'use client';
 import React, { useEffect, useState } from 'react';
-import AddVitalsTable from '@/src/components/organisms/patient-care/add-vitals/add-vitals-table';
-import Header from '@/src/components/organisms/patients/header';
+import AddVitalsTable from '@/src/components/organisms/add-vitals/add-vitals-table';
+import Header from '@/src/components/organisms/patient/header';
 import { Search, Loader, XIcon } from 'lucide-react';
 import { useDebounce } from '@/src/hooks/debounce/use-debounce';
 import { useQueryTask } from '@/src/hooks/task/use-query-task';

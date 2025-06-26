@@ -10,7 +10,6 @@ import { useQueryStaff } from '@/src/hooks/staff/use-query-staff';
 import { useUpdateStaff } from '@/src/hooks/staff/use-update-staff';
 import SelectDropdown from '../../molecules/select-dropdown/select-dropdown';
 import { useForm, useWatch } from 'react-hook-form';
-import { toast } from 'react-toastify';
 import StatusBar from '../../molecules/status-bar/status-bar';
 
 type StaffStatusForm = {
@@ -43,27 +42,15 @@ const StaffDetailsTemplate = () => {
 
   const status = useWatch({ control, name: 'status' });
 
-  const {
-    updateStaff,
-    loading: insertLoading,
-    error,
-  } = useUpdateStaff({
+  const { updateStaff, loading: insertLoading } = useUpdateStaff({
     columns: { status: status.value },
     staff_id: staffInfo?.id,
   });
 
   const changeStatus = async () => {
-    try {
-      await updateStaff();
-      if (!error) {
-        toast.success('Staff status updated successfully');
-        refetch();
-      } else {
-        toast.error('Error updating staff status');
-      }
-    } catch (err) {
-      toast.error('Error updating staff status');
-      console.error(err);
+    const response = await updateStaff();
+    if (response === 'success') {
+      refetch();
     }
   };
 
@@ -112,6 +99,7 @@ const StaffDetailsTemplate = () => {
             className="flex items-center gap-2 text-xs px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md shadow-sm transition-all"
             loading={loading}
             value="Edit"
+            onClick={() => router.push(`/admin/edit-staff/${staffInfo?.id}`)}
           />
         </div>
       </div>

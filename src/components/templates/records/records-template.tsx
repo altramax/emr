@@ -1,7 +1,7 @@
 'use client';
 import React, { useEffect, useState } from 'react';
 import RecordTable from '../../organisms/records/record-table';
-import Header from '@/src/components/organisms/patients/header';
+import Header from '@/src/components/organisms/patient/header';
 import { useQueryPatient } from '@/src/hooks/patient/use-query-patient';
 import { Search, Loader, XIcon } from 'lucide-react';
 import { useDebounce } from '@/src/hooks/debounce/use-debounce';

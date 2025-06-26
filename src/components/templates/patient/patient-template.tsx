@@ -1,22 +1,30 @@
 'use client';
 import React, { useEffect, useState } from 'react';
-import StaffTable from '../../organisms/admin/staff-table';
+import { useQueryPatient } from '@/src/hooks/patient/use-query-patient';
 import Header from '@/src/components/organisms/patient/header';
-import { useQueryStaff } from '@/src/hooks/staff/use-query-staff';
 import { Search, Loader, XIcon } from 'lucide-react';
 import { useDebounce } from '@/src/hooks/debounce/use-debounce';
+import PatientCard from '../../organisms/patient/patient-card';
+import EmptyState from '../../molecules/empty-state/empty-state';
+import { useRouter } from 'next/navigation';
 
-export default function StaffTemplate() {
+export default function PatientTemplate() {
   const [name, setName] = useState('');
   const debouncedName = useDebounce(name, 500);
-  const { queryStaff, data, loading, clearData } = useQueryStaff({
-    select: 'first_name,last_name,department,id,gender,date_of_birth,status',
+  const {
+    queryPatient,
+    data: patients,
+    loading,
+    clearData,
+  } = useQueryPatient({
+    select: 'first_name,last_name,id,gender,date_of_birth,status',
     name: debouncedName,
   });
+  const router = useRouter();
 
   useEffect(() => {
     if (debouncedName) {
-      queryStaff();
+      queryPatient();
     }
   }, [debouncedName]);
 
@@ -35,7 +43,7 @@ export default function StaffTemplate() {
 
   return (
     <div className="p-8 bg-white min-h-screen">
-      <Header title="Staffs" subTitle="Search for staffs here" />
+      <Header title="Patients" subTitle="Search for patients here" />
       <div className="flex justify-between items-start mt-8 w-full ">
         <div className="flex items-center justify-between mb-2 gap-8 w-[50%] relative">
           <input
@@ -67,7 +75,21 @@ export default function StaffTemplate() {
       </div>
       <div className=" w-[800px] border-b border-gray-200 pb-4"></div>
       <div className="overflow-x-auto mt-6">
-        <StaffTable patients={data} />
+        {patients &&
+          (patients?.length > 0 ? (
+            /* eslint-disable  @typescript-eslint/no-explicit-any */
+            patients.map((patient: any) => (
+              <div key={patient?.id}>
+                <PatientCard
+                  {...patient}
+                  onChange={() => router.push(`/patients/${patient?.id}`)}
+                  key={patient?.id}
+                />
+              </div>
+            ))
+          ) : (
+            <EmptyState title="No Patient found" message="No record found for this patient" />
+          ))}
       </div>
     </div>
   );
