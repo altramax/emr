@@ -22,10 +22,12 @@ export default function StaffEmploymentInfo({ defaultData }: staffType) {
   );
 
   useEffect(() => {
+    if (!data) {
+      getDepartments();
+    }
+
     if (data) {
       handleOptions();
-    } else {
-      getDepartments();
     }
 
     if (defaultData) {
@@ -38,7 +40,7 @@ export default function StaffEmploymentInfo({ defaultData }: staffType) {
       });
       setValue('date_hired', defaultData?.date_hired);
     }
-  }, [data]);
+  }, [data, defaultData]);
 
   const roleOptions = [
     { label: 'Doctor', value: 'doctor' },

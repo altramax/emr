@@ -59,6 +59,7 @@ export default function LabOrders({ data }: dataType) {
     { label: 'Blood Glucose', value: 'Blood glucose', status: 'pending' },
     { label: 'Hemoglobin A1C', value: 'Hemoglobin A1C', status: 'pending' },
   ];
+
   const priorityOptions = [
     { label: 'Routine', value: 'routine' },
     { label: 'Urgent', value: 'urgent' },
@@ -74,8 +75,6 @@ export default function LabOrders({ data }: dataType) {
     priority: formData?.priority?.value ?? 'routine',
     note: formData?.notes,
   };
-
-  // (formData?.test ?? []).map((item: option) => item.value),
 
   const { insertTask, error } = useInsertTask({ tableName: 'tasks', columns: submitValue });
 
@@ -138,6 +137,8 @@ export default function LabOrders({ data }: dataType) {
       );
     }
   };
+
+  console.log(testArr);
 
   return (
     <form onSubmit={handleSubmit(submitForm)}>

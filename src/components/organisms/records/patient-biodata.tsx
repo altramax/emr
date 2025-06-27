@@ -5,10 +5,29 @@ import { useFormContext } from 'react-hook-form';
 import { useNewPatientStore } from '@/src/store/new-patient-store';
 import SelectDropdown from '../../molecules/select-dropdown/select-dropdown';
 import Button from '../../atoms/button/button';
+import { useEffect } from 'react';
 
-export default function PatientBiodata() {
-  const { control, trigger } = useFormContext();
+type patientType = {
+  /* eslint-disable  @typescript-eslint/no-explicit-any */
+  data?: any;
+};
+
+export default function PatientBiodata({ data }: patientType) {
+  const { control, trigger, setValue } = useFormContext();
   const { currentStep, setStep } = useNewPatientStore();
+
+  useEffect(() => {
+    if (data) {
+      setValue('first_name', data?.first_name);
+      setValue('last_name', data?.last_name);
+      setValue('date_of_birth', data?.date_of_birth);
+      setValue('gender', { label: data?.gender, value: data?.gender });
+      setValue('marital_status', { label: data?.marital_status, value: data?.marital_status });
+      setValue('nationality', data?.nationality);
+      setValue('religion', data?.religion);
+      setValue('occupation', data?.occupation);
+    }
+  }, [data]);
 
   const genderOptions = [
     { label: 'Male', value: 'male' },

@@ -25,7 +25,6 @@ export default function AddDiagnosisTab({ data }: dataType) {
     { label: 'in progress', value: 'in progress' },
     { label: 'completed', value: 'completed' },
   ];
-
   console.log(data);
   return (
     <div className="w-full">

@@ -1,13 +1,9 @@
 import { createClient } from '../../utils/supabase/client';
 import { useState } from 'react';
 
-// type dataType = Record<string, string>;
-
 type getDataType = {
   /* eslint-disable  @typescript-eslint/no-explicit-any */
   columns: any;
-  /* eslint-disable  @typescript-eslint/no-explicit-any */
-  id?: any;
 };
 
 export const useInsertLabResult = ({ columns }: getDataType) => {

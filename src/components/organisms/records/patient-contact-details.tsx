@@ -4,10 +4,26 @@ import Input from '../../atoms/Input/input-field';
 import { useFormContext } from 'react-hook-form';
 import { useNewPatientStore } from '@/src/store/new-patient-store';
 import Button from '../../atoms/button/button';
+import { useEffect } from 'react';
 
-export default function PatientContactInfo() {
-  const { control, trigger } = useFormContext();
+type patientType = {
+  /* eslint-disable  @typescript-eslint/no-explicit-any */
+  data?: any;
+};
+export default function PatientContactInfo({ data }: patientType) {
+  const { control, trigger, setValue } = useFormContext();
   const { currentStep, setStep } = useNewPatientStore();
+
+  useEffect(() => {
+    if (data) {
+      setValue('email', data?.email);
+      setValue('phone_number', data?.phone_number);
+      setValue('address', data?.address);
+      setValue('emergency_contact_name', data?.emergency_contact_name);
+      setValue('emergency_contact_number', data?.emergency_contact_number);
+      setValue('emergency_contact_relationship', data?.emergency_contact_relationship);
+    }
+  }, [data]);
 
   const triggerValidation = async () => {
     const isValid = await trigger([

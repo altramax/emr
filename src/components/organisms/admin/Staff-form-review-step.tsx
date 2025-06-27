@@ -8,7 +8,7 @@ import { useInsertStaff } from '@/src/hooks/staff/use-insert-staff';
 import { useUpdateStaff } from '@/src/hooks/staff/use-update-staff';
 
 type StaffReviewStep = {
-  staff_id: string;
+  staff_id?: string;
 };
 
 export default function StaffReviewStep({ staff_id }: StaffReviewStep) {
@@ -35,7 +35,7 @@ export default function StaffReviewStep({ staff_id }: StaffReviewStep) {
   const { insertStaff } = useInsertStaff({ columns: staffData });
   const { updateStaff } = useUpdateStaff({
     columns: staffData,
-    staff_id: staff_id,
+    staff_id: staff_id ?? '',
   });
 
   const insertForm = async () => {

@@ -7,8 +7,7 @@ import StepIndicator from '@/src/components/molecules/step-indicator/step-indica
 import PatientBiodata from '@/src/components/organisms/records/patient-biodata';
 import PatientContactInfo from '@/src/components/organisms/records/patient-contact-details';
 import PatientReviewStep from '../../organisms/records/patient-form-review-step';
-import { useRouter } from 'next/navigation';
-import { XCircleIcon } from 'lucide-react';
+import { IdCard } from 'lucide-react';
 
 const initialValues = {
   first_name: '',
@@ -27,7 +26,6 @@ const initialValues = {
 };
 
 export default function NewPatientTemplate() {
-  const router = useRouter();
   const methods = useForm<inputType>({
     resolver: yupResolver(NewPatientSchema),
     mode: 'onChange',
@@ -53,12 +51,9 @@ export default function NewPatientTemplate() {
     <div className="text-sm w-full h-[100vh] p-8 flex flex-col justify-center items-center">
       <div className="w-[550px] rounded-xl shadow-xl bg-white py-4  relative overflow-auto no-scrollbar">
         <div className="px-4 flex items-center justify-start gap-2 pb-4 border-b">
-          <button
-            onClick={() => router.push('/records')}
-            className=" text-sm flex items-center gap-1 text-red-400 px-2 py-1 rounded-md"
-          >
-            <XCircleIcon size={20} />
-          </button>
+          <div className=" text-sm flex items-center text-blue-400 px-2 py-1 rounded-md">
+            <IdCard size={20} />
+          </div>
           <div>
             {currentStep === 1 && (
               <h1 className="text-lg font-semibold text-gray-800 ">Patient biodata</h1>

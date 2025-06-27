@@ -41,7 +41,7 @@ const PatientDetailsTemplate = () => {
           className="flex items-center gap-2 text-xs px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md shadow-sm transition-all"
           loading={loading}
           value="Edit"
-          // onClick={() => router.push(`/admin/edit-staff/${staffInfo?.id}`)}
+          onClick={() => router.push(`/patients/edit-patient/${patientInfo?.id}`)}
         />
       </div>
       <div className="border-t border-gray-200"></div>

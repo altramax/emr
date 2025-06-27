@@ -7,8 +7,11 @@ import StepIndicator from '@/src/components/molecules/step-indicator/step-indica
 import PatientBiodata from '@/src/components/organisms/records/patient-biodata';
 import PatientContactInfo from '@/src/components/organisms/records/patient-contact-details';
 import PatientReviewStep from '../../organisms/records/patient-form-review-step';
-import { useRouter } from 'next/navigation';
-import { XCircleIcon } from 'lucide-react';
+import { useParams } from 'next/navigation';
+import { IdCard } from 'lucide-react';
+import { useGetPatients } from '@/src/hooks/patient/use-get-patients';
+import { useEffect } from 'react';
+import Loading from '@/src/components/atoms/loading-bar/loading-bar-page';
 
 const initialValues = {
   first_name: '',
@@ -27,38 +30,52 @@ const initialValues = {
 };
 
 export default function EditPatientTemplate() {
-  const router = useRouter();
   const methods = useForm<inputType>({
     resolver: yupResolver(NewPatientSchema),
-    mode: 'onChange',
+    mode: 'all',
     defaultValues: initialValues,
   });
+
+  const param = useParams();
+  const id = param?.id ?? '';
+
+  const { getPatient, data, loading } = useGetPatients({
+    select: '*',
+    id: id,
+  });
+
+  useEffect(() => {
+    if (id) {
+      getPatient();
+    }
+  }, [id]);
 
   const { currentStep } = useNewPatientStore();
 
   const renderForm = () => {
     switch (currentStep) {
       case 1:
-        return <PatientBiodata />;
+        return <PatientBiodata data={data?.[0]} />;
       case 2:
-        return <PatientContactInfo />;
+        return <PatientContactInfo data={data?.[0]} />;
       case 3:
-        return <PatientReviewStep />;
+        return <PatientReviewStep id={data?.[0]?.id} />;
       default:
         return <PatientBiodata />;
     }
   };
 
+  if (id && loading) {
+    return <Loading />;
+  }
+
   return (
     <div className="text-sm w-full h-[100vh] p-8 flex flex-col justify-center items-center">
       <div className="w-[550px] rounded-xl shadow-xl bg-white py-4  relative overflow-auto no-scrollbar">
         <div className="px-4 flex items-center justify-start gap-2 pb-4 border-b">
-          <button
-            onClick={() => router.push('/records')}
-            className=" text-sm flex items-center gap-1 text-red-400 px-2 py-1 rounded-md"
-          >
-            <XCircleIcon size={20} />
-          </button>
+          <div className=" text-sm flex items-center text-blue-400 px-2 py-1 rounded-md">
+            <IdCard size={20} />
+          </div>
           <div>
             {currentStep === 1 && (
               <h1 className="text-lg font-semibold text-gray-800 ">Patient biodata</h1>

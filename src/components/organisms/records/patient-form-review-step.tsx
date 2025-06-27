@@ -3,40 +3,50 @@
 import { useFormContext } from 'react-hook-form';
 import { useNewPatientStore } from '@/src/store/new-patient-store';
 import Button from '../../atoms/button/button';
-import { toast } from 'react-toastify';
-import { createClient } from '@/src/utils/supabase/client';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
+import { useInsertPatient } from '@/src/hooks/patient/use-insert-patient';
+import { useUpdatePatient } from '@/src/hooks/patient/use-update-patient';
 
-export default function PatientReviewStep() {
+type patientReviewStep = {
+  /* eslint-disable  @typescript-eslint/no-explicit-any */
+  id?: any;
+};
+
+export default function PatientReviewStep({ id }: patientReviewStep) {
   const { getValues } = useFormContext();
-  const values = getValues();
   const { currentStep, setStep } = useNewPatientStore();
-  const supabase = createClient();
+  const pathname = usePathname();
   const router = useRouter();
+  const values = getValues();
 
-  const submitForm = async () => {
-    const submitData = getValues();
-    /* eslint-disable  @typescript-eslint/no-explicit-any */
-    const data: any = {
-      ...submitData,
-      blood_group: submitData?.blood_group?.value,
-      status: 'active',
-      gender: submitData?.gender?.value,
-      marital_status: submitData?.marital_status?.value,
-      genotype: submitData?.genotype?.value,
-    };
+  const submitData = {
+    ...values,
+    // blood_group: values?.blood_group?.value,
+    status: 'active',
+    gender: values?.gender?.value,
+    marital_status: values?.marital_status?.value,
+    // genotype: values?.genotype?.value,
+  };
 
-    try {
-      const { status } = await supabase.from('patients').insert(data);
-      if (status === 201) {
-        toast.success('Patient added successfully');
-        router.push('/patients');
-      } else if (status >= 400) {
-        toast.error('Patient already exists');
-      }
-    } catch (error) {
-      console.error(error);
-      toast.error('Error adding patient');
+  const { insertPatient } = useInsertPatient({ columns: submitData });
+  const { updatePatient } = useUpdatePatient({
+    columns: submitData,
+    id: id,
+  });
+
+  const insertForm = async () => {
+    const response = await insertPatient();
+    if (response === 'success') {
+      setStep(1);
+      router.push('/patients');
+    }
+  };
+
+  const updateForm = async () => {
+    const response = await updatePatient();
+    if (response === 'success') {
+      setStep(1);
+      router.push('/patients');
     }
   };
 
@@ -91,9 +101,9 @@ export default function PatientReviewStep() {
           className="w-[100px] text-sm bg-gray-300 py-2 text-black rounded-lg hover:bg-gray-400 "
         />
         <Button
-          type="submit"
+          type="button"
           value="Submit"
-          onClick={submitForm}
+          onClick={pathname.includes('edit-patient') ? updateForm : insertForm}
           className="text-sm bg-blue-500 w-[100px] py-2  text-white rounded-lg hover:bg-blue-600 focus:outline-none "
         />
       </div>

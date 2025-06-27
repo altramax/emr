@@ -10,7 +10,6 @@ type GetDataParams = {
 
 export const useGetPatients = ({ select, id, status }: GetDataParams) => {
   const supabase = createClient();
-
   const [data, setData] = useState<any>(null);
   const [error, setError] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(false);
