@@ -12,6 +12,7 @@ import Input from '@/src/components/atoms/Input/input-field';
 import { useGetDepartments } from '@/src/hooks/departments/use-get-departments';
 import Button from '@/src/components/atoms/button/button';
 import { useRouter } from 'next/navigation';
+import Loading from '../../atoms/loading-bar/loading-bar-page';
 
 export default function InventoryTemplate() {
   const { control, watch, setValue } = useForm({
@@ -133,6 +134,7 @@ export default function InventoryTemplate() {
           ) : (
             <EmptyState title="No item found" message="No item found for this department" />
           ))}
+        {loading && <Loading />}
       </div>
     </div>
   );

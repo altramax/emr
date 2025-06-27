@@ -48,16 +48,40 @@ export default function LabOrders({ data }: dataType) {
   }, []);
 
   const tests = [
-    { label: 'Complete Blood Count', value: 'Complete blood count', status: 'pending' },
-    { label: 'Basic Metabolic Panel ', value: 'Basic metabolic panel', status: 'pending' },
-    { label: 'Lipid Panel', value: 'Lipid panel', status: 'pending' },
-    { label: 'Thyroid Function Tests', value: 'Thyroid tests', status: 'pending' },
-    { label: 'Liver Function Tests', value: 'Liver tests', status: 'pending' },
-    { label: 'Urinalysis', value: 'Urinalysis', status: 'pending' },
-    { label: 'Chest X-Ray', value: 'Chest xray', status: 'pending' },
-    { label: 'ECG', value: 'ECG', status: 'pending' },
-    { label: 'Blood Glucose', value: 'Blood glucose', status: 'pending' },
+    // Core Blood Tests
+    { label: 'Complete Blood Count (CBC)', value: 'Complete blood count', status: 'pending' },
+    { label: 'Basic Metabolic Panel', value: 'Basic metabolic panel', status: 'pending' },
+    { label: 'Lipid Profile', value: 'Lipid profile', status: 'pending' },
+    { label: 'Thyroid Function Tests', value: 'Thyroid function tests', status: 'pending' },
+    { label: 'Liver Function Test (LFT)', value: 'Liver function test', status: 'pending' },
     { label: 'Hemoglobin A1C', value: 'Hemoglobin A1C', status: 'pending' },
+    { label: 'Blood Glucose (Fasting)', value: 'Blood glucose fasting', status: 'pending' },
+    { label: 'Urinalysis', value: 'Urinalysis', status: 'pending' },
+
+    // Infectious Disease
+    { label: 'HIV 1 & 2 Antibody', value: 'HIV 1+2 Antibody', status: 'pending' },
+    { label: 'Malaria Parasite Test', value: 'Malaria parasite test', status: 'pending' },
+    { label: 'Widal Test', value: 'Widal test', status: 'pending' },
+    { label: 'Hepatitis B Surface Antigen (HBsAg)', value: 'HBsAg test', status: 'pending' },
+    { label: 'HCV Antibody', value: 'HCV antibody', status: 'pending' },
+    { label: 'VDRL Test (Syphilis)', value: 'VDRL test', status: 'pending' },
+
+    // Pregnancy / Hormones
+    { label: 'Pregnancy Test (β-hCG)', value: 'Pregnancy test', status: 'pending' },
+    { label: 'Prolactin', value: 'Prolactin', status: 'pending' },
+
+    // Cardiac & Clotting
+    { label: 'ECG', value: 'ECG', status: 'pending' },
+    { label: 'Troponin I', value: 'Troponin I', status: 'pending' },
+    { label: 'D-Dimer', value: 'D-Dimer', status: 'pending' },
+    { label: 'Prothrombin Time / INR', value: 'PT/INR', status: 'pending' },
+
+    // Imaging
+    { label: 'Chest X-Ray (PA/LAT)', value: 'Chest xray', status: 'pending' },
+    { label: 'Abdominal Ultrasound', value: 'Abdominal ultrasound', status: 'pending' },
+    { label: 'Pelvic Ultrasound', value: 'Pelvic ultrasound', status: 'pending' },
+    { label: 'CT Scan (Head, With Contrast)', value: 'CT scan head', status: 'pending' },
+    { label: 'MRI Brain (No Contrast)', value: 'MRI brain', status: 'pending' },
   ];
 
   const priorityOptions = [
