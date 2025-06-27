@@ -10,7 +10,6 @@ export default function RecordsTemplate() {
   const [name, setName] = useState('');
   const debouncedName = useDebounce(name, 500);
   const { queryPatient, data, loading, clearData } = useQueryPatient({
-    tableName: 'patients',
     select: 'first_name,last_name,id,gender,date_of_birth,status',
     name: debouncedName,
   });
