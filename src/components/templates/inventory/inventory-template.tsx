@@ -1,52 +1,52 @@
 'use client';
-
+import React, { useEffect, useState } from 'react';
+import InventoryTable from '@/src/components/organisms/admin/inventory-table';
+import Header from '@/src/components/organisms/patient/header';
+import { Search, Loader, XIcon } from 'lucide-react';
+import { useDebounce } from '@/src/hooks/debounce/use-debounce';
+import { useQueryInventory } from '@/src/hooks/inventory/use-query-inventory';
+import EmptyState from '@/src/components/molecules/empty-state/empty-state';
+import SelectDropdown from '@/src/components/molecules/select-dropdown/select-dropdown';
 import { useForm } from 'react-hook-form';
-import { useState, useEffect } from 'react';
-import Input from '../../atoms/Input/input-field';
-import SelectDropdown from '../../molecules/select-dropdown/select-dropdown';
+import Input from '@/src/components/atoms/Input/input-field';
 import { useGetDepartments } from '@/src/hooks/departments/use-get-departments';
-import Button from '../../atoms/button/button';
-import { ClipboardList } from 'lucide-react';
-// import { useInsertInventory } from '@/src/hooks/inventory/use-insert-inventory';
-
-const initialValues = {
-  name: '',
-  description: '',
-  type: '',
-  department_id: { label: '', value: '' },
-  unit_price: '',
-  unit_of_measure: '',
-  billable: false,
-  discountable: false,
-};
+import Button from '@/src/components/atoms/button/button';
+import { useRouter } from 'next/navigation';
 
 export default function InventoryTemplate() {
-  const { handleSubmit, control } = useForm({
-    defaultValues: initialValues,
-    mode: 'all',
+  const { control, watch, setValue } = useForm({
+    mode: 'onChange',
   });
   const [departmentOptions, setDepartmentOptions] = useState<{ label: string; value: string }[]>(
     []
   );
-  // const value = getValues();
+  const router = useRouter();
 
-  // const inventoryData = {
-  //   ...value,
-  //   department_id: value?.department_id?.value,
-  // };
-
-  // const { insertInventory, loading } = useInsertInventory({ columns: inventoryData });
+  const department_id = watch('department_id');
+  /* eslint-disable  @typescript-eslint/no-explicit-any */
+  const searchValue: any = watch('search');
+  const debouncedName = useDebounce(searchValue, 500);
 
   const { getDepartments, data } = useGetDepartments({ select: '*' });
 
-  const typeOptions = [
-    { label: 'Lab Test', value: 'lab_test' },
-    { label: 'Medication', value: 'medication' },
-    { label: 'Procedure', value: 'procedure' },
-    { label: 'Consultation', value: 'consultation' },
-    { label: 'Imaging', value: 'imaging' },
-    { label: 'Other', value: 'other' },
-  ];
+  const {
+    queryInventory,
+    data: queryData,
+    loading,
+    clearData,
+  } = useQueryInventory({
+    name: debouncedName,
+    department_id: department_id?.value ?? '',
+  });
+
+  useEffect(() => {
+    queryInventory();
+  }, [debouncedName, department_id]);
+
+  const resetField = () => {
+    setValue('search', '');
+    clearData();
+  };
 
   useEffect(() => {
     if (!data) {
@@ -72,117 +72,68 @@ export default function InventoryTemplate() {
     setDepartmentOptions(options);
   };
 
-  const submit = async () => {
-    console.log(data);
-  };
-
   return (
-    <div className="w-full h-[100vh] flex justify-center items-center ">
-      <form
-        onSubmit={handleSubmit(submit)}
-        className="w-[550px] bg-white p-6 rounded-lg shadow space-y-5"
-      >
-        <div className="flex items-center gap-2">
-          <ClipboardList size={20} className="text-blue-400" />
-          <h2 className="text-lg font-semibold text-gray-800">Add Inventory Item</h2>
-        </div>
-
-        <div>
+    <div className="p-8 bg-white min-h-screen">
+      <Header title="Inventory" subTitle="Search for inventory here" />
+      <div className=" flex justify-start items-center gap-4 mt-6 w-full border-gray-200 pb-4">
+        <div className=" w-[40%] relative gap-8">
           <Input
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 border h-9 text-xs"
-            label="Name"
-            name="name"
+            type="text"
+            name="search"
+            placeholder="Search for item by name"
+            className="w-full px-4 py-2 border rounded-lg text-xs"
             control={control}
-            placeholder="e.g. Full Blood Count"
+            onChange={(e) => {
+              if (e.target.value.length < 1) {
+                resetField();
+                clearData();
+              }
+            }}
           />
+          {searchValue && (
+            <XIcon
+              size={18}
+              className="cursor-pointer absolute right-12 top-1/2 transform -translate-y-1/2 border rounded-full p-1 w-6 h-6 border-red-600 text-red-600"
+              onClick={resetField}
+            />
+          )}
+          {loading ? (
+            <Loader
+              size={18}
+              className=" text-gray-950 absolute right-4 top-1/2 transform -translate-y-1/2"
+            />
+          ) : (
+            <Search
+              size={18}
+              className="text-gray-950 absolute right-4 top-1/2 transform -translate-y-1/2"
+            />
+          )}
         </div>
-
-        <div>
-          <Input
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 border h-9 text-xs"
-            label="Description"
-            name="description"
-            control={control}
-            placeholder="Optional"
-          />
-        </div>
-
-        <div>
+        <div className="w-[200px] ">
           <SelectDropdown
-            label="Type"
-            name="type"
-            control={control}
-            options={typeOptions}
-            placeholder="Select type"
-          />
-        </div>
-
-        <div>
-          <SelectDropdown
-            label="Department"
-            name="department_id"
-            control={control}
-            options={departmentOptions}
             placeholder="Select department"
-          />
-        </div>
-
-        <div>
-          <Input
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 border h-9 text-xs"
-            label="Unit Price (₦)"
+            name="department_id"
+            options={departmentOptions}
             control={control}
-            name="unit_price"
-            placeholder="0.00"
           />
         </div>
-
-        <div>
-          <Input
-            label="Unit of Measure"
-            control={control}
-            name="unit_of_measure"
-            placeholder="e.g. tablet, test"
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 border h-9 text-xs"
-          />
-        </div>
-        <div>
-          <div className="flex items-center justify-between gap-4 w-fit">
-            <Input
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 border h-9 text-xs"
-              label="Billable"
-              control={control}
-              name="billable"
-              type="checkbox"
-            />
-          </div>
-
-          <div className="flex items-center justify-between gap-4 w-fit">
-            <Input
-              className="block w-full rounded-md border-gray-300 shadow-sm p-2 border h-9 text-xs"
-              label="Discountable"
-              control={control}
-              name="discountable"
-              type="checkbox"
-            />
-          </div>
-        </div>
-
-        <div className="flex items-center justify-between">
+        <div className="self-end ml-auto">
           <Button
             type="button"
-            value="Back"
-            // onClick={() => router.push('/inventory')}
-            className="w-[100px] text-sm bg-gray-300 py-2 text-black rounded-lg hover:bg-gray-400"
-          />
-          <Button
-            type="button"
-            value="Next"
-            // onClick={() => router.push('/inventory')}
-            className="text-sm bg-blue-500 w-[100px] py-2 text-white rounded-lg hover:bg-blue-600 focus:outline-none"
+            value="Add Inventory"
+            onClick={() => router.push('/admin/inventory/add-inventory')}
+            className=" text-sm bg-blue-500 py-2 px-3 text-white rounded-lg hover:bg-blue-600 transition"
           />
         </div>
-      </form>
+      </div>
+      <div className="overflow-x-auto mt-4">
+        {!loading &&
+          (queryData?.length > 0 ? (
+            <InventoryTable items={queryData} department={departmentOptions} />
+          ) : (
+            <EmptyState title="No item found" message="No item found for this department" />
+          ))}
+      </div>
     </div>
   );
 }
