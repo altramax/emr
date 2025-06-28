@@ -1,6 +1,6 @@
 'use client';
-import React, { useEffect } from 'react';
-import MedicationOrderTable from '@/src/components/organisms/medication-order/medication-order-table';
+import React from 'react';
+import BillingTable from '../../organisms/billing/billing-table';
 import Header from '@/src/components/organisms/patient/header';
 import { Search, Loader, XIcon } from 'lucide-react';
 import { useDebounce } from '@/src/hooks/debounce/use-debounce';
@@ -9,8 +9,9 @@ import EmptyState from '@/src/components/molecules/empty-state/empty-state';
 import SelectDropdown from '@/src/components/molecules/select-dropdown/select-dropdown';
 import { useForm } from 'react-hook-form';
 import Input from '@/src/components/atoms/Input/input-field';
+// import { useGetUnpaidBills } from '@/src/hooks/billing/use-get-query-bills';
 
-export default function BillPaymentTemplate() {
+export default function BillingTemplate() {
   const { control, watch, setValue } = useForm({
     defaultValues: { search: '', status: { label: 'Pending', value: 'pending' } },
     mode: 'onChange',
@@ -22,7 +23,7 @@ export default function BillPaymentTemplate() {
   const debouncedName = useDebounce(searchValue, 500);
 
   const {
-    queryTask,
+    // queryTask,
     data: queryData,
     loading,
     clearData,
@@ -33,9 +34,14 @@ export default function BillPaymentTemplate() {
     status: status ? status?.value : 'pending',
   });
 
-  useEffect(() => {
-    queryTask();
-  }, [debouncedName, status]);
+  // const { getUnpaidBills, data: unpaidData, loading: loadingUnpaid, clearData: clearUnpaidData } = useGetUnpaidBills({});
+
+  // console.log(unpaidData);
+
+  // useEffect(() => {
+  //   queryTask();
+  //   getUnpaidBills();
+  // }, [debouncedName, status]);
 
   const resetField = () => {
     setValue('search', '');
@@ -93,7 +99,7 @@ export default function BillPaymentTemplate() {
       <div className="overflow-x-auto mt-4">
         {!loading &&
           (queryData?.length > 0 ? (
-            <MedicationOrderTable patients={queryData} />
+            <BillingTable patients={queryData} />
           ) : (
             <EmptyState title="No task found" message="No task found for lab order" />
           ))}

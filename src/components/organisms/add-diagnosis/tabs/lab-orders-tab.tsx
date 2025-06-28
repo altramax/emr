@@ -25,7 +25,9 @@ export default function LabOrders({ data }: dataType) {
   const formData = getValues();
   const testArr =
     formData?.test && formData?.test.length > 0
-      ? formData?.test.map((item: option) => item.value)
+      ? formData?.test.map((item: option) => {
+          return { name: item.value, bill: 'unpaid' };
+        })
       : [];
 
   const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState(false);
@@ -37,7 +39,6 @@ export default function LabOrders({ data }: dataType) {
     loading,
     refetch,
   } = useGetTasks({
-    select: '*',
     task_name: 'lab_order',
     visit_id: data?.visit_id,
     // status: 'pending',
@@ -126,7 +127,12 @@ export default function LabOrders({ data }: dataType) {
   };
 
   const modalDisplayValue = {
-    test: testArr.join(' , '),
+    /* eslint-disable  @typescript-eslint/no-explicit-any */
+    test: testArr
+      ?.map((item: any) => {
+        return item.name;
+      })
+      .join(' , '),
     priority: formData?.priority?.value,
     notes: formData?.notes,
   };
@@ -161,8 +167,6 @@ export default function LabOrders({ data }: dataType) {
       );
     }
   };
-
-  console.log(testArr);
 
   return (
     <form onSubmit={handleSubmit(submitForm)}>

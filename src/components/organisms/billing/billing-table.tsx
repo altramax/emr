@@ -9,7 +9,7 @@ interface PatientCareTableProps {
   patients: Record<string, any>[];
 }
 
-export default function MedicationOrderTable({ patients }: PatientCareTableProps) {
+export default function BillingTable({ patients }: PatientCareTableProps) {
   const router = useRouter();
 
   const navigateToPatientDetails = (id: string) => {

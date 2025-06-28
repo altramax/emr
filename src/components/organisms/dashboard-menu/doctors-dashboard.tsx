@@ -173,11 +173,11 @@ export default function DoctorsDashboard({ isOpen }: nursesDashboardType) {
           </span>
 
           <button
-            onClick={() => handleClick('bill-payment')}
-            className={`relative ${pathname?.includes('bill-payment') ? 'bg-blue-500' : ''} flex items-center gap-2 hover:bg-blue-500 p-2 rounded w-full text-left`}
+            onClick={() => handleClick('billing')}
+            className={`relative ${pathname?.includes('billing') ? 'bg-blue-500' : ''} flex items-center gap-2 hover:bg-blue-500 p-2 rounded w-full text-left`}
           >
             <HandCoins size={18} />
-            <span className={` ${isOpen ? '' : 'hidden '}`}>Bill Payment</span>
+            <span className={` ${isOpen ? '' : 'hidden '}`}>Billing</span>
             <span
               className={` ${isOpen ? 'relative bottom-0 left-0' : 'absolute bottom-8 left-4 '} `}
             >

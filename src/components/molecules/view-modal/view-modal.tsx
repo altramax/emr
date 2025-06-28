@@ -12,7 +12,7 @@ type ConfirmationModalProps = {
   formdata?: any;
 };
 
-const ViewModal = ({ isOpen, onCancel, title, formdata }: ConfirmationModalProps) => {
+const OrderedTestViewModal = ({ isOpen, onCancel, title, formdata }: ConfirmationModalProps) => {
   if (!isOpen) return null;
 
   return (
@@ -26,23 +26,23 @@ const ViewModal = ({ isOpen, onCancel, title, formdata }: ConfirmationModalProps
         </div>
         {/* eslint-disable  @typescript-eslint/no-explicit-any */}
         {formdata?.map((data: any) => {
-          return data?.task_data.map((item: any) => {
-            return (
-              <div
-                key={item}
-                className="text-xs flex gap-8 justify-between items-center border-b py-3"
-              >
-                <p className=" font-medium">{item?.charAt(0).toUpperCase() + item?.slice(1)}</p>
-                <p className="text-gray-600">
-                  {dayjs(data?.created_at).format('dddd D [of] MMMM h:mm A')}
-                </p>
-              </div>
-            );
-          });
+          return data?.task_data.map((item: any, index: number) => (
+            <div
+              key={index + 1}
+              className="text-xs flex gap-8 justify-between items-center border-b py-3"
+            >
+              <p className=" font-medium">
+                {item.name?.charAt(0).toUpperCase() + item.name?.slice(1)}
+              </p>
+              <p className="text-gray-600">
+                {dayjs(data?.created_at).format('dddd D [of] MMMM h:mm A')}
+              </p>
+            </div>
+          ));
         })}
       </div>
     </div>
   );
 };
 
-export default ViewModal;
+export default OrderedTestViewModal;

@@ -2,7 +2,7 @@ import { createClient } from '../../utils/supabase/client';
 import { useState } from 'react';
 
 type getDataType = {
-  select: string;
+  select?: string;
   /* eslint-disable  @typescript-eslint/no-explicit-any */
   visit_id?: any;
   status?: string;
@@ -28,7 +28,10 @@ export const useGetTasks = ({
   const getTask = async () => {
     try {
       setLoading(true);
-      let query = supabase.from('tasks').select(select).range(0, 10);
+      let query = supabase
+        .from('tasks')
+        .select(select ?? '*')
+        .range(0, 10);
 
       if (status) {
         query = query.eq('status', status);
@@ -51,6 +54,7 @@ export const useGetTasks = ({
       }
 
       const { data: response, error: fetchError } = await query;
+      console.log(data);
       if (fetchError) {
         setError(fetchError);
       } else {
