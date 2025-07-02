@@ -17,7 +17,6 @@ import { useUpdateLabResult } from '@/src/hooks/lab-test-result/use-update-lab-r
 import {
   cbcDefaultValue,
   basicmetabolicpanelDefaultValue,
-  lipidpanelDefaultValue,
   thyroidtestDefaultValue,
   livertestDefaultValue,
   urinalysisDefaultValue,
@@ -25,6 +24,22 @@ import {
   ecgDefaultValue,
   bloodglucoseDefaultValue,
   hba1cDefaultValue,
+  hivAntibodyDefaultValue,
+  malariaParasiteDefaultValue,
+  widalTestDefaultValue,
+  hbsagTestDefaultValue,
+  hcvAntibodyDefaultValue,
+  vdrlTestDefaultValue,
+  pregnancyTestDefaultValue,
+  prolactinDefaultValue,
+  troponinITestDefaultValue,
+  ddimerDefaultValue,
+  ptinrDefaultValue,
+  abdominalUltrasoundDefaultValue,
+  pelvicUltrasoundDefaultValue,
+  ctScanHeadDefaultValue,
+  mriBrainDefaultValue,
+  lipidprofileDefaultValue,
 } from '@/src/utils/test-initial-values';
 import PriorityBar from '@/src/components/molecules/priority-bar/priority-bar';
 
@@ -58,16 +73,31 @@ const LabOrderDetails = ({ data, refetch }: vitalsType) => {
 
   /* eslint-disable  @typescript-eslint/no-explicit-any */
   const formDefaultObj: Record<string, any> = {
-    completebloodcount: cbcDefaultValue,
+    'completebloodcount(cbc)': cbcDefaultValue,
     basicmetabolicpanel: basicmetabolicpanelDefaultValue,
-    lipidpanel: lipidpanelDefaultValue,
-    thyroidtests: thyroidtestDefaultValue,
-    livertests: livertestDefaultValue,
+    lipidprofileDefaultValue: lipidprofileDefaultValue,
+    thyroidfunctiontests: thyroidtestDefaultValue,
+    'liverfunctiontest(lft)': livertestDefaultValue,
     urinalysis: urinalysisDefaultValue,
-    chestxray: chestxrayDefaultValue,
+    'chestx-ray': chestxrayDefaultValue,
     ecg: ecgDefaultValue,
-    bloodglucose: bloodglucoseDefaultValue,
-    hba1c: hba1cDefaultValue,
+    bloodglucosefasting: bloodglucoseDefaultValue,
+    hemoglobina1c: hba1cDefaultValue,
+    'hiv1+2antibody': hivAntibodyDefaultValue,
+    malariaparasitetest: malariaParasiteDefaultValue,
+    widaltest: widalTestDefaultValue,
+    hbsagtest: hbsagTestDefaultValue,
+    hcvantibodytest: hcvAntibodyDefaultValue,
+    vdrltest: vdrlTestDefaultValue,
+    'pregnancytest(β-hcg)': pregnancyTestDefaultValue,
+    prolactin: prolactinDefaultValue,
+    troponini: troponinITestDefaultValue,
+    'd-dimer': ddimerDefaultValue,
+    'pt/inr': ptinrDefaultValue,
+    abdominalultrasound: abdominalUltrasoundDefaultValue,
+    pelvicultrasound: pelvicUltrasoundDefaultValue,
+    'ctscanhead(withcontrast)': ctScanHeadDefaultValue,
+    'mribrain(withoutcontrast)': mriBrainDefaultValue,
   };
 
   const { control, getValues, reset, handleSubmit, setValue } = useForm({
@@ -167,7 +197,7 @@ const LabOrderDetails = ({ data, refetch }: vitalsType) => {
     setCurrentForm(formKey);
   };
 
-  // console.log(queryData);
+  console.log(data);
 
   return (
     <div className="flex flex-col md:flex-row gap-6 max-w-7xl mx-auto">
@@ -193,11 +223,12 @@ const LabOrderDetails = ({ data, refetch }: vitalsType) => {
           )}
         </div>
         <div className="space-y-4">
-          {data?.task_data.map((item: string, index: number) => {
-            const formKey = item.replace(/\s+/g, '').toLowerCase();
+          {data?.task_data.map((item: { name: string; bill: string }, index: number) => {
+            const formKey = item?.name.replace(/\s+/g, '').toLowerCase();
             const status: any =
-              data?.task_result && Object.entries(data?.task_result).find(([key]) => key === item);
-
+              data?.task_result &&
+              Object.entries(data?.task_result).find(([key]) => key === item?.name);
+            if (item?.bill === 'unpaid') return;
             return (
               <button
                 key={`${formKey}-${index}`}
@@ -209,13 +240,13 @@ const LabOrderDetails = ({ data, refetch }: vitalsType) => {
                   }`}
                 onClick={() => {
                   changeFormInView(formKey);
-                  setTestName(item);
+                  setTestName(item?.name);
                 }}
               >
                 <div className="w-full flex items-top gap-2">
                   <FlaskConical size={18} className="text-blue-500 flex-shrink-0" />
                   <div className="text-left overflow-hidden">
-                    <p className="font-medium text-gray-800 truncate text-sm">{item}</p>
+                    <p className="font-medium text-gray-800 truncate text-sm">{item?.name}</p>
                     <p className="text-xs text-gray-500 mb-4">
                       {dayjs(data?.created_at).format('h:mm A · DD-MM-YY')}
                     </p>
@@ -248,7 +279,6 @@ const LabOrderDetails = ({ data, refetch }: vitalsType) => {
                         .replace(/([A-Z])/g, ' $1')
                         .replace(/(^|\s)\S/g, (l) => l.toUpperCase())
                         .trim()}
-                      Test
                     </h2>
                     <p className="text-xs text-gray-500 mt-1">
                       Record all required values for this test
@@ -265,7 +295,7 @@ const LabOrderDetails = ({ data, refetch }: vitalsType) => {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className="grid items-end grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 ">
                   <RenderForm
                     control={control}
                     form={currentForm}

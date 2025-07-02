@@ -4,49 +4,38 @@ import { useState } from 'react';
 type GetDataType = {
   select?: string;
   name?: string;
-  filter?: string;
-  // task_name: string;
   status?: string;
 };
 
-export const useQueryBillableTask = ({ select, name, filter, status }: GetDataType) => {
+export const useQueryBillableTask = ({ select, name, status }: GetDataType) => {
   const supabase = createClient();
   /* eslint-disable  @typescript-eslint/no-explicit-any */
   const [data, setData] = useState<any>(null);
   /* eslint-disable  @typescript-eslint/no-explicit-any */
   const [error, setError] = useState<any>(null);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const queryBillableTask = async () => {
+    setLoading(true);
     try {
-      let query = supabase
-        .from('tasks')
-        .select(select ?? '*')
-        .range(0, 10);
-      // .eq('status', status);
+      const { data: response, error: fetchError } = await supabase
+        .rpc('search_billable_tasks', {
+          name: name ?? '',
+          bill_status: status ?? 'unpaid',
+        })
+        .select(select ?? '*');
 
-      if (status !== 'all') {
-        query = query.eq('status', status);
-      }
-
-      if (name !== undefined) {
-        query = query.or(
-          `patient->>first_name.ilike.%${name}%,patient->>last_name.ilike.%${name}%,patient->>id.ilike.%${name}%`
-        );
-      }
-      if (filter !== undefined) {
-        query = query.filter('patient->>id', 'eq', filter);
-      }
-
-      const { data: response, error: fetchError } = await query;
-      console.log(data);
       if (fetchError) {
+        console.error('RPC error:', fetchError);
         setError(fetchError);
+        setData(null);
       } else {
         setData(response);
       }
     } catch (err) {
+      console.error('Unhandled error:', err);
       setError(err);
+      setData(null);
     } finally {
       setLoading(false);
     }
@@ -54,7 +43,8 @@ export const useQueryBillableTask = ({ select, name, filter, status }: GetDataTy
 
   const clearData = () => {
     setData(null);
+    setError(null);
   };
 
-  return { queryBillableTask, error, loading, data, clearData };
+  return { queryBillableTask, data, error, loading, clearData };
 };

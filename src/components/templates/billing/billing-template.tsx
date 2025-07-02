@@ -1,19 +1,18 @@
 'use client';
-import React from 'react';
-import BillingTable from '../../organisms/billing/billing-table';
+import React, { useEffect } from 'react';
+import BillingTable from '../../organisms/billing/billing-template-table';
 import Header from '@/src/components/organisms/patient/header';
 import { Search, Loader, XIcon } from 'lucide-react';
 import { useDebounce } from '@/src/hooks/debounce/use-debounce';
-import { useQueryTask } from '@/src/hooks/task/use-query-task';
 import EmptyState from '@/src/components/molecules/empty-state/empty-state';
 import SelectDropdown from '@/src/components/molecules/select-dropdown/select-dropdown';
 import { useForm } from 'react-hook-form';
 import Input from '@/src/components/atoms/Input/input-field';
-// import { useGetUnpaidBills } from '@/src/hooks/billing/use-get-query-bills';
+import { useQueryBillableTask } from '@/src/hooks/task/use-query-billable-task';
 
 export default function BillingTemplate() {
   const { control, watch, setValue } = useForm({
-    defaultValues: { search: '', status: { label: 'Pending', value: 'pending' } },
+    defaultValues: { search: '', status: { label: 'Unpaid', value: 'unpaid' } },
     mode: 'onChange',
   });
 
@@ -23,25 +22,19 @@ export default function BillingTemplate() {
   const debouncedName = useDebounce(searchValue, 500);
 
   const {
-    // queryTask,
+    queryBillableTask,
     data: queryData,
     loading,
     clearData,
-  } = useQueryTask({
-    task_name: 'lab_order',
-    select: '*',
+  } = useQueryBillableTask({
+    select: 'patient',
     name: debouncedName,
-    status: status ? status?.value : 'pending',
+    status: status ? status?.value : '',
   });
 
-  // const { getUnpaidBills, data: unpaidData, loading: loadingUnpaid, clearData: clearUnpaidData } = useGetUnpaidBills({});
-
-  // console.log(unpaidData);
-
-  // useEffect(() => {
-  //   queryTask();
-  //   getUnpaidBills();
-  // }, [debouncedName, status]);
+  useEffect(() => {
+    queryBillableTask();
+  }, [debouncedName, status]);
 
   const resetField = () => {
     setValue('search', '');
@@ -50,10 +43,11 @@ export default function BillingTemplate() {
 
   const options = [
     { label: 'All', value: 'all' },
-    { label: 'Pending', value: 'pending' },
-    { label: 'In Progress', value: 'in_progress' },
-    { label: 'Completed', value: 'completed' },
+    { label: 'Paid', value: 'paid' },
+    { label: 'Unpaid', value: 'unpaid' },
   ];
+
+  console.log(queryData);
 
   return (
     <div className="p-8 bg-white min-h-screen">

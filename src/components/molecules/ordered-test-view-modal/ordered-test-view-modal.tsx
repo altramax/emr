@@ -17,7 +17,7 @@ const OrderedTestViewModal = ({ isOpen, onCancel, title, formdata }: Confirmatio
 
   return (
     <div className="text-black fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-      <div className="bg-white w-full max-w-md p-6 rounded-xl shadow-xl space-y-4">
+      <div className="bg-white w-full max-w-md p-6 rounded-xl shadow-xl space-y-4  h-[80vh] overflow-auto">
         <div className="flex items-center justify-between gap-3">
           <h2 className="text-lg font-semibold text-gray-800">{title}</h2>
           <button onClick={onCancel}>

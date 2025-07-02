@@ -7,7 +7,7 @@ import ConfirmationReviewModal from '@/src/components/molecules/confirmation-rev
 import { toast } from 'react-toastify';
 import { useInsertTask } from '@/src/hooks/task/use-insert-task';
 import { useGetTasks } from '@/src/hooks/task/use-get-tasks';
-import ViewModal from '@/src/components/molecules/view-modal/view-modal';
+import OrderedTestViewModal from '@/src/components/molecules/ordered-test-view-modal/ordered-test-view-modal';
 
 type option = {
   label: string;
@@ -49,41 +49,40 @@ export default function LabOrders({ data }: dataType) {
   }, []);
 
   const tests = [
-    // Core Blood Tests
-    { label: 'Complete Blood Count (CBC)', value: 'Complete blood count', status: 'pending' },
-    { label: 'Basic Metabolic Panel', value: 'Basic metabolic panel', status: 'pending' },
-    { label: 'Lipid Profile', value: 'Lipid profile', status: 'pending' },
-    { label: 'Thyroid Function Tests', value: 'Thyroid function tests', status: 'pending' },
-    { label: 'Liver Function Test (LFT)', value: 'Liver function test', status: 'pending' },
+    { label: 'Complete Blood Count (CBC)', value: 'Complete Blood Count (CBC)', status: 'pending' },
+    { label: 'Basic Metabolic Panel', value: 'Basic Metabolic Panel', status: 'pending' },
+    { label: 'Lipid Profile', value: 'Lipid Profile', status: 'pending' },
+    { label: 'Thyroid Function Tests', value: 'Thyroid Function Tests', status: 'pending' },
+    { label: 'Liver Function Test (LFT)', value: 'Liver Function Test (LFT)', status: 'pending' },
     { label: 'Hemoglobin A1C', value: 'Hemoglobin A1C', status: 'pending' },
-    { label: 'Blood Glucose (Fasting)', value: 'Blood glucose fasting', status: 'pending' },
+    { label: 'Blood Glucose (Fasting)', value: 'Blood Glucose Fasting', status: 'pending' },
     { label: 'Urinalysis', value: 'Urinalysis', status: 'pending' },
-
-    // Infectious Disease
     { label: 'HIV 1 & 2 Antibody', value: 'HIV 1+2 Antibody', status: 'pending' },
-    { label: 'Malaria Parasite Test', value: 'Malaria parasite test', status: 'pending' },
-    { label: 'Widal Test', value: 'Widal test', status: 'pending' },
-    { label: 'Hepatitis B Surface Antigen (HBsAg)', value: 'HBsAg test', status: 'pending' },
-    { label: 'HCV Antibody', value: 'HCV antibody', status: 'pending' },
-    { label: 'VDRL Test (Syphilis)', value: 'VDRL test', status: 'pending' },
-
-    // Pregnancy / Hormones
-    { label: 'Pregnancy Test (β-hCG)', value: 'Pregnancy test', status: 'pending' },
-    { label: 'Prolactin', value: 'Prolactin', status: 'pending' },
-
-    // Cardiac & Clotting
+    { label: 'Malaria Parasite Test', value: 'Malaria Parasite Test', status: 'pending' },
+    { label: 'Widal Test', value: 'Widal Test', status: 'pending' },
+    { label: 'Hepatitis B Surface Antigen (HBsAg)', value: 'HBsAg Test', status: 'pending' },
+    { label: 'HCV Antibody', value: 'HCV Antibody Test', status: 'pending' },
+    { label: 'VDRL Test (Syphilis)', value: 'VDRL Test', status: 'pending' },
+    { label: 'Pregnancy Test (β-hCG)', value: 'Pregnancy Test (β-hCG)', status: 'pending' },
     { label: 'ECG', value: 'ECG', status: 'pending' },
     { label: 'Troponin I', value: 'Troponin I', status: 'pending' },
-    { label: 'D-Dimer', value: 'D-Dimer', status: 'pending' },
     { label: 'Prothrombin Time / INR', value: 'PT/INR', status: 'pending' },
-
-    // Imaging
-    { label: 'Chest X-Ray (PA/LAT)', value: 'Chest xray', status: 'pending' },
-    { label: 'Abdominal Ultrasound', value: 'Abdominal ultrasound', status: 'pending' },
-    { label: 'Pelvic Ultrasound', value: 'Pelvic ultrasound', status: 'pending' },
-    { label: 'CT Scan (Head, With Contrast)', value: 'CT scan head', status: 'pending' },
-    { label: 'MRI Brain (No Contrast)', value: 'MRI brain', status: 'pending' },
+    { label: 'Chest X-Ray', value: 'Chest X-Ray', status: 'pending' },
+    { label: 'Abdominal Ultrasound', value: 'Abdominal Ultrasound', status: 'pending' },
+    { label: 'Pelvic Ultrasound', value: 'Pelvic Ultrasound', status: 'pending' },
+    {
+      label: 'CT Scan Head(With Contrast)',
+      value: 'CT Scan Head (with Contrast)',
+      status: 'pending',
+    },
+    {
+      label: 'MRI Brain (Without Contrast)',
+      value: 'MRI Brain (without Contrast)',
+      status: 'pending',
+    },
   ];
+
+  console.log(data);
 
   const priorityOptions = [
     { label: 'Routine', value: 'routine' },
@@ -158,7 +157,7 @@ export default function LabOrders({ data }: dataType) {
   const renderTestOrderModal = () => {
     if (isTestOrderModalOpen) {
       return (
-        <ViewModal
+        <OrderedTestViewModal
           isOpen={isTestOrderModalOpen}
           onCancel={handleShowTestOrder}
           title="Test Order"
