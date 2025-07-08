@@ -6,13 +6,9 @@ type billTableType = {
   billInfo: any;
   setFinalTasks: (
     items: {
-      key: string;
       name: string;
-      category: string;
-      price: number;
       quantity: number;
       discount: number;
-      subTotal: number;
     }[]
   ) => void;
 };
@@ -35,9 +31,8 @@ export default function BillingDetailsTable({ billInfo, setFinalTasks }: billTab
       checked: boolean;
     }[]
   >([]);
-  const [checkAll, setCheckAll] = useState(false);
+  const [selectedTaskKey, setSelectedTaskKey] = useState<string>('');
 
-  // Initialize task list
   useEffect(() => {
     const tasks: typeof allTasks = [];
     /* eslint-disable  @typescript-eslint/no-explicit-any */
@@ -60,31 +55,42 @@ export default function BillingDetailsTable({ billInfo, setFinalTasks }: billTab
     setAllTasks(tasks);
   }, [billInfo]);
 
-  // Handle check all
   useEffect(() => {
-    setAllTasks((prev) =>
-      prev.map((item) => ({
-        ...item,
-        checked: checkAll,
-      }))
-    );
-  }, [checkAll]);
+    const selected = allTasks.filter((item) => item.checked);
+    const exist = selected.filter((item) => item?.key === selectedTaskKey);
 
-  // Update selected tasks for backend
-  useEffect(() => {
-    const selected = allTasks
-      .filter((item) => item.checked)
-      .map((item) => ({
-        key: item.key,
-        name: item.task.name,
-        category: item.category,
-        price: item.task.price,
-        quantity: item.task.quantity ?? 1,
-        discount: item.discount,
-        subTotal: item.subTotal,
-      }));
-    setFinalTasks(selected);
+    if (exist.length === 0 && selectedTaskKey) {
+      setSelectedTaskKey('');
+      return;
+    }
+
+    const newItems = selected.map((item) => ({
+      name: item.task.name,
+      quantity: item.task.quantity ?? 1,
+      discount: item.discount,
+    }));
+
+    setSelectedTaskKey('');
+    return setFinalTasks(newItems);
   }, [allTasks]);
+
+  const handleCheckAll = (checked: boolean) => {
+    if (checked) {
+      setAllTasks((prev) =>
+        prev.map((item) => ({
+          ...item,
+          checked: true,
+        }))
+      );
+    } else {
+      setAllTasks((prev) =>
+        prev.map((item) => ({
+          ...item,
+          checked: false,
+        }))
+      );
+    }
+  };
 
   const toggleCheckbox = (key: string) => {
     setAllTasks((prev) =>
@@ -98,25 +104,25 @@ export default function BillingDetailsTable({ billInfo, setFinalTasks }: billTab
     if (/^\d*$/.test(sanitized)) {
       const input = Number(sanitized);
 
-      setAllTasks((prev) =>
-        prev.map((item) => {
-          if (item.key !== key) return item;
+      const updatedTasks = allTasks.map((item) => {
+        if (item.key !== key) return item;
 
-          const quantity = item.task.quantity ?? 1;
-          const maxAllowed = item.task.price * quantity * 0.1;
+        const quantity = item.task.quantity ?? 1;
+        const maxAllowed = item.task.price * quantity * 0.1;
 
-          if (input > maxAllowed) {
-            toast.error('Discount cannot exceed 10% of subtotal');
-            return item; // Keep old state
-          }
+        if (input > maxAllowed) {
+          toast.error('Discount cannot exceed 10% of total');
+          return item; // return the original item if validation fails
+        }
 
-          return {
-            ...item,
-            discount: input,
-            subTotal: item.task.price * quantity - input,
-          };
-        })
-      );
+        return {
+          ...item,
+          discount: input,
+          subTotal: item.task.price * quantity - input,
+        };
+      });
+
+      setAllTasks(updatedTasks);
     }
   };
 
@@ -129,8 +135,9 @@ export default function BillingDetailsTable({ billInfo, setFinalTasks }: billTab
               <input
                 type="checkbox"
                 className="checkbox cursor-pointer"
-                checked={checkAll}
-                onChange={() => setCheckAll((prev) => !prev)}
+                onChange={(e) => {
+                  handleCheckAll(e.target.checked);
+                }}
               />
             </th>
             <th className="text-left px-6 py-3">Item</th>
@@ -138,7 +145,7 @@ export default function BillingDetailsTable({ billInfo, setFinalTasks }: billTab
             <th className="text-right px-6 py-3">Qty</th>
             <th className="text-right px-6 py-3">Unit Cost</th>
             <th className="text-right px-6 py-3">Discount</th>
-            <th className="text-right px-6 py-3">Subtotal</th>
+            <th className="text-right px-6 py-3">Total</th>
           </tr>
         </thead>
         <tbody className="text-gray-700 text-sm">
@@ -170,7 +177,10 @@ export default function BillingDetailsTable({ billInfo, setFinalTasks }: billTab
                       type="text"
                       inputMode="numeric"
                       value={discount === 0 ? '' : discount}
-                      onChange={(e) => handleDiscountInput(key, e.target.value)}
+                      onChange={(e) => {
+                        setSelectedTaskKey(key);
+                        handleDiscountInput(key, e.target.value);
+                      }}
                       className="w-[70px] border px-1 rounded"
                       placeholder={`Max 10%`}
                     />
