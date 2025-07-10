@@ -17,7 +17,7 @@ import { useUpdateLabResult } from '@/src/hooks/lab-test-result/use-update-lab-r
 import {
   cbcDefaultValue,
   basicmetabolicpanelDefaultValue,
-  lipidpanelDefaultValue,
+  lipidprofileDefaultValue,
   thyroidtestDefaultValue,
   livertestDefaultValue,
   urinalysisDefaultValue,
@@ -60,7 +60,7 @@ const LabOrderDetails = ({ data, refetch }: vitalsType) => {
   const formDefaultObj: Record<string, any> = {
     completebloodcount: cbcDefaultValue,
     basicmetabolicpanel: basicmetabolicpanelDefaultValue,
-    lipidpanel: lipidpanelDefaultValue,
+    lipidpanel: lipidprofileDefaultValue,
     thyroidtests: thyroidtestDefaultValue,
     livertests: livertestDefaultValue,
     urinalysis: urinalysisDefaultValue,
