@@ -228,7 +228,7 @@ const LabOrderDetails = ({ data, refetch }: vitalsType) => {
             const status: any =
               data?.task_result &&
               Object.entries(data?.task_result).find(([key]) => key === item?.name);
-            if (item?.bill === 'unpaid') return;
+            // if (item?.bill === 'unpaid') return;
             return (
               <button
                 key={`${formKey}-${index}`}
