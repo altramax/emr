@@ -1,7 +1,7 @@
 import {
   BasicMetabolicPanelForm,
   CompleteBloodCountForm,
-  LipidPanelForm,
+  LipidProfileForm,
   ThyroidTestForm,
   LiverTestForm,
   UrinalysisForm,
@@ -27,7 +27,7 @@ type formtype = {
 const formsObj: any = {
   completebloodcount: CompleteBloodCountForm,
   basicmetabolicpanel: BasicMetabolicPanelForm,
-  lipidpanel: LipidPanelForm,
+  lipidpanel: LipidProfileForm,
   thyroidtests: ThyroidTestForm,
   livertests: LiverTestForm,
   urinalysis: UrinalysisForm,
