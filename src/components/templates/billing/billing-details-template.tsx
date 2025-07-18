@@ -1,6 +1,6 @@
 'use client';
 import { useState, useEffect } from 'react';
-import PatientDetailsHeader from '../../organisms/patient/patient-details-header';
+import BillingDetailsHeader from '../../organisms/billing/billing-patient-details-header';
 import { useParams } from 'next/navigation';
 import { useQueryBillableTask } from '@/src/hooks/task/use-query-billable-task';
 import Loading from '../../atoms/loading-bar/loading-bar-page';
@@ -9,6 +9,9 @@ import BillingDetailsTable from '../../organisms/billing/billing-details-table';
 import { UseCalculateSubtotal } from '@/src/hooks/billing/use-calculate-subtotal';
 import Button from '../../atoms/button/button';
 import { useInsertBilling } from '@/src/hooks/billing/use-insert-billing';
+import { toast } from 'react-toastify';
+import { usePDF } from 'react-to-pdf';
+import ReceiptLayout from '../../organisms/billing/receipt-layout';
 
 export interface SelectedTask {
   name: string;
@@ -18,13 +21,14 @@ export interface SelectedTask {
 
 export default function BillingDetailsPage() {
   const param = useParams();
+  const { toPDF, targetRef } = usePDF({ filename: 'page.pdf' });
   /* eslint-disable  @typescript-eslint/no-explicit-any */
   const detailsId: any = param?.detailsId;
   const [selectedTasks, setSelectedTasks] = useState<SelectedTask[]>([]);
-
-  const { queryBillableTask, data, loading } = useQueryBillableTask({
+  const { queryBillableTask, data, loading, refetch } = useQueryBillableTask({
     select: '*',
     name: detailsId,
+    status: 'all',
   });
 
   const {
@@ -51,8 +55,6 @@ export default function BillingDetailsPage() {
 
   const subtotal = totalData?.[0];
 
-  console.log(data);
-
   const paymentData = {
     visit_id: billInfo?.visit_id,
     patient_id: billInfo?.patient_id,
@@ -64,8 +66,18 @@ export default function BillingDetailsPage() {
   const { insertBill } = useInsertBilling({ column: paymentData });
 
   const payBill = async () => {
-    console.log(paymentData);
-    insertBill();
+    const response = await insertBill();
+    if (response === 'success') {
+      toast.success('Bill paid successfully');
+      refetch();
+    }
+  };
+
+  const downloadHandler = () => {
+    toPDF();
+    setTimeout(() => {
+      toast.success('Receipt downloaded successfully');
+    }, 1000);
   };
 
   if (loading) return <Loading />;
@@ -73,7 +85,11 @@ export default function BillingDetailsPage() {
   return (
     <div className="p-8 max-w-7xl mx-auto text-sm bg-gray-50 min-h-screen">
       <div className="mb-8">
-        <PatientDetailsHeader data={billInfo} back_path="/billing" />
+        <BillingDetailsHeader
+          data={billInfo}
+          back_path="/billing"
+          receiptAction={downloadHandler}
+        />
       </div>
 
       <BillingDetailsTable billInfo={billInfo} setFinalTasks={setSelectedTasks} />
@@ -133,6 +149,12 @@ export default function BillingDetailsPage() {
           </div>
         </div>
       )}
+
+      <div
+      // className="absolute left-[-9999px] top-0"
+      >
+        <ReceiptLayout receiptData={selectedTasks} Ref={targetRef} />
+      </div>
     </div>
   );
 }

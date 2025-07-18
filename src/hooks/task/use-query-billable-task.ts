@@ -46,5 +46,9 @@ export const useQueryBillableTask = ({ select, name, status }: GetDataType) => {
     setError(null);
   };
 
-  return { queryBillableTask, data, error, loading, clearData };
+  const refetch = () => {
+    queryBillableTask();
+  };
+
+  return { queryBillableTask, data, error, loading, clearData, refetch };
 };

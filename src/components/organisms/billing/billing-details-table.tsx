@@ -18,6 +18,8 @@ type TaskItem = {
   price: number;
   quantity?: number;
   discountable?: boolean;
+  bill?: string;
+  discount?: number;
 };
 
 export default function BillingDetailsTable({ billInfo, setFinalTasks }: billTableType) {
@@ -32,23 +34,35 @@ export default function BillingDetailsTable({ billInfo, setFinalTasks }: billTab
     }[]
   >([]);
   const [selectedTaskKey, setSelectedTaskKey] = useState<string>('');
+  const [isAllChecked, setIsAllChecked] = useState<boolean>(false);
 
   useEffect(() => {
     const tasks: typeof allTasks = [];
-    /* eslint-disable  @typescript-eslint/no-explicit-any */
+
     billInfo?.tasks?.forEach((item: any, taskIndex: number) => {
       item?.task_data?.forEach((task: TaskItem, i: number) => {
         const key = `${item.task_name}-${task.name}-${taskIndex}-${i}`;
         const quantity = task.quantity ?? 1;
         const price = task.price;
-        tasks.push({
-          key,
-          task,
-          category: item.task_name.replace(/_/g, ' '),
-          discount: 0,
-          subTotal: price * quantity,
-          checked: false,
-        });
+        if (task?.bill === 'paid') {
+          tasks.push({
+            key,
+            task,
+            category: item.task_name.replace(/_/g, ' '),
+            discount: task?.discount ?? 0,
+            subTotal: price * quantity - (task?.discount ?? 0),
+            checked: true,
+          });
+        } else {
+          tasks.push({
+            key,
+            task,
+            category: item.task_name.replace(/_/g, ' '),
+            discount: 0,
+            subTotal: price * quantity,
+            checked: false,
+          });
+        }
       });
     });
 
@@ -56,12 +70,19 @@ export default function BillingDetailsTable({ billInfo, setFinalTasks }: billTab
   }, [billInfo]);
 
   useEffect(() => {
-    const selected = allTasks.filter((item) => item.checked);
+    const selected = allTasks.filter((item) => item.task?.bill !== 'paid' && item.checked);
     const exist = selected.filter((item) => item?.key === selectedTaskKey);
+    const allChecked = allTasks.every((item) => item.checked);
 
     if (exist.length === 0 && selectedTaskKey) {
       setSelectedTaskKey('');
       return;
+    }
+
+    if (allChecked) {
+      setIsAllChecked(true);
+    } else {
+      setIsAllChecked(false);
     }
 
     const newItems = selected.map((item) => ({
@@ -75,13 +96,14 @@ export default function BillingDetailsTable({ billInfo, setFinalTasks }: billTab
   }, [allTasks]);
 
   const handleCheckAll = (checked: boolean) => {
-    if (checked) {
+    if (checked === true) {
       setAllTasks((prev) =>
         prev.map((item) => ({
           ...item,
           checked: true,
         }))
       );
+      setIsAllChecked(true);
     } else {
       setAllTasks((prev) =>
         prev.map((item) => ({
@@ -89,6 +111,7 @@ export default function BillingDetailsTable({ billInfo, setFinalTasks }: billTab
           checked: false,
         }))
       );
+      setIsAllChecked(false);
     }
   };
 
@@ -126,6 +149,8 @@ export default function BillingDetailsTable({ billInfo, setFinalTasks }: billTab
     }
   };
 
+  console.log(billInfo);
+
   return (
     <div className="bg-white shadow-md mb-8 overflow-hidden border mt-8 rounded-2xl">
       <table className="w-full">
@@ -135,6 +160,7 @@ export default function BillingDetailsTable({ billInfo, setFinalTasks }: billTab
               <input
                 type="checkbox"
                 className="checkbox cursor-pointer"
+                checked={isAllChecked}
                 onChange={(e) => {
                   handleCheckAll(e.target.checked);
                 }}
@@ -158,7 +184,8 @@ export default function BillingDetailsTable({ billInfo, setFinalTasks }: billTab
                   <input
                     type="checkbox"
                     className="checkbox cursor-pointer"
-                    checked={checked}
+                    checked={task?.bill === 'paid' ? true : checked}
+                    disabled={task?.bill === 'paid'}
                     onChange={() => toggleCheckbox(key)}
                   />
                 </td>
@@ -183,6 +210,7 @@ export default function BillingDetailsTable({ billInfo, setFinalTasks }: billTab
                       }}
                       className="w-[70px] border px-1 rounded"
                       placeholder={`Max 10%`}
+                      disabled={task?.bill === 'paid'}
                     />
                   ) : (
                     'N/A'
