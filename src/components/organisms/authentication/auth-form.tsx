@@ -30,7 +30,11 @@ export default function AuthForm() {
 
     try {
       const res = await signInAction(form);
-      if (res === 'success') {
+      if (res?.response === 'error') {
+        toast.error(res.message);
+        return;
+      }
+      if (res?.response === 'success') {
         router.replace('/dashboard');
         toast.success('Signin Successful');
       }
