@@ -1,3 +1,9 @@
+import dayjs from 'dayjs';
+import { TaskItem } from './billing-details-table';
+import { UseCalculateSubtotal } from '@/src/hooks/billing/use-calculate-subtotal';
+import { useEffect, useState } from 'react';
+import { SelectedTask } from '@/src/components/templates/billing/billing-details-template';
+
 type receiptDataType = {
   /* eslint-disable  @typescript-eslint/no-explicit-any */
   receiptData: any;
@@ -6,16 +12,35 @@ type receiptDataType = {
 
 export default function ReceiptLayout({ receiptData, Ref }: receiptDataType) {
   const date = new Date();
-  const year = date.getFullYear();
-  const month = date.getMonth() + 1;
-  const day = date.getDate();
+  const formatted = date.toLocaleString('en-NG', {
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: true,
+  });
+  const receiptDate = `${dayjs(date).format('DD of MMMM YYYY')}`;
+  const receiptTime = `${formatted}`;
+  const [paidTasks, setPaidTasks] = useState<SelectedTask[]>([]);
 
-  const se = date.getTime().toLocaleString();
+  useEffect(() => {
+    const items = receiptData?.items?.map((item: TaskItem) => {
+      return {
+        name: item.name,
+        quantity: item.quantity ?? 1,
+        discount: item.discount ?? 0,
+      };
+    });
+    setPaidTasks(items);
+  }, [receiptData]);
 
-  console.log(receiptData);
+  useEffect(() => {
+    if (paidTasks.length === 0) return;
+    calculateSubtotal();
+  }, [paidTasks]);
 
-  const receiptDate = `${day}-${month}-${year}`;
-  const receiptTime = `${se}`;
+  const { calculateSubtotal, data: totalData } = UseCalculateSubtotal({
+    items: paidTasks,
+  });
+  const finalCalculation = totalData?.[0] ?? 0;
 
   return (
     <div
@@ -27,7 +52,7 @@ export default function ReceiptLayout({ receiptData, Ref }: receiptDataType) {
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div className="">
-          <div className="flex gap-2 items-center mt-2">
+          <div className="flex gap-2 items-center">
             <div className="bg-white text-blue-600 rounded flex items-center justify-center p-2 pt-0 px-1">
               <svg
                 width="30"
@@ -44,44 +69,39 @@ export default function ReceiptLayout({ receiptData, Ref }: receiptDataType) {
             </div>
             <h1 className="text-lg font-bold">LiLy HealthCare</h1>
           </div>
-          <p className="text-xs text-gray-500 text-end">Plot 42, Medical Way, Lagos</p>
+          <p className="text-xs text-gray-500 text-end pl-12">Plot 42, Medical Way, Lagos</p>
         </div>
 
         <div className="text-right text-xs text-gray-600">
           <p>
-            <strong>Date:</strong> {receiptDate}
-          </p>
-          <p>
             <strong>Time:</strong> {receiptTime}
           </p>
           <p>
-            <strong>Receipt No:</strong> RCP-20250712-02
+            <strong>Date:</strong> {receiptDate}
           </p>
+          {/* <p>
+            <strong>Receipt No:</strong> RCP-20250712-02
+          </p> */}
         </div>
       </div>
 
       <hr className="mb-4 border-gray-300" />
 
-      {/* Patient Info */}
       <div className="mb-4">
-        <h3 className="text-sm font-semibold text-gray-800 mb-2">Patient Information</h3>
-        <div className="grid grid-cols-2 gap-y-1 text-xs">
+        {/* <h3 className="text-sm font-semibold text-gray-800 mb-2">Patient Information</h3> */}
+        <div className="text-xs space-y-1">
           <p>
-            <strong>Full Name:</strong> Ezekiel Opeyemi
+            <strong>Full Name:</strong> {receiptData?.patientInfo?.fullname || 'N/A'}
           </p>
           <p>
-            <strong>Patient ID:</strong> HSP-1021
+            <strong>Patient ID:</strong> {receiptData?.patientInfo?.patientId || 'N/A'}
           </p>
           <p>
-            <strong>Visit ID:</strong> VS-3298
-          </p>
-          <p>
-            <strong>Gender:</strong> Male
+            <strong>Gender:</strong> {receiptData?.patientInfo?.patientGender || 'N/A'}
           </p>
         </div>
       </div>
 
-      {/* Billing Table */}
       <div className="mb-6">
         <h3 className="text-sm font-semibold text-gray-800 mb-2">Billed Items</h3>
         <table className="w-full border text-xs">
@@ -89,47 +109,71 @@ export default function ReceiptLayout({ receiptData, Ref }: receiptDataType) {
             <tr>
               <th className="p-2 border">#</th>
               <th className="p-2 border text-left">Item</th>
+              <th className="p-2 border text-center">Qty</th>
               <th className="p-2 border">Price</th>
               <th className="p-2 border">Discount</th>
               <th className="p-2 border">Total</th>
             </tr>
           </thead>
+
           <tbody>
-            <tr className="text-gray-800">
-              <td className="p-2 border text-center">1</td>
-              <td className="p-2 border">CBC Test</td>
-              <td className="p-2 border text-center">₦5,000</td>
-              <td className="p-2 border text-center">₦0</td>
-              <td className="p-2 border text-center font-semibold">₦5,000</td>
-            </tr>
-            <tr className="text-gray-800">
-              <td className="p-2 border text-center">2</td>
-              <td className="p-2 border">Chest X-Ray</td>
-              <td className="p-2 border text-center">₦8,000</td>
-              <td className="p-2 border text-center">₦1,000</td>
-              <td className="p-2 border text-center font-semibold">₦7,000</td>
-            </tr>
+            {receiptData
+              ? receiptData.items?.map((task: TaskItem, i: number) => {
+                  return (
+                    <tr className="text-gray-800" key={i + 1}>
+                      <td className="p-2 border text-center">{i + 1}</td>
+                      <td className="p-2 border">{task.name}</td>
+                      <td className="p-2 border text-center">{task.quantity ?? 1}</td>
+                      <td className="p-2 border text-center">
+                        {new Intl.NumberFormat('en-NG', {
+                          style: 'currency',
+                          currency: 'NGN',
+                        }).format(task.price)}
+                      </td>
+                      <td className="p-2 border text-center">
+                        {new Intl.NumberFormat('en-NG', {
+                          style: 'currency',
+                          currency: 'NGN',
+                        }).format(task.discount ?? 0)}
+                      </td>
+
+                      <td className="p-2 border text-center font-semibold">
+                        {new Intl.NumberFormat('en-NG', {
+                          style: 'currency',
+                          currency: 'NGN',
+                        }).format(task?.price * (task.quantity ?? 1) - (task?.discount ?? 0))}
+                      </td>
+                    </tr>
+                  );
+                })
+              : null}
           </tbody>
         </table>
       </div>
 
-      {/* Summary */}
-      <div className="text-right text-sm mb-6">
-        <p className="mb-1">
-          <strong>Subtotal:</strong> ₦13,000
+      <div className="w-fit ml-auto text-left text-sm mb-6">
+        <p className="mb-1 flex gap-2">
+          <strong>Total:</strong>
+          {new Intl.NumberFormat('en-NG', { style: 'currency', currency: 'NGN' }).format(
+            finalCalculation?.total_billed ?? 0
+          )}
         </p>
-        <p className="mb-1">
-          <strong>Amount Paid:</strong> ₦10,000
+        <p className="mb-1 flex gap-2">
+          <strong>Discount:</strong>
+          {new Intl.NumberFormat('en-NG', { style: 'currency', currency: 'NGN' }).format(
+            finalCalculation?.total_discount ?? 0
+          )}
         </p>
-        <p className="text-red-600 font-bold">
-          <strong>Balance:</strong> ₦3,000
+        <p className="text-red-600 font-bold flex gap-2">
+          <strong>Subtotal:</strong>
+          {new Intl.NumberFormat('en-NG', { style: 'currency', currency: 'NGN' }).format(
+            finalCalculation?.final_amount ?? 0
+          )}
         </p>
       </div>
 
-      {/* Footer */}
       <div className="text-center text-xs text-gray-500 border-t pt-3">
-        <p>This is a system-generated receipt. No signature is required.</p>
-        <p>Thank you for choosing Lifeline Medical Center.</p>
+        <p>Thank you for choosing Lily HealthCare.</p>
       </div>
     </div>
   );

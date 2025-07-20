@@ -12,6 +12,7 @@ import { useInsertBilling } from '@/src/hooks/billing/use-insert-billing';
 import { toast } from 'react-toastify';
 import { usePDF } from 'react-to-pdf';
 import ReceiptLayout from '../../organisms/billing/receipt-layout';
+import { TaskItem } from '../../organisms/billing/billing-details-table';
 
 export interface SelectedTask {
   name: string;
@@ -24,6 +25,7 @@ export default function BillingDetailsPage() {
   const { toPDF, targetRef } = usePDF({ filename: 'page.pdf' });
   /* eslint-disable  @typescript-eslint/no-explicit-any */
   const detailsId: any = param?.detailsId;
+  const [receiptItems, setReceiptItems] = useState<any>([]);
   const [selectedTasks, setSelectedTasks] = useState<SelectedTask[]>([]);
   const { queryBillableTask, data, loading, refetch } = useQueryBillableTask({
     select: '*',
@@ -45,6 +47,30 @@ export default function BillingDetailsPage() {
     if (!detailsId) return;
     queryBillableTask();
   }, [detailsId]);
+
+  useEffect(() => {
+    const items: TaskItem[] = [];
+    const patientInfo = {
+      fullname: billInfo?.patient?.first_name + ' ' + billInfo?.patient?.last_name,
+      patientId: billInfo?.patient?.id,
+      patientGender: billInfo?.patient?.gender,
+    };
+    console.log(billInfo);
+
+    if (billInfo) {
+      billInfo?.tasks?.map((item: any) => {
+        item?.task_data?.map((task: TaskItem) => {
+          if (task?.bill === 'paid') {
+            items.push(task);
+          }
+        });
+      });
+    }
+
+    setReceiptItems({ patientInfo: patientInfo, items: items });
+  }, [billInfo]);
+
+  // console.log(receiptItems);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -88,7 +114,9 @@ export default function BillingDetailsPage() {
         <BillingDetailsHeader
           data={billInfo}
           back_path="/billing"
-          receiptAction={downloadHandler}
+          buttonAction={downloadHandler}
+          buttonText="Download Receipt"
+          disabled={receiptItems?.items?.length === 0}
         />
       </div>
 
@@ -150,10 +178,8 @@ export default function BillingDetailsPage() {
         </div>
       )}
 
-      <div
-      // className="absolute left-[-9999px] top-0"
-      >
-        <ReceiptLayout receiptData={selectedTasks} Ref={targetRef} />
+      <div className="absolute left-[-9999px] top-0">
+        <ReceiptLayout receiptData={receiptItems} Ref={targetRef} />
       </div>
     </div>
   );

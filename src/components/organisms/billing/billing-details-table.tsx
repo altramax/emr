@@ -13,14 +13,14 @@ type billTableType = {
   ) => void;
 };
 
-type TaskItem = {
+export interface TaskItem {
   name: string;
   price: number;
   quantity?: number;
   discountable?: boolean;
   bill?: string;
   discount?: number;
-};
+}
 
 export default function BillingDetailsTable({ billInfo, setFinalTasks }: billTableType) {
   const [allTasks, setAllTasks] = useState<
@@ -149,7 +149,7 @@ export default function BillingDetailsTable({ billInfo, setFinalTasks }: billTab
     }
   };
 
-  console.log(billInfo);
+  // console.log(billInfo);
 
   return (
     <div className="bg-white shadow-md mb-8 overflow-hidden border mt-8 rounded-2xl">

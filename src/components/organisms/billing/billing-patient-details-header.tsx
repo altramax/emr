@@ -8,10 +8,18 @@ type PatientInfoRowProps = {
   /* eslint-disable  @typescript-eslint/no-explicit-any */
   data: any;
   back_path?: string;
-  receiptAction: () => void;
+  buttonAction: () => void;
+  buttonText: string;
+  disabled?: boolean;
 };
 
-const BillingPatientDetailsHeader = ({ data, back_path, receiptAction }: PatientInfoRowProps) => {
+const DetailsHeaderWithButton = ({
+  data,
+  back_path,
+  buttonAction,
+  buttonText,
+  disabled = false,
+}: PatientInfoRowProps) => {
   const router = useRouter();
 
   const renderStatus = (status: string) => {
@@ -65,9 +73,10 @@ const BillingPatientDetailsHeader = ({ data, back_path, receiptAction }: Patient
         </div>
         <Button
           className="bg-blue-600 text-white rounded-md px-4 py-1.5 text-xs"
-          onClick={receiptAction}
-          value={`Download Receipt`}
+          onClick={buttonAction}
+          value={buttonText}
           type="button"
+          disabled={disabled}
         />
       </div>
 
@@ -100,4 +109,4 @@ const BillingPatientDetailsHeader = ({ data, back_path, receiptAction }: Patient
   );
 };
 
-export default BillingPatientDetailsHeader;
+export default DetailsHeaderWithButton;
