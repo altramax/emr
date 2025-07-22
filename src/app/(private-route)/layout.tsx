@@ -12,7 +12,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     <section>
       <div className="flex min-h-screen bg-gray-100 ">
         <div
-          className={`${isNavOpen ? 'w-[310px]' : 'w-fit'} z-10 fixed lg:relative h-[100vh] overflow-y-auto no-scrollbar`}
+          className={`${isNavOpen ? 'w-[250px] lg:w-[310px]' : 'w-fit'} z-10 fixed lg:relative h-[100vh] overflow-y-auto no-scrollbar`}
         >
           <DashboardMenu isNavOpen={isNavOpen} expandNavHandler={expandNavHandler} />
         </div>

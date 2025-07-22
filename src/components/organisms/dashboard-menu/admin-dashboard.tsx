@@ -138,7 +138,7 @@ export default function AdminDashboard({ isOpen }: nursesDashboardType) {
           </span>
 
           <button
-            onClick={() => handleClick('medical-records')}
+            // onClick={() => handleClick('medical-records')}
             className={`relative ${pathname?.includes('/medical-records') ? 'bg-blue-500' : ''} flex items-center gap-2 hover:bg-blue-500 p-2 rounded w-full text-left`}
           >
             <FolderHeart size={18} />
