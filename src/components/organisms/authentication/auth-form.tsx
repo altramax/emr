@@ -71,7 +71,7 @@ export default function AuthForm() {
             />
           </svg>
         </div>
-        Lily Health Care
+        Lily Healthcare
       </div>
 
       <div className="text-xs flex flex-col items-start justify-start gap-1">

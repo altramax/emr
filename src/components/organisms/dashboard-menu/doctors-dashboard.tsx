@@ -86,7 +86,11 @@ export default function DoctorsDashboard({ isOpen }: nursesDashboardType) {
             <span className={` ${isOpen ? '' : 'hidden '}`}> Add-Vitals </span>
             <span
               className={` ${isOpen ? 'relative bottom-0 left-0' : 'absolute bottom-8 left-4 '} `}
-            ></span>
+            >
+              {diagnosisState?.diagnosis?.length > 0 && (
+                <Notification count={diagnosisState?.diagnosis?.length} />
+              )}
+            </span>
           </button>
         </div>
 

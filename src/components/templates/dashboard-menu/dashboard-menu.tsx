@@ -31,7 +31,7 @@ export default function DashboardMenu({ isNavOpen, expandNavHandler }: dashboard
     >
       <div className="bg-blue-600 z-50 sticky top-0 pt-5 flex gap-2 items-center mt-2 mb-6">
         <Logo />
-        <h1 className={`text-base font-bold ${isNavOpen ? '' : 'hidden'}`}>LiLy HealthCare</h1>
+        <h1 className={`text-base font-bold ${isNavOpen ? '' : 'hidden'}`}>LiLy Healthcare</h1>
         <Button
           value={
             <>

@@ -39,8 +39,7 @@ export default function AddVitalsDetailsTemplate() {
     }
   }, []);
 
-  const pageData =
-    pathname.get('from') === '/diagnosis' ? visitData && visitData[0] : data && data[0];
+  const pageData = pathname.get('from') === '/diagnosis' ? visitData?.[0] : data?.[0];
 
   if (loading || visitLoading) return <LoadingBar />;
 
