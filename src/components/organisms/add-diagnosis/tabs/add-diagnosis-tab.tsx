@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import Button from '@/src/components/atoms/button/button';
 import SelectDropdown from '@/src/components/molecules/select-dropdown/select-dropdown';
 import { useForm } from 'react-hook-form';
 
@@ -28,8 +27,8 @@ export default function AddDiagnosisTab({ data }: dataType) {
   console.log(data);
   return (
     <div className="w-full">
-      <div className="flex gap-4 items-center justify-start w-[50%] mb-4">
-        <div className=" w-[50%] text-xs text-blue-500">
+      <div className="flex gap-4 items-center justify-end mb-4">
+        <div className=" w-[200px] text-xs text-blue-500">
           <SelectDropdown
             options={options}
             name="status"
@@ -38,10 +37,6 @@ export default function AddDiagnosisTab({ data }: dataType) {
             className="text-xs text-blue-500"
           />
         </div>
-        <Button
-          value={'Admit patient'}
-          className="bg-blue-400 text-white font-medium text-xs text-center px-4 py-2 rounded-lg w-fit"
-        />
       </div>
       <form onSubmit={handleSubmit}>
         <div className="flex gap-6 items-center justify-between mb-4">
@@ -51,7 +46,7 @@ export default function AddDiagnosisTab({ data }: dataType) {
               className="w-full px-4 py-2 text-black text-xs border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
               value={symptoms}
               onChange={(e) => setSymptoms(e.target.value)}
-              rows={5}
+              rows={6}
               required
             ></textarea>
           </div>
@@ -62,7 +57,7 @@ export default function AddDiagnosisTab({ data }: dataType) {
               className="w-full px-4 py-2 text-black text-xs border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
               value={observations}
               onChange={(e) => setObservations(e.target.value)}
-              rows={5}
+              rows={6}
             ></textarea>
           </div>
         </div>
@@ -74,22 +69,22 @@ export default function AddDiagnosisTab({ data }: dataType) {
             className="w-full px-4 py-2 text-black text-xs border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
             value={observations}
             onChange={(e) => setObservations(e.target.value)}
-            rows={3}
+            rows={7}
           ></textarea>
         </div>
 
-        <div className="flex items-center justify-between mt-10">
-          <button
-            type="submit"
-            className="px-6 py-2 bg-blue-400 text-xs text-white font-semibold rounded-md hover:bg-blue-600 transition"
-          >
-            Submit Diagnosis
-          </button>
+        <div className="flex items-center justify-end gap-4 mt-10">
           <button
             type="button"
             className="px-6 py-2 bg-gray-300 text-xs text-gray-700 font-semibold rounded-md hover:bg-gray-400 transition"
           >
             Reset
+          </button>
+          <button
+            type="submit"
+            className="px-6 py-2 bg-blue-500 text-xs text-white font-semibold rounded-md hover:bg-blue-600 transition"
+          >
+            Submit
           </button>
         </div>
       </form>

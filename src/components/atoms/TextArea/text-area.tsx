@@ -37,7 +37,10 @@ const Textarea = (props: TextareaFieldProp) => {
   return (
     <>
       {label && (
-        <label htmlFor={name} className="flex items-center justify-start gap-1 font-semibold">
+        <label
+          htmlFor={name}
+          className="text-gray-500 text-xs flex items-center justify-start gap-1 font-medium"
+        >
           {label}
           {asterisk && <span className="text-[#DB1813]">*</span>}
         </label>

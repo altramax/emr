@@ -66,7 +66,6 @@ export default function AddDiagnosisTable({ patients }: PatientCareTableProps) {
                 <Avatar
                   firstname={patient?.patient?.first_name}
                   lastname={patient?.patient?.last_name}
-                  size={2}
                 />
               )}
               {`${patient?.patient?.first_name.charAt(0).toUpperCase() + patient?.patient?.first_name.slice(1)} ${patient?.patient?.last_name.charAt(0).toUpperCase() + patient?.patient?.last_name.slice(1)}`}

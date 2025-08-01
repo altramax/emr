@@ -117,9 +117,9 @@ const LabOrderDetails = ({ data, refetch }: vitalsType) => {
     result: result,
   };
 
-  const selectedData = queryData
-    ? queryData.filter((item: any) => item.test_name === testName)[0]
-    : null;
+  // const selectedData = queryData
+  //   ? queryData.filter((item: any) => item.test_name === testName)[0]
+  //   : null;
 
   const { insertLabResult, error, loading } = useInsertLabResult({ columns: submitData });
   const {
@@ -138,7 +138,7 @@ const LabOrderDetails = ({ data, refetch }: vitalsType) => {
     }
 
     try {
-      if (selectedData?.status === 'In Progress') {
+      if (queryData[0]?.id) {
         await updateLabResult();
         if (updateError) {
           toast.error('error saving test results');
@@ -196,8 +196,6 @@ const LabOrderDetails = ({ data, refetch }: vitalsType) => {
     reset({ ...formDefaultObj[formKey], status: initialStatus });
     setCurrentForm(formKey);
   };
-
-  console.log(data);
 
   return (
     <div className="flex flex-col md:flex-row gap-6 max-w-7xl mx-auto">
@@ -291,6 +289,7 @@ const LabOrderDetails = ({ data, refetch }: vitalsType) => {
                       options={options}
                       label="Test Status"
                       defaultValue={initialStatus}
+                      disabled={initialStatus?.value === 'Completed'}
                     />
                   </div>
                 </div>

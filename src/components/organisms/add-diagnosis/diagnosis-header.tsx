@@ -1,8 +1,8 @@
 import { useRouter } from 'next/navigation';
-import Avatar from '../../atoms/Avatar/Avatar';
 import { ArrowLeft, User2 } from 'lucide-react';
-import PatientInfoRow from '../../molecules/patient-info-row/patient-info-row';
+import PatientInfoColumn from '../../molecules/patient-info-row/patient-info-column';
 import CalculateAge from '../../atoms/calculate-age/calculate-age';
+import Avatar from '../../atoms/Avatar/Avatar';
 
 type PatientInfoRowProps = {
   /* eslint-disable  @typescript-eslint/no-explicit-any */
@@ -10,7 +10,7 @@ type PatientInfoRowProps = {
   back_path?: string;
 };
 
-const PatientDetailsHeader = ({ data, back_path }: PatientInfoRowProps) => {
+const DiagnosisHeader = ({ data, back_path }: PatientInfoRowProps) => {
   const router = useRouter();
 
   const renderStatus = (status: string) => {
@@ -50,7 +50,7 @@ const PatientDetailsHeader = ({ data, back_path }: PatientInfoRowProps) => {
   };
 
   return (
-    <div className="px-10 py-4 flex flex-col gap-4 bg-white rounded-xl shadow-md border border-gray-100">
+    <div className="p-4 flex flex-col gap-4 bg-white rounded-xl shadow-md border border-gray-100 w-[200px] h-full">
       <div className="flex items-center justify-start gep-4">
         <button
           className="flex items-center text-blue-600 hover:text-blue-700 gap-2 transition-colors"
@@ -64,8 +64,8 @@ const PatientDetailsHeader = ({ data, back_path }: PatientInfoRowProps) => {
 
       <div className="border-t border-gray-200"></div>
 
-      <div className="flex justify-between items-start gap-6">
-        <div className="flex flex-col items-center gap-2 w-[20%]">
+      <div className="flex justify-center items-center flex-col gap-3">
+        <div className="flex flex-col items-center gap-2">
           <div className="w-[90px] h-[90px] rounded-full bg-gray-100 border border-gray-300 flex items-center justify-center text-gray-400 shadow-sm">
             {data?.patient?.first_name && data?.patient?.last_name ? (
               <Avatar
@@ -81,22 +81,22 @@ const PatientDetailsHeader = ({ data, back_path }: PatientInfoRowProps) => {
           {renderStatus(data?.patient?.status)}
         </div>
 
-        <div className="flex flex-col border rounded-lg border-gray-100 px-4 py-2 bg-gray-50 shadow-sm w-[35%]">
-          <PatientInfoRow
+        <button className="w-fit py-1 px-3 rounded-lg  text-xs bg-green-500 hover:bg-green-600 text-white">
+          Admit Patient
+        </button>
+
+        <div className=" border rounded-lg border-gray-100 px-2 py-1 bg-gray-50 shadow-sm mt-2">
+          <PatientInfoColumn
             label="Name"
             value={`${data?.patient?.first_name} ${data?.patient?.last_name}`}
           />
-
-          <PatientInfoRow label="Gender" value={data?.patient?.gender} />
-        </div>
-
-        <div className="flex flex-col border rounded-lg border-gray-100 px-4 py-2 bg-gray-50 shadow-sm w-[35%]">
-          <PatientInfoRow label="Age" value={CalculateAge(data?.patient?.date_of_birth)} />
-          <PatientInfoRow label="Email" value={data?.patient?.email} />
+          <PatientInfoColumn label="Gender" value={data?.patient?.gender} />
+          <PatientInfoColumn label="Age" value={CalculateAge(data?.patient?.date_of_birth)} />
+          <PatientInfoColumn label="Email" value={data?.patient?.email} />
         </div>
       </div>
     </div>
   );
 };
 
-export default PatientDetailsHeader;
+export default DiagnosisHeader;

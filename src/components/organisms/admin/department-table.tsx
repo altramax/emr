@@ -32,7 +32,7 @@ export default function DepartmentTable({ departments }: PatientCareTableProps) 
             onClick={() => navigateTodeptDetails(dept?.id)}
           >
             <td className="p-4 flex items-center gap-4">
-              {departments && <Avatar firstname={dept?.name} size={2} />}
+              {departments && <Avatar firstname={dept?.name} />}
               {`${dept?.name.charAt(0).toUpperCase() + dept?.name.slice(1)}`}
             </td>
 

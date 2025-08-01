@@ -28,7 +28,7 @@ export const useGetDiagnosis = ({ select, id, status, filter }: getDataType) => 
         query = query.filter('patient->>id', 'eq', filter);
       }
 
-      const { data: response } = await query;
+      const { data: response } = await query.order('created_at', { ascending: true });
 
       setData(response);
       setLoading(false);

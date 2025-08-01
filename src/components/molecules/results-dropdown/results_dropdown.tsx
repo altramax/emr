@@ -1,4 +1,4 @@
-import VitalCard from '@/src/components/molecules/vitals-card/vitals-card';
+import VitalCard from '@/src/components/molecules/vitals-card/former-vitals-card';
 import { useState } from 'react';
 import dayjs from 'dayjs';
 

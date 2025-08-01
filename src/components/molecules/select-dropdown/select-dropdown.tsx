@@ -24,6 +24,7 @@ type CustomSelectProps = {
   control?: Control<any>; // optional
   isMulti?: boolean;
   defaultValue?: Option;
+  disabled?: boolean;
 };
 
 export default function SelectDropdown({
@@ -36,6 +37,7 @@ export default function SelectDropdown({
   control,
   defaultValue,
   isMulti = false,
+  disabled = false,
 }: CustomSelectProps) {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -98,6 +100,7 @@ export default function SelectDropdown({
         }}
         aria-haspopup="listbox"
         aria-expanded={isOpen}
+        disabled={disabled}
       >
         {!isMulti ? (
           <span

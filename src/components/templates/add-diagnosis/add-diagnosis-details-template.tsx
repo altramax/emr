@@ -1,21 +1,22 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import PatientDetailsHeader from '@/src/components/organisms/patient/patient-details-header';
+import DiagnosisHeader from '../../organisms/add-diagnosis/diagnosis-header';
 import { useGetDiagnosis } from '@/src/hooks/diagnosis/use-get-diagnosis';
 import { useParams } from 'next/navigation';
 import Loading from '@/src/components/atoms/loading-bar/loading-bar-page';
 import AddDiagnosisTab from '@/src/components/organisms/add-diagnosis/tabs/add-diagnosis-tab';
 import Button from '@/src/components/atoms/button/button';
-import OrdersTab from '@/src/components/organisms/add-diagnosis/tabs/orders-tab';
+import LabOrders from '@/src/components/organisms/add-diagnosis/tabs/lab-orders-tab';
 import VitalsViewTab from '@/src/components/organisms/add-diagnosis/tabs/view-vitals-tab';
-import { Stethoscope, ClipboardList, HeartPulse, MessageCircleReply, Plus } from 'lucide-react';
+import Medications from '@/src/components/organisms/add-diagnosis/tabs/medication-orders-tab';
+import { Stethoscope, ClipboardList, MessageCircleReply, FlaskConical, Pill } from 'lucide-react';
 import Results from '@/src/components/organisms/add-diagnosis/tabs/results-tab';
 
 export default function AddDiagnosisDetailsTemplate() {
   const param = useParams();
   const id = param?.detailsId ?? '';
-  const [currentTab, setCurrentTab] = useState('Orders');
+  const [currentTab, setCurrentTab] = useState('Add Diagnosis');
 
   const { getDiagnosis, data, loading } = useGetDiagnosis({
     select: '*',
@@ -31,10 +32,10 @@ export default function AddDiagnosisDetailsTemplate() {
 
   const tabs = [
     { name: 'Add Diagnosis', icon: <Stethoscope size={18} /> },
-    { name: 'Vitals', icon: <HeartPulse size={18} /> },
-    { name: 'Orders', icon: <Plus size={18} /> },
+    { name: 'Test', icon: <FlaskConical size={18} /> },
+    { name: 'Medication', icon: <Pill size={18} /> },
     { name: 'Results', icon: <MessageCircleReply size={18} /> },
-    { name: 'History', icon: <ClipboardList size={18} /> },
+    { name: 'Patient history', icon: <ClipboardList size={18} /> },
   ];
 
   /* eslint-disable  @typescript-eslint/no-explicit-any */
@@ -44,18 +45,13 @@ export default function AddDiagnosisDetailsTemplate() {
 
   const renderContent = () => {
     switch (currentTab) {
-      case 'Vitals':
-        return (
-          <VitalsViewTab
-            visit_id={data ? data[0]?.visit_id : null}
-            id={data ? data[0]?.patient?.id : null}
-          />
-        );
-      case 'Orders':
-        return <OrdersTab data={data ? data[0] : null} />;
       case 'Results':
         return <Results results={data ? data[0] : null} />;
-      case 'History':
+      case 'Test':
+        return <LabOrders data={data ? data[0] : null} />;
+      case 'Medication':
+        return <Medications />;
+      case 'Patient history':
         return <div>History</div>;
       default:
         return;
@@ -63,31 +59,40 @@ export default function AddDiagnosisDetailsTemplate() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 p-8">
-      <PatientDetailsHeader data={data ? data[0] : null} back_path="/add-diagnosis" />
-      <div className="mt-6 text-white bg-white rounded-lg px-10 py-4">
-        <div className="flex items-center gap-14 border-b border-gray-200 pb-3">
-          {tabs.map((tab) => {
-            return (
-              <Button
-                onClick={() => renderHeader(tab?.name)}
-                key={tab?.name}
-                className={`${currentTab === tab?.name ? 'text-sm text-white bg-blue-500 rounded-lg px-4 py-2 font-medium' : 'text-gray-500 bg-white'}  text-xs flex justify-start items-center gap-2`}
-                value={
-                  <>
-                    {tab?.icon}
-                    {tab?.name}
-                  </>
-                }
-              />
-            );
-          })}
-        </div>
-        <div className={`pt-6`}>
-          <div className={`${currentTab === 'Add Diagnosis' ? 'block' : 'hidden'}`}>
-            <AddDiagnosisTab data={data ? data[0] : null} />
+    <div className="flex gap-4 min-h-screen bg-gray-100 p-4">
+      <div className="flex flex-col gap-4">
+        <DiagnosisHeader data={data ? data[0] : null} back_path="/add-diagnosis" />
+      </div>
+      <div className="w-full">
+        <VitalsViewTab
+          visit_id={data ? data[0]?.visit_id : null}
+          id={data ? data[0]?.patient?.id : null}
+        />
+        <div className="mt-4 text-white bg-white rounded-lg py-4 px-5">
+          <div className="flex items-center gap-14 border-b border-gray-200 pb-3">
+            {tabs.map((tab) => {
+              return (
+                <Button
+                  onClick={() => renderHeader(tab?.name)}
+                  key={tab?.name}
+                  className={`${currentTab === tab?.name ? 'text-sm text-black px-4 py-2 font-medium border-b-2 border-blue-500' : 'text-gray-500'}  text-xs flex justify-start items-center gap-2`}
+                  value={
+                    <>
+                      {tab?.icon}
+                      {tab?.name}
+                    </>
+                  }
+                />
+              );
+            })}
           </div>
-          <div>{renderContent()}</div>
+
+          <div className={`pt-6 h-[62vh]`}>
+            <div className={`${currentTab === 'Add Diagnosis' ? 'block' : 'hidden'}`}>
+              <AddDiagnosisTab data={data ? data[0] : null} />
+            </div>
+            <div>{renderContent()}</div>
+          </div>
         </div>
       </div>
     </div>
