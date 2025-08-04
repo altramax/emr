@@ -7,16 +7,17 @@ import { useParams } from 'next/navigation';
 import Loading from '@/src/components/atoms/loading-bar/loading-bar-page';
 import AddDiagnosisTab from '@/src/components/organisms/add-diagnosis/tabs/add-diagnosis-tab';
 import Button from '@/src/components/atoms/button/button';
-import LabOrders from '@/src/components/organisms/add-diagnosis/tabs/lab-orders-tab';
+// import LabOrders from '@/src/components/organisms/add-diagnosis/tabs/lab-orders-tab';
 import VitalsViewTab from '@/src/components/organisms/add-diagnosis/tabs/view-vitals-tab';
 import Medications from '@/src/components/organisms/add-diagnosis/tabs/medication-orders-tab';
-import { Stethoscope, ClipboardList, MessageCircleReply, FlaskConical, Pill } from 'lucide-react';
-import Results from '@/src/components/organisms/add-diagnosis/tabs/results-tab';
+import { Stethoscope, ClipboardList, FlaskConical, Pill } from 'lucide-react';
+// import Results from '@/src/components/organisms/add-diagnosis/tabs/test-results-tab';
+import TestTab from '../../organisms/add-diagnosis/tabs/test-tab';
 
 export default function AddDiagnosisDetailsTemplate() {
   const param = useParams();
   const id = param?.detailsId ?? '';
-  const [currentTab, setCurrentTab] = useState('Add Diagnosis');
+  const [currentTab, setCurrentTab] = useState('Test');
 
   const { getDiagnosis, data, loading } = useGetDiagnosis({
     select: '*',
@@ -34,7 +35,7 @@ export default function AddDiagnosisDetailsTemplate() {
     { name: 'Add Diagnosis', icon: <Stethoscope size={18} /> },
     { name: 'Test', icon: <FlaskConical size={18} /> },
     { name: 'Medication', icon: <Pill size={18} /> },
-    { name: 'Results', icon: <MessageCircleReply size={18} /> },
+    // { name: 'Results', icon: <MessageCircleReply size={18} /> },
     { name: 'Patient history', icon: <ClipboardList size={18} /> },
   ];
 
@@ -45,10 +46,10 @@ export default function AddDiagnosisDetailsTemplate() {
 
   const renderContent = () => {
     switch (currentTab) {
-      case 'Results':
-        return <Results results={data ? data[0] : null} />;
+      // case 'Results':
+      // return <Results results={data ? data[0] : null} />;
       case 'Test':
-        return <LabOrders data={data ? data[0] : null} />;
+        return <TestTab data={data ? data[0] : null} />;
       case 'Medication':
         return <Medications />;
       case 'Patient history':
@@ -69,13 +70,13 @@ export default function AddDiagnosisDetailsTemplate() {
           id={data ? data[0]?.patient?.id : null}
         />
         <div className="mt-4 text-white bg-white rounded-lg py-4 px-5">
-          <div className="flex items-center gap-14 border-b border-gray-200 pb-3">
+          <div className="flex items-center gap-14 border-b border-gray-200">
             {tabs.map((tab) => {
               return (
                 <Button
                   onClick={() => renderHeader(tab?.name)}
                   key={tab?.name}
-                  className={`${currentTab === tab?.name ? 'text-sm text-black px-4 py-2 font-medium border-b-2 border-blue-500' : 'text-gray-500'}  text-xs flex justify-start items-center gap-2`}
+                  className={`${currentTab === tab?.name ? 'text-sm text-blue-500 px-4 py-2 font-medium border-b-2 border-blue-500' : 'text-gray-500'}  text-xs flex justify-start items-center gap-2`}
                   value={
                     <>
                       {tab?.icon}

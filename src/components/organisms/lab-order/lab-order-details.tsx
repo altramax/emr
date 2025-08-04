@@ -115,6 +115,7 @@ const LabOrderDetails = ({ data, refetch }: vitalsType) => {
     visit_id: data?.visit_id,
     test_name: testName,
     result: result,
+    ordered_at: data?.created_at,
   };
 
   // const selectedData = queryData
@@ -134,6 +135,11 @@ const LabOrderDetails = ({ data, refetch }: vitalsType) => {
   const submitForm = async () => {
     if (!submitData?.status) {
       toast.error('Please select a status before submitting');
+      return;
+    }
+
+    if (submitData?.status === 'Pending') {
+      toast.error('Please update status before submitting');
       return;
     }
 

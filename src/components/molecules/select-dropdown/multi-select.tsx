@@ -26,7 +26,7 @@ export default function MultiSelect({ isOpen, options, selected, onChange }: sin
   if (!isOpen) return;
 
   return (
-    <div className="text-xs absolute z-10 mt-1 w-fit max-h-60 overflow-auto bg-white rounded-lg shadow-lg border border-gray-200 ">
+    <div className="text-xs absolute top-12 z-10 mt-1 w-[90%] max-h-60 overflow-x-auto bg-white rounded-lg shadow-lg border border-gray-200 ">
       {options.map((option) => (
         <div
           key={option.value ?? 'no-value'}

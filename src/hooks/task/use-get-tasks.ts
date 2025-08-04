@@ -37,7 +37,7 @@ export const useGetTasks = ({
         query = query.eq('status', status);
       }
 
-      if (visit_id !== undefined) {
+      if (visit_id) {
         query = query.eq('visit_id', visit_id);
       }
 
@@ -49,7 +49,7 @@ export const useGetTasks = ({
         query = query.eq('id', task_id);
       }
 
-      if (patient_lhc_id !== undefined) {
+      if (patient_lhc_id) {
         query = query.filter('patient->>id', 'eq', patient_lhc_id);
       }
 

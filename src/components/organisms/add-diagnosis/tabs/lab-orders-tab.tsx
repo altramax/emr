@@ -2,13 +2,11 @@ import SelectDropdown from '@/src/components/molecules/select-dropdown/select-dr
 import { useForm } from 'react-hook-form';
 import Textarea from '@/src/components/atoms/TextArea/text-area';
 import Button from '@/src/components/atoms/button/button';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import ConfirmationReviewModal from '@/src/components/molecules/confirmation-review-modal/confirmation-review-modal';
 import { toast } from 'react-toastify';
 import { useInsertTask } from '@/src/hooks/task/use-insert-task';
-import { useGetTasks } from '@/src/hooks/task/use-get-tasks';
-import OrderedTestViewModal from '@/src/components/molecules/ordered-test-view-modal/ordered-test-view-modal';
-import { FlaskConical } from 'lucide-react';
+// import OrderedTestViewModal from '@/src/components/molecules/ordered-test-view-modal/ordered-test-view-modal';
 
 type option = {
   label: string;
@@ -32,21 +30,8 @@ export default function LabOrders({ data }: dataType) {
       : [];
 
   const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState(false);
-  const [isTestOrderModalOpen, setIsTestOrderModalOpen] = useState(false);
-
-  const {
-    getTask,
-    data: orderData,
-    refetch,
-  } = useGetTasks({
-    task_name: 'lab_order',
-    visit_id: data?.visit_id,
-    // status: 'pending',
-  });
-
-  useEffect(() => {
-    getTask();
-  }, []);
+  // const [isTestOrderModalOpen, setIsTestOrderModalOpen] = useState(false);
+  // console.log(isTestOrderModalOpen);
 
   const tests = [
     { label: 'Complete Blood Count (CBC)', value: 'Complete Blood Count (CBC)', status: 'pending' },
@@ -111,7 +96,6 @@ export default function LabOrders({ data }: dataType) {
         setValue('test', []);
         setValue('priority', []);
         setValue('notes', '');
-        refetch();
       } else {
         toast.error('Error saving lab order');
       }
@@ -150,93 +134,55 @@ export default function LabOrders({ data }: dataType) {
     }
   };
 
-  const handleShowTestOrder = () => {
-    setIsTestOrderModalOpen(!isTestOrderModalOpen);
-  };
-
-  const renderTestOrderModal = () => {
-    if (isTestOrderModalOpen) {
-      return (
-        <OrderedTestViewModal
-          isOpen={isTestOrderModalOpen}
-          onCancel={handleShowTestOrder}
-          title="Test Order"
-          formdata={orderData}
-        />
-      );
-    }
-  };
-
   return (
-    <div className="flex gap-4 items-stretch justify-between">
-      <form onSubmit={handleSubmit(submitForm)} className="w-[70%]">
-        <p className="text-sm text-black font-medium flex gap-2 items-center">
-          <FlaskConical size={15} />
-          Order new tests
-        </p>
-        {renderConfirmationModal()}
-        {renderTestOrderModal()}
-        <div className="">
-          <div className="flex flex-col justify-start gap-6 items-start mt-4">
-            <div className="w-full">
-              <SelectDropdown
-                options={tests}
-                name="test"
-                control={control}
-                label="Test"
-                isMulti={true}
-              />
-            </div>
-
-            <div className="w-full">
-              <Textarea
-                name="notes"
-                label="Clinical note"
-                placeholder="Add note"
-                className="w-full px-3 py-1 rounded-lg mt-1 block p-2 border text-xs border-blue-300"
-                // className="w-full px-3 py-1 rounded-lg mt-1 block border-blue-300 ring-1 ring-transparent focus:ring-blue-400 p-2 border h-8 text-xs"
-                control={control}
-                rows={5}
-              />
-            </div>
-
-            <div className="w-[200px]">
-              <SelectDropdown
-                name="priority"
-                options={priorityOptions}
-                control={control}
-                label="Priority"
-                defaultValue={priorityOptions[0]}
-              />
-            </div>
+    <form onSubmit={handleSubmit(submitForm)} className="">
+      {renderConfirmationModal()}
+      <div className="flex justify-between gap-5 mb-4 mt-4">
+        <div className="w-[48%]">
+          <SelectDropdown
+            options={tests}
+            name="test"
+            control={control}
+            label="Test"
+            isMulti={true}
+            className="w-[50%]"
+          />
+        </div>
+        <div className="bg-gray-100 h-[400px] w-0.5"></div>
+        <div className="flex flex-col justify-start gap-6 items-start  w-[48%] ">
+          <div className="w-[200px]">
+            <SelectDropdown
+              name="priority"
+              options={priorityOptions}
+              control={control}
+              label="Priority"
+              defaultValue={priorityOptions[0]}
+            />
+          </div>
+          <div className="w-full">
+            <Textarea
+              name="notes"
+              label="Clinical note"
+              placeholder="Add note"
+              className="w-full p-2 rounded-lg mt-1 block text-black border text-xs border-blue-300"
+              // className="w-full px-3 py-1 rounded-lg mt-1 block border-blue-300 ring-1 ring-transparent focus:ring-blue-400 p-2 border h-8 text-xs"
+              control={control}
+              rows={5}
+            />
           </div>
 
           {/* <Input name="Lab order" type="text" label="Laboratory Orders" control={control} /> */}
-          <div className="flex justify-end items-center mt-4">
+          <div className="flex justify-center  mt-4 w-full">
             <Button
               type="button"
-              className="mt-4 px-3 py-2 bg-blue-500 text-white rounded text-xs w-full"
-              value="+ order tests"
+              className="mt-4 px-3 py-2 bg-blue-500 text-white rounded text-xs w-[300px]"
+              value="Submit order"
               // disabled={watch("test")}
               onClick={handleIsConfirmationModalOpen}
             />
           </div>
         </div>
-      </form>
-
-      <div className="w-0.5 h-[full] bg-gray-200 text-red-50"></div>
-
-      <div className="w-[49%]"></div>
-    </div>
+      </div>
+    </form>
   );
 }
-
-// <div className="">
-//   <Button
-//     value={'View test ordered'}
-//     onClick={handleShowTestOrder}
-//     loading={loading}
-//     disabled={orderData?.length === 0}
-//     className=" px-3 py-2 bg-blue-500 text-white rounded text-xs ml-auto"
-//   />
-// </div>

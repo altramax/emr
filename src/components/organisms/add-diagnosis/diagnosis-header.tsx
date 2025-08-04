@@ -85,7 +85,7 @@ const DiagnosisHeader = ({ data, back_path }: PatientInfoRowProps) => {
           Admit Patient
         </button>
 
-        <div className=" border rounded-lg border-gray-100 px-2 py-1 bg-gray-50 shadow-sm mt-2">
+        <div className=" border rounded-lg border-gray-100 px-2 py-1 bg-gray-50 shadow-sm mt-2 w-full">
           <PatientInfoColumn
             label="Name"
             value={`${data?.patient?.first_name} ${data?.patient?.last_name}`}
