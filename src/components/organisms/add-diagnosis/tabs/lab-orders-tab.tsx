@@ -137,28 +137,19 @@ export default function LabOrders({ data }: dataType) {
   return (
     <form onSubmit={handleSubmit(submitForm)} className="">
       {renderConfirmationModal()}
-      <div className="flex justify-between gap-5 mb-4 mt-4">
-        <div className="w-[48%]">
-          <SelectDropdown
-            options={tests}
-            name="test"
-            control={control}
-            label="Test"
-            isMulti={true}
-            className="w-[50%]"
-          />
-        </div>
-        <div className="bg-gray-100 h-[400px] w-0.5"></div>
-        <div className="flex flex-col justify-start gap-6 items-start  w-[48%] ">
-          <div className="w-[200px]">
+      <div className="flex justify-center items-center gap-5 mb-4 mt-4">
+        <div className="w-[60%] space-y-5">
+          <div className="">
             <SelectDropdown
-              name="priority"
-              options={priorityOptions}
+              options={tests}
+              name="test"
               control={control}
-              label="Priority"
-              defaultValue={priorityOptions[0]}
+              label="Test"
+              isMulti={true}
+              className="w-[50%]"
             />
           </div>
+
           <div className="w-full">
             <Textarea
               name="notes"
@@ -168,6 +159,15 @@ export default function LabOrders({ data }: dataType) {
               // className="w-full px-3 py-1 rounded-lg mt-1 block border-blue-300 ring-1 ring-transparent focus:ring-blue-400 p-2 border h-8 text-xs"
               control={control}
               rows={5}
+            />
+          </div>
+          <div className="w-[250px]">
+            <SelectDropdown
+              name="priority"
+              options={priorityOptions}
+              control={control}
+              label="Priority"
+              defaultValue={priorityOptions[0]}
             />
           </div>
 

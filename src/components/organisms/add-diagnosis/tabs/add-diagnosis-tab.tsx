@@ -46,7 +46,7 @@ export default function AddDiagnosisTab({ data }: dataType) {
               className="w-full px-4 py-2 text-black text-xs border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
               value={symptoms}
               onChange={(e) => setSymptoms(e.target.value)}
-              rows={6}
+              rows={4}
               required
             ></textarea>
           </div>
@@ -57,7 +57,7 @@ export default function AddDiagnosisTab({ data }: dataType) {
               className="w-full px-4 py-2 text-black text-xs border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
               value={observations}
               onChange={(e) => setObservations(e.target.value)}
-              rows={6}
+              rows={4}
             ></textarea>
           </div>
         </div>
@@ -69,7 +69,7 @@ export default function AddDiagnosisTab({ data }: dataType) {
             className="w-full px-4 py-2 text-black text-xs border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
             value={observations}
             onChange={(e) => setObservations(e.target.value)}
-            rows={7}
+            rows={5}
           ></textarea>
         </div>
 

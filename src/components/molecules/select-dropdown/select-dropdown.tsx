@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { Control, useController } from 'react-hook-form';
 import { ErrorMessage } from '@hookform/error-message';
-import { XCircleIcon, ChevronDown } from 'lucide-react';
+import { ChevronDown } from 'lucide-react';
 import SingleSelect from './single-select';
 import MultiSelect from './multi-select';
 
@@ -93,7 +93,7 @@ export default function SelectDropdown({
       <div className={``}>
         <button
           type="button"
-          className={`no-scrollbar overflow-x-auto h-[32px] text-xs w-full flex items-center justify-between p-2 border rounded-lg bg-white text-left transition-all duration-200 ${
+          className={`no-scrollbar overflow-x-scroll h-[32px] text-xs w-full flex items-center justify-between p-2 border rounded-lg bg-white text-left transition-all duration-200 ${
             isOpen
               ? 'ring-1 ring-blue-500 border-blue-500'
               : 'border-blue-300 hover:border-blue-400'
@@ -105,49 +105,42 @@ export default function SelectDropdown({
           aria-expanded={isOpen}
           disabled={disabled}
         >
-          {!isMulti && (
+          {!isMulti ? (
+            <span
+              className={!currentValue ? 'text-gray-400' : 'text-blue-500 flex items-center gap-2'}
+            >
+              {currentValue?.label ?? placeholder}
+            </span>
+          ) : (
             <span
               className={
                 !currentValue
                   ? 'text-gray-400'
-                  : 'text-blue-500 flex items-center gap-2 max-w-full truncate'
+                  : 'relative text-blue-500 gap-2 flex items-center justify-start no-scrollbar  overflow-x-scroll w-[500px]'
               }
             >
-              {currentValue?.label ?? placeholder}
+              {currentValue
+                ? currentValue?.map((item: Option, index: number) => {
+                    return (
+                      <div
+                        key={index + 1}
+                        className="flex justify-between items-center border rounded-sm px-3 py-1 w-fit"
+                      >
+                        <span key={item.value} className="w-full text-nowrap">
+                          {item.label}
+                        </span>
+                      </div>
+                    );
+                  })
+                : placeholder}
             </span>
           )}
 
           <ChevronDown
             size={12}
-            className={`h-5 w-5 text-gray-500 transition-transform ${isOpen ? 'rotate-180' : ''} ${isMulti ? 'ml-auto' : ''}`}
+            className={`h-5 w-5 text-gray-500 transition-transform ${isOpen ? 'rotate-180' : ''}`}
           />
         </button>
-        {isMulti && currentValue?.length > 0 ? (
-          <div
-            className={
-              ' text-blue-500 text-xs mt-1 bg-white rounded-lg shadow-lg border w-full p-2 space-y-2 overflow-y-auto h-[210px]'
-            }
-          >
-            {currentValue?.map((item: Option, index: number) => (
-              <div
-                key={index + 1}
-                className="flex justify-between items-center px-3 py-1 w-full  bg-gray-50 rounded-lg text-xs group"
-              >
-                <span key={item.value} className="w-full text-nowrap">
-                  {item.label}
-                </span>
-                <XCircleIcon
-                  size={16}
-                  className="text-red-500 w-fit cursor-pointer group-hover:bg-red-100 group-hover:rounded-full"
-                  onClick={(evt: any) => {
-                    evt.stopPropagation();
-                    removeSelectedMulti(item);
-                  }}
-                />
-              </div>
-            ))}
-          </div>
-        ) : null}
       </div>
 
       {!isMulti && (
@@ -164,6 +157,7 @@ export default function SelectDropdown({
           options={options}
           selected={currentValue}
           onChange={handleChangeMulti}
+          unselect={removeSelectedMulti}
         />
       )}
 

@@ -23,6 +23,8 @@ export default function LabOrderDetailsTemplate() {
 
   const pageData = data ? data[0] : null;
 
+  console.log(pageData);
+
   if (loading) return <Loading />;
 
   return (

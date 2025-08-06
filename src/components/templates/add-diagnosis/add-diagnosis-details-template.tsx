@@ -88,7 +88,7 @@ export default function AddDiagnosisDetailsTemplate() {
             })}
           </div>
 
-          <div className={`pt-6 h-[62vh]`}>
+          <div className={`pt-6 min-h-[62vh] overflow-auto`}>
             <div className={`${currentTab === 'Add Diagnosis' ? 'block' : 'hidden'}`}>
               <AddDiagnosisTab data={data ? data[0] : null} />
             </div>

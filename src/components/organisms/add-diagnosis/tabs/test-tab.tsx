@@ -28,12 +28,11 @@ export default function TestTab({ data }: dataType) {
         </button>
       </div>
 
-      <div className={`${activeTab === 'labs' ? 'block' : 'hidden'}`}>
+      {activeTab === 'labs' ? (
         <LabOrders data={data} />
-      </div>
-      <div className={`${activeTab === 'meds' ? 'block' : 'hidden'}`}>
+      ) : (
         <TestResults visitId={data?.visit_id} patientId={data?.patient_id} />
-      </div>
+      )}
     </div>
   );
 }

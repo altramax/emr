@@ -15,13 +15,16 @@ export const useGetLabResults = ({ select, patient_id, visit_id }: getDataType) 
   const [error, setError] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
-  const getLabResult = async () => {
+  const getLabResult = async (id: string) => {
     try {
       setLoading(true);
       let query = supabase.from('lab_test_results').select(select).range(0, 10);
 
       if (patient_id) {
         query = query.eq('patient_id', patient_id);
+      }
+      if (id) {
+        query = query.eq('id', id);
       }
       if (visit_id) {
         query = query.eq('visit_id', visit_id);
@@ -40,8 +43,8 @@ export const useGetLabResults = ({ select, patient_id, visit_id }: getDataType) 
     }
   };
 
-  const refetch = () => {
-    getLabResult();
+  const refetch = (id: string) => {
+    getLabResult(id);
   };
 
   return { getLabResult, error, loading, data, refetch };
