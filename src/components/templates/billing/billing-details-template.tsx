@@ -1,10 +1,9 @@
 'use client';
 import { useState, useEffect } from 'react';
-import BillingDetailsHeader from '../../organisms/billing/billing-patient-details-header';
+import BillingDetailsHeader from '../../organisms/patient/patient-details-header-with-button';
 import { useParams } from 'next/navigation';
 import { useQueryBillableTask } from '@/src/hooks/task/use-query-billable-task';
 import Loading from '../../atoms/loading-bar/loading-bar-page';
-import LoadingBar from '../../atoms/loading-bar/loading-bar-section';
 import BillingDetailsTable from '../../organisms/billing/billing-details-table';
 import { UseCalculateSubtotal } from '@/src/hooks/billing/use-calculate-subtotal';
 import Button from '../../atoms/button/button';
@@ -13,6 +12,7 @@ import { toast } from 'react-toastify';
 import { usePDF } from 'react-to-pdf';
 import ReceiptLayout from '../../organisms/billing/receipt-layout';
 import { TaskItem } from '../../organisms/billing/billing-details-table';
+import LoadingIcon from '../../atoms/loading-bar/loading-bar-fit';
 
 export interface SelectedTask {
   name: string;
@@ -49,35 +49,16 @@ export default function BillingDetailsPage() {
   }, [detailsId]);
 
   useEffect(() => {
-    const items: TaskItem[] = [];
-    const patientInfo = {
-      fullname: billInfo?.patient?.first_name + ' ' + billInfo?.patient?.last_name,
-      patientId: billInfo?.patient?.id,
-      patientGender: billInfo?.patient?.gender,
-    };
-    console.log(billInfo);
-
-    if (billInfo) {
-      billInfo?.tasks?.map((item: any) => {
-        item?.task_data?.map((task: TaskItem) => {
-          if (task?.bill === 'paid') {
-            items.push(task);
-          }
-        });
-      });
-    }
-
-    setReceiptItems({ patientInfo: patientInfo, items: items });
-  }, [billInfo]);
-
-  // console.log(receiptItems);
-
-  useEffect(() => {
     const timer = setTimeout(() => {
       calculateSubtotal();
     }, 1000);
     return () => clearTimeout(timer);
   }, [selectedTasks]);
+
+  useEffect(() => {
+    if (receiptItems?.length === 0) return;
+    downloadHandler();
+  }, [receiptItems]);
 
   const subtotal = totalData?.[0];
 
@@ -106,6 +87,35 @@ export default function BillingDetailsPage() {
     }, 1000);
   };
 
+  const downloadDataHandler = (id: any, name?: string) => {
+    const items: TaskItem[] = [];
+    const patientInfo = {
+      fullname: billInfo?.patient?.first_name + ' ' + billInfo?.patient?.last_name,
+      patientId: billInfo?.patient?.id,
+      patientGender: billInfo?.patient?.gender,
+    };
+
+    if (id !== '') {
+      billInfo?.tasks?.map((item: any) => {
+        item?.task_data?.map((task: TaskItem) => {
+          if (task?.bill_id === id && task?.name === name) {
+            items.push(task);
+          }
+        });
+      });
+      setReceiptItems({ patientInfo: patientInfo, items: items });
+    } else {
+      billInfo?.tasks?.map((item: any) => {
+        item?.task_data?.map((task: TaskItem) => {
+          if (task?.bill === 'paid') {
+            items.push(task);
+          }
+        });
+      });
+      setReceiptItems({ patientInfo: patientInfo, items: items });
+    }
+  };
+
   if (loading) return <Loading />;
 
   return (
@@ -114,25 +124,28 @@ export default function BillingDetailsPage() {
         <BillingDetailsHeader
           data={billInfo}
           back_path="/billing"
-          buttonAction={downloadHandler}
-          buttonText="Download Receipt"
+          buttonAction={downloadDataHandler}
+          buttonText="Download All paid receipt"
           disabled={receiptItems?.items?.length === 0}
         />
       </div>
 
-      <BillingDetailsTable billInfo={billInfo} setFinalTasks={setSelectedTasks} />
+      <BillingDetailsTable
+        billInfo={billInfo}
+        setFinalTasks={setSelectedTasks}
+        selectedReceipt={downloadDataHandler}
+      />
 
-      {/* Payment Summary */}
-      {loadingSubtotal ? (
-        <div className="bg-white shadow-md rounded-2xl p-6 border h-[238px]">
-          <LoadingBar />
-        </div>
-      ) : (
-        <div className="bg-white shadow-md rounded-2xl p-6 border">
-          <h3 className="text-base font-semibold mb-4 text-gray-700">Payment Summary</h3>
-          <div className="space-y-3 text-gray-700 text-sm">
-            <div className="flex justify-between">
-              <span>Total Cost:</span>
+      <div className="bg-white shadow-md rounded-lg py-3 px-8 border w-[500px] m-auto">
+        <h3 className=" text-base font-semibold mb-4 text-black  w-fit m-auto">Payment Summary</h3>
+        <div className="space-y-4 text-gray-700 text-sm">
+          <div className="flex justify-between">
+            <span>Total Cost:</span>
+            {loadingSubtotal ? (
+              <div className="w-30 flex justify-center">
+                <LoadingIcon />
+              </div>
+            ) : (
               <span>
                 {subtotal?.final_amount
                   ? new Intl.NumberFormat('en-NG', {
@@ -141,9 +154,16 @@ export default function BillingDetailsPage() {
                     }).format(subtotal?.total_billed)
                   : '0'}
               </span>
-            </div>
-            <div className="flex justify-between">
-              <span>Discount:</span>
+            )}
+          </div>
+
+          <div className="flex justify-between">
+            <span>Discount:</span>
+            {loadingSubtotal ? (
+              <div className="w-30 flex justify-center">
+                <LoadingIcon />
+              </div>
+            ) : (
               <span>
                 -{' '}
                 {subtotal?.total_discount
@@ -153,9 +173,16 @@ export default function BillingDetailsPage() {
                     }).format(subtotal?.total_discount)
                   : '0'}
               </span>
-            </div>
-            <div className="flex justify-between font-bold text-gray-900 border-t pt-3">
-              <span>SubTotal</span>
+            )}
+          </div>
+          <div className="flex justify-between font-bold text-gray-900 border-t pt-3">
+            <span>SubTotal</span>
+
+            {loadingSubtotal ? (
+              <div className="w-30 flex justify-center">
+                <LoadingIcon />
+              </div>
+            ) : (
               <span>
                 {subtotal?.total_billed
                   ? new Intl.NumberFormat('en-NG', {
@@ -164,19 +191,19 @@ export default function BillingDetailsPage() {
                     }).format(subtotal?.final_amount)
                   : '0'}
               </span>
-            </div>
-          </div>
-          <div className="flex justify-center">
-            <Button
-              disabled={subtotal?.final_amount === 0}
-              type="button"
-              className="mt-4 bg-blue-600 text-white p-2 rounded-md w-[300px]"
-              value={`Pay Now`}
-              onClick={payBill}
-            />
+            )}
           </div>
         </div>
-      )}
+        <div className="flex justify-center">
+          <Button
+            disabled={subtotal?.final_amount === 0}
+            type="button"
+            className="mt-4 bg-blue-600 text-white p-2 rounded-md w-[300px]"
+            value={`Pay Now`}
+            onClick={payBill}
+          />
+        </div>
+      </div>
 
       <div className="absolute left-[-9999px] top-0">
         <ReceiptLayout receiptData={receiptItems} Ref={targetRef} />

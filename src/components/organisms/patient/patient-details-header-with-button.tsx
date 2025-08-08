@@ -3,12 +3,13 @@ import { ArrowLeft, User2 } from 'lucide-react';
 import PatientInfoRow from '../../molecules/patient-info-row/patient-info-row';
 import CalculateAge from '../../atoms/calculate-age/calculate-age';
 import Button from '../../atoms/button/button';
+import Avatar from '../../atoms/Avatar/Avatar';
 
 type PatientInfoRowProps = {
   /* eslint-disable  @typescript-eslint/no-explicit-any */
   data: any;
   back_path?: string;
-  buttonAction: () => void;
+  buttonAction: (id: string) => void;
   buttonText: string;
   disabled?: boolean;
 };
@@ -73,7 +74,7 @@ const DetailsHeaderWithButton = ({
         </div>
         <Button
           className="bg-blue-600 text-white rounded-md px-4 py-1.5 text-xs"
-          onClick={buttonAction}
+          onClick={() => buttonAction('')}
           value={buttonText}
           type="button"
           disabled={disabled}
@@ -84,8 +85,16 @@ const DetailsHeaderWithButton = ({
 
       <div className="flex justify-between items-start gap-6">
         <div className="flex flex-col items-center gap-2 w-[20%]">
-          <div className="w-[100px] h-[100px] rounded-full bg-gray-100 border border-gray-300 flex items-center justify-center text-gray-400 shadow-sm">
-            <User2 size={38} />
+          <div className="w-[90px] h-[90px] rounded-full bg-gray-100 border border-gray-300 flex items-center justify-center text-gray-400 shadow-sm">
+            {data?.patient?.first_name && data?.patient?.last_name ? (
+              <Avatar
+                firstname={data?.patient?.first_name}
+                lastname={data?.patient?.last_name}
+                size={100}
+              />
+            ) : (
+              <User2 size={40} />
+            )}
           </div>
 
           {renderStatus(data?.patient?.status)}

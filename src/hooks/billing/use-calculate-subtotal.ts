@@ -27,14 +27,13 @@ export const UseCalculateSubtotal = ({ items }: GetDataType) => {
       });
 
       if (fetchError) {
-        console.error('RPC error:', fetchError);
-        setError(fetchError);
+        console.log('RPC error:', fetchError);
         setData(null);
       } else {
         setData(response);
       }
     } catch (err) {
-      console.error('Unhandled error:', err);
+      console.log('Unhandled error:', err);
       setError(err);
       setData(null);
     } finally {

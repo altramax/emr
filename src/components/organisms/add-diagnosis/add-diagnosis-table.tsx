@@ -76,7 +76,11 @@ export default function AddDiagnosisTable({ patients }: PatientCareTableProps) {
             <td className="p-4">
               {patient?.patient?.gender.charAt(0).toUpperCase() + patient?.patient?.gender.slice(1)}
             </td>
-            <td className="p-4">{renderStatus(patient?.status)}</td>
+            <td className="p-4">
+              <div className="flex items-center justify-center">
+                {renderStatus(patient?.status)}
+              </div>
+            </td>
           </tr>
         ))}
       </tbody>

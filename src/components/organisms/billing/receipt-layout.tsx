@@ -33,7 +33,7 @@ export default function ReceiptLayout({ receiptData, Ref }: receiptDataType) {
   }, [receiptData]);
 
   useEffect(() => {
-    if (paidTasks.length === 0) return;
+    if (paidTasks?.length === 0) return;
     calculateSubtotal();
   }, [paidTasks]);
 

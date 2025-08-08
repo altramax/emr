@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
-import { toast } from 'react-toastify'; // or your preferred toast library
+import { toast } from 'react-toastify';
+import { Download } from 'lucide-react';
 
 type billTableType = {
   /* eslint-disable  @typescript-eslint/no-explicit-any */
@@ -11,6 +12,7 @@ type billTableType = {
       discount: number;
     }[]
   ) => void;
+  selectedReceipt: (id: string, name: string) => void;
 };
 
 export interface TaskItem {
@@ -20,9 +22,14 @@ export interface TaskItem {
   discountable?: boolean;
   bill?: string;
   discount?: number;
+  bill_id?: string;
 }
 
-export default function BillingDetailsTable({ billInfo, setFinalTasks }: billTableType) {
+export default function BillingDetailsTable({
+  billInfo,
+  setFinalTasks,
+  selectedReceipt,
+}: billTableType) {
   const [allTasks, setAllTasks] = useState<
     {
       key: string;
@@ -31,6 +38,7 @@ export default function BillingDetailsTable({ billInfo, setFinalTasks }: billTab
       discount: number;
       subTotal: number;
       checked: boolean;
+      bill_id: string;
     }[]
   >([]);
   const [selectedTaskKey, setSelectedTaskKey] = useState<string>('');
@@ -52,6 +60,7 @@ export default function BillingDetailsTable({ billInfo, setFinalTasks }: billTab
             discount: task?.discount ?? 0,
             subTotal: price * quantity - (task?.discount ?? 0),
             checked: true,
+            bill_id: task?.bill_id ?? '',
           });
         } else {
           tasks.push({
@@ -61,6 +70,7 @@ export default function BillingDetailsTable({ billInfo, setFinalTasks }: billTab
             discount: 0,
             subTotal: price * quantity,
             checked: false,
+            bill_id: task?.bill_id ?? '',
           });
         }
       });
@@ -149,14 +159,12 @@ export default function BillingDetailsTable({ billInfo, setFinalTasks }: billTab
     }
   };
 
-  // console.log(billInfo);
-
   return (
-    <div className="bg-white shadow-md mb-8 overflow-hidden border mt-8 rounded-2xl">
+    <div className="bg-white shadow-md mb-8 overflow-hidden border mt-8 rounded-lg">
       <table className="w-full">
         <thead className="bg-gray-100 text-gray-700 text-sm font-medium">
           <tr className="px-4">
-            <th className="text-left px-6 py-3">
+            <th className="text-left px-3 py-3">
               <input
                 type="checkbox"
                 className="checkbox cursor-pointer"
@@ -166,21 +174,21 @@ export default function BillingDetailsTable({ billInfo, setFinalTasks }: billTab
                 }}
               />
             </th>
-            <th className="text-left px-6 py-3">Item</th>
-            <th className="text-left px-6 py-3">Category</th>
-            <th className="text-right px-6 py-3">Qty</th>
-            <th className="text-right px-6 py-3">Unit Cost</th>
-            <th className="text-right px-6 py-3">Discount</th>
-            <th className="text-right px-6 py-3">Total</th>
+            <th className="text-left px-3 py-3">Item</th>
+            <th className="text-left px-3 py-3">Category</th>
+            <th className="text-right px-3 py-3">Qty</th>
+            <th className="text-right px-3 py-3">Unit Cost</th>
+            <th className="text-right px-3 py-3">Discount</th>
+            <th className="text-right px-3 py-3">Total</th>
+            <th className=" px-3 py-3 relative group">Receipt</th>
           </tr>
         </thead>
         <tbody className="text-gray-700 text-sm">
-          {allTasks.map(({ key, task, category, discount, subTotal, checked }) => {
+          {allTasks.map(({ key, task, category, discount, subTotal, checked, bill_id }) => {
             const quantity = task.quantity ?? 1;
-
             return (
               <tr key={key} className="border-t px-4">
-                <td className="px-6 py-4">
+                <td className="px-3 py-4">
                   <input
                     type="checkbox"
                     className="checkbox cursor-pointer"
@@ -189,10 +197,11 @@ export default function BillingDetailsTable({ billInfo, setFinalTasks }: billTab
                     onChange={() => toggleCheckbox(key)}
                   />
                 </td>
-                <td className="px-6 py-4 font-medium">{task.name}</td>
-                <td className="px-6 py-4">{category}</td>
-                <td className="px-6 py-4 text-right">{quantity}</td>
-                <td className="px-6 py-4 text-right">
+
+                <td className="px-3 py-4 font-medium">{task.name}</td>
+                <td className="px-3 py-4">{category}</td>
+                <td className="px-3 py-4 text-right">{quantity}</td>
+                <td className="px-3 py-4 text-right">
                   {new Intl.NumberFormat('en-NG', {
                     style: 'currency',
                     currency: 'NGN',
@@ -216,11 +225,21 @@ export default function BillingDetailsTable({ billInfo, setFinalTasks }: billTab
                     'N/A'
                   )}
                 </td>
-                <td className="px-6 py-4 text-right">
+                <td className="px-3 py-4 text-right">
                   {new Intl.NumberFormat('en-NG', {
                     style: 'currency',
                     currency: 'NGN',
                   }).format(subTotal)}
+                </td>
+                <td
+                  className="text-right px-3 py-3 relative "
+                  onClick={() => selectedReceipt(bill_id, task?.name)}
+                >
+                  <Download
+                    size={18}
+                    className={`m-auto 
+                    ${task?.bill === 'paid' ? 'text-green-500 cursor-pointer' : 'text-gray-500'}`}
+                  />
                 </td>
               </tr>
             );
