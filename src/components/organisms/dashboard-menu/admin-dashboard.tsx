@@ -8,6 +8,7 @@ import {
   Boxes,
   FolderHeart,
   Store,
+  LayoutDashboard,
 } from 'lucide-react';
 import { useRouter, usePathname } from 'next/navigation';
 import { useEffect } from 'react';
@@ -72,6 +73,26 @@ export default function AdminDashboard({ isOpen }: nursesDashboardType) {
       <div
         className={` w-fit flex flex-col   ${isOpen ? 'border-l ml-4 gap-3' : 'gap-8 mt-12 lg:mt-2 '} border-gray-200 pb-3 text-xs`}
       >
+        <div className="flex items-center ">
+          <span className={` ${isOpen ? '' : 'hidden'}`}>
+            <Minus size={18} />
+          </span>
+
+          <button
+            onClick={() => handleClick('dashboard')}
+            className={`relative ${pathname?.includes('dashboard') ? 'bg-blue-500' : ''} flex items-center gap-2 hover:bg-blue-500 p-2 rounded w-full text-left`}
+          >
+            <LayoutDashboard size={18} />
+
+            <span className={` ${isOpen ? '' : 'hidden'}`}> Dashboard </span>
+            <span
+              className={` ${isOpen ? 'relative bottom-0 left-0' : 'absolute bottom-8 left-4 '} `}
+            >
+              {/* <Notification count={3} />{' '} */}
+            </span>
+          </button>
+        </div>
+
         <div className="flex items-center ">
           <span className={` ${isOpen ? '' : 'hidden'}`}>
             <Minus size={18} />

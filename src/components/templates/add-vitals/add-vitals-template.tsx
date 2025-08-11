@@ -6,6 +6,8 @@ import { Search, Loader, XIcon } from 'lucide-react';
 import { useDebounce } from '@/src/hooks/debounce/use-debounce';
 import { useQueryTask } from '@/src/hooks/task/use-query-task';
 import EmptyState from '@/src/components/molecules/empty-state/empty-state';
+import SummaryCards from '../../molecules/dashboard-molecules/summary-cards';
+import { useVitalsCount } from '@/src/hooks/RPC/get-vitals-count';
 
 export default function AddVitalsTemplate() {
   const [name, setName] = useState('');
@@ -23,8 +25,11 @@ export default function AddVitalsTemplate() {
     status: 'pending',
   });
 
+  const { getVitalsCount, data: vitalsData } = useVitalsCount();
+
   useEffect(() => {
     queryTask();
+    getVitalsCount();
   }, [debouncedName]);
 
   /* eslint-disable  @typescript-eslint/no-explicit-any */
@@ -43,7 +48,21 @@ export default function AddVitalsTemplate() {
   return (
     <div className="p-8 bg-white min-h-screen">
       <Header title="Add Vitals" subTitle="Select patient to add vitals" />
-      <div className="flex justify-between items-start mt-6 w-full border-gray-200 pb-4">
+
+      <div className="flex justify-start gap-4 items-start mt-2 w-full border-gray-200 pb-4">
+        <SummaryCards
+          title="Pending vitals"
+          count={vitalsData?.[0].pending_count}
+          variant="pending"
+        />
+        <SummaryCards
+          title="Completed vitals"
+          count={vitalsData?.[0].completed_count}
+          variant="success"
+        />
+      </div>
+
+      <div className="flex justify-between items-start mt-2 w-full border-gray-200">
         <div className="flex items-center justify-between mb-4 gap-8 w-[50%] relative">
           <input
             type="text"
@@ -72,7 +91,7 @@ export default function AddVitalsTemplate() {
           )}
         </div>
       </div>
-      <div className="overflow-x-auto mt-4">
+      <div className="overflow-x-auto mt-2">
         {!loading &&
           (queryData?.length > 0 ? (
             <AddVitalsTable patients={queryData} />
