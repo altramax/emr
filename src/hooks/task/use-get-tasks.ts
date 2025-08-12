@@ -54,7 +54,7 @@ export const useGetTasks = ({
       }
 
       const { data: response, error: fetchError } = await query;
-      console.log(data);
+
       if (fetchError) {
         setError(fetchError);
       } else {

@@ -22,14 +22,11 @@ export default function AddDiagnosisDetailsTemplate() {
   const { getDiagnosis, data, loading } = useGetDiagnosis({
     select: '*',
     filter: id,
-    status: 'pending',
   });
 
   useEffect(() => {
     getDiagnosis();
-  }, []);
-
-  if (loading) return <Loading />;
+  }, [data?.[0]?.status]);
 
   const tabs = [
     { name: 'Add Diagnosis', icon: <Stethoscope size={18} /> },
@@ -59,10 +56,17 @@ export default function AddDiagnosisDetailsTemplate() {
     }
   };
 
+  if (loading) return <Loading />;
+
   return (
     <div className="flex gap-4 min-h-screen bg-gray-100 p-4">
       <div className="flex flex-col gap-4">
-        <DiagnosisHeader data={data ? data[0] : null} back_path="/add-diagnosis" />
+        <DiagnosisHeader
+          data={data ? data[0] : null}
+          back_path="/add-diagnosis"
+          diagnosisStatus={data?.[0]?.status ?? null}
+          refetch={getDiagnosis}
+        />
       </div>
       <div className="w-full">
         <VitalsViewTab

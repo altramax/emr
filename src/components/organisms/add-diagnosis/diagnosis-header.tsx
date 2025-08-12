@@ -3,44 +3,47 @@ import { ArrowLeft, User2 } from 'lucide-react';
 import PatientInfoColumn from '../../molecules/patient-info-row/patient-info-column';
 import CalculateAge from '../../atoms/calculate-age/calculate-age';
 import Avatar from '../../atoms/Avatar/Avatar';
+import StatusBar from '../../molecules/status-bar/status-bar';
+import SelectDropdown from '../../molecules/select-dropdown/select-dropdown';
+import { useForm } from 'react-hook-form';
+import { useUpdateDiagnosis } from '@/src/hooks/diagnosis/use-update-diagnosis';
+import { useEffect } from 'react';
 
 type PatientInfoRowProps = {
   /* eslint-disable  @typescript-eslint/no-explicit-any */
   data: any;
   back_path?: string;
+  diagnosisStatus:
+    | 'awaiting_examination'
+    | 'under_evaluation'
+    | 'evaluation_completed'
+    | 'treatment_administered'
+    | null;
+  refetch: () => void;
 };
 
-const DiagnosisHeader = ({ data, back_path }: PatientInfoRowProps) => {
+const DiagnosisHeader = ({ data, back_path, diagnosisStatus, refetch }: PatientInfoRowProps) => {
   const router = useRouter();
 
-  const renderStatus = (status: string) => {
-    switch (status) {
-      case 'active':
-        return (
-          <div className="bg-green-100 text-green-600 rounded-full  px-2 py-1 text-xs w-fit font-base">
-            Active
-          </div>
-        );
-      case 'pending':
-        return (
-          <div className="bg-yellow-100 text-yellow-600 rounded-full text-center px-2 py-1 text-xs w-fit font-base">
-            Pending
-          </div>
-        );
-      case 'cancelled':
-        return (
-          <div className="bg-red-100 text-red-600 rounded-full text-center px-2 py-1 text-xs w-fit font-base">
-            Cancelled
-          </div>
-        );
-      default:
-        return (
-          <div className="bg-gray-100 text-black rounded-full text-center px-2 py-1 text-xs w-fit font-base">
-            unavailable
-          </div>
-        );
+  const { control, watch } = useForm({
+    defaultValues: {
+      status: { label: diagnosisStatus, value: diagnosisStatus },
+    },
+  });
+
+  const status = watch('status');
+
+  useEffect(() => {
+    if (status.value !== diagnosisStatus) {
+      UpdateDiagnosis();
+      refetch();
     }
-  };
+  }, [status?.value]);
+
+  const { UpdateDiagnosis } = useUpdateDiagnosis({
+    columns: { status: status?.value },
+    id: data?.id,
+  });
 
   const backHandler = () => {
     if (back_path) {
@@ -48,6 +51,13 @@ const DiagnosisHeader = ({ data, back_path }: PatientInfoRowProps) => {
     }
     return router.back();
   };
+
+  const options = [
+    { label: 'Awaiting Examination', value: 'awaiting_examination' },
+    { label: 'Under Evaluation', value: 'under_evaluation' },
+    { label: 'Treatment Administered', value: 'treatment_administered' },
+    { label: 'Evaluation Completed', value: 'evaluation_completed' },
+  ];
 
   return (
     <div className="p-4 flex flex-col gap-4 bg-white rounded-xl shadow-md border border-gray-100 w-[200px] h-full">
@@ -78,12 +88,25 @@ const DiagnosisHeader = ({ data, back_path }: PatientInfoRowProps) => {
             )}
           </div>
 
-          {renderStatus(data?.patient?.status)}
+          {<StatusBar status={data?.patient?.status} />}
         </div>
 
         <button className="w-fit py-1 px-3 rounded-lg  text-xs bg-green-500 hover:bg-green-600 text-white">
           Admit Patient
         </button>
+
+        <div className="flex flex-col gap-4 items-center justify-end mb-4">
+          <StatusBar status={diagnosisStatus ?? 'awaiting_examination'} />
+          <div className=" w-[170px] text-xs text-blue-500">
+            <SelectDropdown
+              options={options}
+              name="status"
+              placeholder="Update status"
+              control={control}
+              className="text-xs text-blue-500"
+            />
+          </div>
+        </div>
 
         <div className=" border rounded-lg border-gray-100 px-2 py-1 bg-gray-50 shadow-sm mt-2 w-full">
           <PatientInfoColumn

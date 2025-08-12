@@ -1,8 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import SelectDropdown from '@/src/components/molecules/select-dropdown/select-dropdown';
-import { useForm } from 'react-hook-form';
 
 type dataType = {
   /* eslint-disable  @typescript-eslint/no-explicit-any */
@@ -17,28 +15,10 @@ export default function AddDiagnosisTab({ data }: dataType) {
     e.preventDefault();
   };
 
-  const { control } = useForm();
-
-  const options = [
-    { label: 'pending', value: 'pending' },
-    { label: 'in progress', value: 'in progress' },
-    { label: 'completed', value: 'completed' },
-  ];
   console.log(data);
 
   return (
     <div className="w-full">
-      <div className="flex gap-4 items-center justify-end mb-4">
-        <div className=" w-[200px] text-xs text-blue-500">
-          <SelectDropdown
-            options={options}
-            name="status"
-            placeholder="Care status"
-            control={control}
-            className="text-xs text-blue-500"
-          />
-        </div>
-      </div>
       <form onSubmit={handleSubmit}>
         <div className="flex gap-6 items-center justify-between mb-4">
           <div className="w-[50%]">

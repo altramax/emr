@@ -19,12 +19,17 @@ export const useGetDiagnosis = ({ select, id, status, filter }: getDataType) => 
   const getDiagnosis = async () => {
     try {
       setLoading(true);
-      let query = supabase.from('diagnosis').select(select).range(0, 10).eq('status', status);
+      let query = supabase.from('diagnosis').select(select).range(0, 10);
 
-      if (id !== undefined) {
+      if (id) {
         query = query.eq('patient_id', id);
       }
-      if (filter !== undefined) {
+
+      if (status) {
+        query = query.eq('status', status);
+      }
+
+      if (filter) {
         query = query.filter('patient->>id', 'eq', filter);
       }
 

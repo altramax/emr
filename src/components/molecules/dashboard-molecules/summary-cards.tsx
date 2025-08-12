@@ -35,7 +35,7 @@ const SummaryCards = ({ title, count, icon, variant }: StatCardProps) => {
   const { bg, text, icon: DefaultIcon } = variantStyles[variant];
   const IconComponent = icon || DefaultIcon;
 
-  const iconClasses = `${text} w-5 h-5 ${variant === 'inprogress' ? 'animate-spin' : ''}`;
+  const iconClasses = `${text} w-5 h-5 ${variant === 'inprogress' ? '' : ''}`;
 
   return (
     <div

@@ -9,12 +9,12 @@ type vitalsType = {
   data: any;
   id?: string;
 };
+
 export default function VitalsReadingCards({ data, id }: vitalsType) {
   const [isSelectedVital, setIsSelectedVital] = useState<any>(data ? data[0] : null);
   const router = useRouter();
   const vitalsArray = isSelectedVital ? Object.entries(isSelectedVital?.task_result) : [];
 
-  console.log('iselected', isSelectedVital);
   return (
     <div className="">
       <div className="flex justify-between items-center gap-4 mb-2">
@@ -26,7 +26,6 @@ export default function VitalsReadingCards({ data, id }: vitalsType) {
           <div className="flex justify-end items-center gap-4">
             {data
               ? data.map((item: any) => {
-                  console.log('item', item);
                   return (
                     <button
                       key={item?.id}

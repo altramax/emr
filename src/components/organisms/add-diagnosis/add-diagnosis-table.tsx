@@ -1,6 +1,7 @@
 import CalculateAge from '@/src/components/atoms/calculate-age/calculate-age';
 import Avatar from '@/src/components/atoms/Avatar/Avatar';
 import { useRouter } from 'next/navigation';
+import StatusBar from '@/src/components/molecules/status-bar/status-bar';
 
 interface PatientCareTableProps {
   /* eslint-disable  @typescript-eslint/no-explicit-any */
@@ -12,35 +13,6 @@ export default function AddDiagnosisTable({ patients }: PatientCareTableProps) {
 
   const navigateToPatientDetails = (id: string) => {
     router.push(`/add-diagnosis/${id}`);
-  };
-
-  const renderStatus = (status: string) => {
-    switch (status) {
-      case 'completed':
-        return (
-          <div className="bg-green-100 text-green-600 rounded-full  px-2 py-1 text-xs w-fit font-base">
-            completed
-          </div>
-        );
-      case 'pending':
-        return (
-          <div className="bg-yellow-100 text-yellow-600 rounded-full text-center px-2 py-1 text-xs w-fit font-base">
-            Pending
-          </div>
-        );
-      case 'cancelled':
-        return (
-          <div className="bg-red-100 text-red-600 rounded-full text-center px-2 py-1 text-xs w-fit font-base">
-            Cancelled
-          </div>
-        );
-      default:
-        return (
-          <div className="bg-gray-100 text-black rounded-full text-center px-2 py-1 text-xs w-fit font-base">
-            unavailable
-          </div>
-        );
-    }
   };
 
   return (
@@ -78,7 +50,7 @@ export default function AddDiagnosisTable({ patients }: PatientCareTableProps) {
             </td>
             <td className="p-4">
               <div className="flex items-center justify-center">
-                {renderStatus(patient?.status)}
+                <StatusBar status={patient?.status} />
               </div>
             </td>
           </tr>

@@ -67,8 +67,6 @@ export default function LabOrders({ data }: dataType) {
     },
   ];
 
-  console.log(data);
-
   const priorityOptions = [
     { label: 'Routine', value: 'routine' },
     { label: 'Urgent', value: 'urgent' },
