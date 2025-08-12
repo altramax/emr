@@ -7,7 +7,7 @@ import TodaysAppointments from '@/src/components/organisms/dashboard-organisms/t
 
 export default function DashboardTemplate() {
   return (
-    <main className="flex-1 p-6">
+    <main className="flex-1">
       <Header />
       <SummaryCardGroup />
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 mt-6">

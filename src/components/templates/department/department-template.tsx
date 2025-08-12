@@ -60,7 +60,7 @@ export default function DepartmentTemplate() {
   return (
     <>
       {renderAddDepartmentModal()}
-      <div className="p-8 bg-white min-h-screen">
+      <div className=" bg-white min-h-screen">
         <Header title="Departments" subTitle="View Departments below" />
         <div className="flex justify-between items-start mt-6 w-full border-gray-200 pb-4">
           <div className="flex  justify-between mb-4 gap-8 w-full items-center relative">

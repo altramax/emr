@@ -2,43 +2,64 @@ import { createClient } from '../../utils/supabase/client';
 import { useState } from 'react';
 
 type GetDataType = {
-  select: string;
+  select?: string;
   name?: string;
   filter?: string;
   task_name: string;
   status?: string;
+  from?: number;
+  to?: number;
 };
 
-export const useQueryTask = ({ select, name, filter, task_name, status }: GetDataType) => {
+export const useQueryTask = ({
+  select,
+  name,
+  filter,
+  task_name,
+  status,
+  from = 0,
+  to = 9,
+}: GetDataType) => {
   const supabase = createClient();
   /* eslint-disable  @typescript-eslint/no-explicit-any */
   const [data, setData] = useState<any>(null);
   /* eslint-disable  @typescript-eslint/no-explicit-any */
   const [error, setError] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(true);
+  const [count, setCount] = useState<number | null>(null);
 
   const queryTask = async () => {
+    setLoading(true);
     try {
-      const query = supabase.from('tasks').select(select).range(0, 10).eq('task_name', task_name);
-      // .eq('status', status);
+      const query = supabase
+        .from('tasks')
+        .select(select ?? '*', { count: 'exact' })
+        .range(from, to)
+        .eq('task_name', task_name);
 
       if (status !== 'all') {
-        const { data: response } = await query.eq('status', status);
-        return setData(response);
+        query.eq('status', status);
       }
-      if (!name && filter === undefined && status === undefined) {
-        const { data: response } = await query;
-        return setData(response);
-      }
-      if (name !== undefined) {
-        const { data: response } = await query.or(
+
+      if (name) {
+        query.or(
           `patient->>first_name.ilike.%${name}%,patient->>last_name.ilike.%${name}%,patient->>id.ilike.%${name}%`
         );
-        return setData(response);
       }
-      if (filter !== undefined) {
-        const { data: response } = await query.filter('patient->>id', 'eq', filter);
-        return setData(response);
+
+      if (filter) {
+        query.filter('patient->>id', 'eq', filter);
+      }
+
+      const { data: response, error: fetchError, count: responseCount } = await query;
+
+      if (fetchError) {
+        console.error('RPC error:', fetchError);
+        setError(fetchError);
+        setData(null);
+      } else {
+        setData(response);
+        setCount(responseCount);
       }
     } catch (err) {
       setError(err);
@@ -51,5 +72,5 @@ export const useQueryTask = ({ select, name, filter, task_name, status }: GetDat
     setData(null);
   };
 
-  return { queryTask, error, loading, data, clearData };
+  return { queryTask, error, loading, data, count, clearData };
 };

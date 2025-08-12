@@ -42,7 +42,7 @@ export default function PatientTemplate() {
   };
 
   return (
-    <div className="p-8 bg-white min-h-screen">
+    <div className=" bg-white min-h-screen">
       <Header title="Patients" subTitle="Search for patients here" />
       <div className="flex justify-between items-start mt-8 w-full ">
         <div className="flex items-center justify-between mb-2 gap-8 w-[50%] relative">

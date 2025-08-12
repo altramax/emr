@@ -29,7 +29,7 @@ export default function DashboardMenu({ isNavOpen, expandNavHandler }: dashboard
     <aside
       className={`${isNavOpen ? 'w-full px-5  items-start' : 'w-14  items-center'} transition-all duration-400 ease-in-out no-scrollbar overflow-auto h-full min-h-screen bg-blue-600 text-sm text-white pb-9 flex flex-col justify-start`}
     >
-      <div className="bg-blue-600 z-50 sticky top-0 pt-5 flex gap-2 items-center mt-2 mb-6">
+      <div className="bg-blue-600 z-50 sticky top-0 pt-5 flex gap-2 items-center mb-3">
         <Logo />
         <h1 className={`text-base font-bold ${isNavOpen ? '' : 'hidden'}`}>LiLy Healthcare</h1>
         <Button

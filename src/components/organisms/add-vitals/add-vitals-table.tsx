@@ -19,17 +19,17 @@ export default function AddVitalsTable({ patients }: PatientCareTableProps) {
     <table className="w-full border-collapse">
       <thead>
         <tr className="bg-gray-100 text-left text-xs text-gray-600">
-          <th className="px-4 py-2">Name</th>
-          <th className="px-4 py-2">Patient id</th>
-          <th className="px-4 py-2">Age</th>
-          <th className="px-4 py-2">Gender</th>
-          <th className="px-4 py-2 text-center">Status</th>
+          <th className="px-4 py-1">Name</th>
+          <th className="px-4 py-1">Patient id</th>
+          <th className="px-4 py-1">Age</th>
+          <th className="px-4 py-1">Gender</th>
+          <th className="px-4 py-1 text-center">Status</th>
         </tr>
       </thead>
       <tbody>
-        {patients?.map((patient: any) => (
+        {patients?.map((patient: any, index: number) => (
           <tr
-            key={patient?.patient?.id}
+            key={patient?.patient?.id + index}
             className="border-b text-xs cursor-pointer"
             onClick={() => navigateToPatientDetails(patient?.patient?.id)}
           >

@@ -50,7 +50,7 @@ export default function MedOrderTemplate() {
   ];
 
   return (
-    <div className="p-8 bg-white min-h-screen">
+    <div className=" bg-white min-h-screen">
       <Header title="Medication orders" subTitle="Select patient to view medication order" />
       <div className=" flex justify-start items-center gap-4 mt-6 w-full border-gray-200 pb-4">
         <div className=" w-[40%] relative gap-8">

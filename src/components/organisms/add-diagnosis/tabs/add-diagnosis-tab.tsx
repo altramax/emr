@@ -25,6 +25,7 @@ export default function AddDiagnosisTab({ data }: dataType) {
     { label: 'completed', value: 'completed' },
   ];
   console.log(data);
+
   return (
     <div className="w-full">
       <div className="flex gap-4 items-center justify-end mb-4">

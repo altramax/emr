@@ -44,7 +44,7 @@ export default function AddVitalsDetailsTemplate() {
   if (loading || visitLoading) return <LoadingBar />;
 
   return (
-    <div className="min-h-screen bg-gray-100 p-8">
+    <div className="min-h-screen bg-gray-100 p-5">
       <PatientDetailsHeader data={pageData} />
       <div className="mt-6 text-white bg-white rounded-lg px-10 py-4">
         <div className="flex items-center gap-3 border-b border-gray-200 pb-3">
