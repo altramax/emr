@@ -31,7 +31,8 @@ export const useGetTasks = ({
       let query = supabase
         .from('tasks')
         .select(select ?? '*')
-        .range(0, 10);
+        .range(0, 10)
+        .order('created_at', { ascending: false });
 
       if (status) {
         query = query.eq('status', status);

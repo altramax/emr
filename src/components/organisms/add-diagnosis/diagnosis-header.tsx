@@ -35,10 +35,14 @@ const DiagnosisHeader = ({ data, back_path, diagnosisStatus, refetch }: PatientI
 
   useEffect(() => {
     if (status.value !== diagnosisStatus) {
-      UpdateDiagnosis();
-      refetch();
+      handleChange();
     }
-  }, [status?.value]);
+  }, [status?.value, diagnosisStatus]);
+
+  const handleChange = async () => {
+    await UpdateDiagnosis();
+    refetch();
+  };
 
   const { UpdateDiagnosis } = useUpdateDiagnosis({
     columns: { status: status?.value },

@@ -1,12 +1,4 @@
-import {
-  Ruler,
-  Scale,
-  HeartPulse,
-  Activity,
-  HeartPulseIcon,
-  Thermometer,
-  Waypoints,
-} from 'lucide-react';
+import { Scale, HeartPulse, Activity, HeartPulseIcon, Thermometer, Waypoints } from 'lucide-react';
 
 type vtype = {
   label: string;
@@ -16,9 +8,7 @@ type vtype = {
 const VitalCard = ({ label, value }: vtype) => {
   const renderIcon = () => {
     switch (label) {
-      case 'Height (cm)':
-        return <Ruler size={24} className="text-green-600 m-auto" />;
-      case 'Weight (kg)':
+      case 'B.M.I':
         return <Scale size={24} className="text-purple-600 m-auto" />;
       case 'B.P (mmHg)':
         return <HeartPulse size={24} className="text-red-600 m-auto" />;

@@ -133,7 +133,7 @@ export default function AddDiagnoseTemplate() {
           <SelectDropdown name="status" options={options} control={control} />
         </div>
       </div>
-      <div className="overflow-x-auto mt-4">
+      <div className="overflow-x-auto mt-2">
         {!loading &&
           (queryData?.length > 0 ? (
             <>
