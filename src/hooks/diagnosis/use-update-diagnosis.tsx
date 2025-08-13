@@ -22,7 +22,6 @@ export const useUpdateDiagnosis = ({ columns, id }: getDataType) => {
       if (error) {
         toast.error(error?.message);
       } else {
-        toast.success('diagnosis updated successfully');
         return 'success';
       }
     } catch (err) {

@@ -17,7 +17,7 @@ export default function AddDiagnosisDetailsTemplate() {
   const id = param?.detailsId ?? '';
   const [currentTab, setCurrentTab] = useState('Add Diagnosis');
 
-  const { getDiagnosis, data, loading } = useGetDiagnosis({
+  const { getDiagnosis, data, loading, refetch } = useGetDiagnosis({
     select: '*',
     filter: id,
   });
@@ -89,7 +89,7 @@ export default function AddDiagnosisDetailsTemplate() {
 
           <div className={`pt-6 min-h-[62vh] overflow-auto`}>
             <div className={`${currentTab === 'Add Diagnosis' ? 'block' : 'hidden'}`}>
-              <AddDiagnosisTab data={data ? data[0] : null} />
+              <AddDiagnosisTab data={data ? data[0] : null} refetch={refetch} />
             </div>
             <div>{renderContent()}</div>
           </div>
