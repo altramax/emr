@@ -40,6 +40,7 @@ export default function SelectDropdown({
   disabled = false,
 }: CustomSelectProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const [filteredOptions, setFilteredOptions] = useState<Option[]>([]);
 
   const {
     field,
@@ -81,6 +82,15 @@ export default function SelectDropdown({
     field.onChange(field.value.filter((item: Option) => item.value !== val?.value));
   };
 
+  const handleItemSearch = (e: any) => {
+    e.preventDefault();
+    setIsOpen(true);
+    const search = options.filter((option: Option) =>
+      option.label.toLowerCase().includes(e.target.value.toLowerCase())
+    );
+    setFilteredOptions(search);
+  };
+
   return (
     <div className={`relative`}>
       <label
@@ -91,7 +101,42 @@ export default function SelectDropdown({
       </label>
 
       <div className={``}>
-        <button
+        <input
+          type="text"
+          className={`text-blue-500 no-scrollbar overflow-x-scroll h-[32px] text-xs w-full flex items-center justify-between p-2 border rounded-lg bg-white text-left transition-all duration-200 ${
+            isOpen
+              ? 'ring-1 ring-blue-500 border-blue-500'
+              : 'border-blue-300 hover:border-blue-400'
+          } ${className}`}
+          onClick={() => {
+            setIsOpen(!isOpen);
+          }}
+          value={
+            !isMulti
+              ? currentValue?.label
+              : currentValue?.map((item: Option, index: number) => {
+                  return (
+                    <div
+                      key={index + 1}
+                      className="flex justify-between items-center border rounded-sm px-3 py-1 w-fit"
+                    >
+                      <span key={item.value} className="w-full text-nowrap">
+                        {item.label}
+                      </span>
+                    </div>
+                  );
+                })
+          }
+          disabled={disabled}
+          onChange={handleItemSearch}
+          placeholder={placeholder}
+        />
+        <ChevronDown
+          size={12}
+          className={`absolute top-[6px] right-3 h-5 w-5 text-gray-500 transition-transform ${isOpen ? 'rotate-180' : ''}`}
+        />
+
+        {/* <button
           type="button"
           className={`no-scrollbar overflow-x-scroll h-[32px] text-xs w-full flex items-center justify-between p-2 border rounded-lg bg-white text-left transition-all duration-200 ${
             isOpen
@@ -106,11 +151,26 @@ export default function SelectDropdown({
           disabled={disabled}
         >
           {!isMulti ? (
-            <span
+            <>
+              <input
+                type="text"
+                className={`no-scrollbar overflow-x-scroll h-[32px] text-xs w-full flex items-center justify-between p-2 border rounded-lg bg-white text-left transition-all duration-200 ${
+                  isOpen
+                    ? 'ring-1 ring-blue-500 border-blue-500'
+                    : 'border-blue-300 hover:border-blue-400'
+                } ${className}`}
+                onClick={() => {
+                  setIsOpen(!isOpen);
+                }}
+                disabled={disabled}
+                onChange={handleItemSearch}
+              />
+              <span
               className={!currentValue ? 'text-gray-400' : 'text-blue-500 flex items-center gap-2'}
             >
               {currentValue?.label ?? placeholder}
             </span>
+            </>
           ) : (
             <span
               className={
@@ -140,13 +200,13 @@ export default function SelectDropdown({
             size={12}
             className={`h-5 w-5 text-gray-500 transition-transform ${isOpen ? 'rotate-180' : ''}`}
           />
-        </button>
+        </button> */}
       </div>
 
       {!isMulti && (
         <SingleSelect
           isOpen={isOpen}
-          options={options}
+          options={filteredOptions}
           selected={currentValue}
           onChange={handleChangesingle}
         />
@@ -154,7 +214,7 @@ export default function SelectDropdown({
       {isMulti && (
         <MultiSelect
           isOpen={isOpen}
-          options={options}
+          options={filteredOptions}
           selected={currentValue}
           onChange={handleChangeMulti}
           unselect={removeSelectedMulti}

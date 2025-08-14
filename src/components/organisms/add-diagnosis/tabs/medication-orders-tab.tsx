@@ -6,6 +6,7 @@ import MedicationRow from '@/src/components/molecules/medications-row/medication
 import { toast } from 'react-toastify';
 import { useState } from 'react';
 import ConfirmationReviewModalMedsOrder from '@/src/components/molecules/confirmation-review-modal-meds-order/confirmation-review-modal-meds-order';
+import SelectDropdown from '@/src/components/molecules/select-dropdown/select-dropdown';
 
 export default function Medications() {
   const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState(false);
@@ -64,6 +65,13 @@ export default function Medications() {
     }
   };
 
+  const options = [
+    { value: '1', label: '14 tab' },
+    { value: '2', label: '21 tab' },
+    { value: '3', label: '32 tab' },
+    { value: '4', label: '43 tab' },
+  ];
+
   return (
     <form
       onSubmit={handleSubmit(submitForm)}
@@ -95,6 +103,15 @@ export default function Medications() {
           canRemove={fields.length > 1}
         />
       ))}
+
+      <SelectDropdown
+        options={options}
+        placeholder="Select number of tabs"
+        className="mt-4"
+        label="Number of tabs"
+        name="number_of_tabs"
+        control={control}
+      />
 
       <Button
         type="button"
