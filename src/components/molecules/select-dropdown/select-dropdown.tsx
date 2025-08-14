@@ -24,7 +24,7 @@ type CustomSelectProps = {
   control?: Control<any>; // optional
   isMulti?: boolean;
   defaultValue?: Option;
-  disabled?: boolean;
+  // disabled?: boolean;
 };
 
 export default function SelectDropdown({
@@ -37,10 +37,11 @@ export default function SelectDropdown({
   control,
   defaultValue,
   isMulti = false,
-  disabled = false,
+  // disabled = false,
 }: CustomSelectProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const [filteredOptions, setFilteredOptions] = useState<Option[]>([]);
+  const [filteredOptions, setFilteredOptions] = useState<Option[]>(options);
+  const [inputValue, setInputValue] = useState<string | undefined>('');
 
   const {
     field,
@@ -61,6 +62,7 @@ export default function SelectDropdown({
 
   const handleChangesingle = (val: Option | null) => {
     field.onChange(val);
+    setInputValue(val?.label);
     setIsOpen(false);
   };
 
@@ -83,13 +85,22 @@ export default function SelectDropdown({
   };
 
   const handleItemSearch = (e: any) => {
-    e.preventDefault();
     setIsOpen(true);
+    if (e.key === 'Backspace') {
+      setInputValue('');
+      console.log(e.key);
+    }
+    console.log(e.key);
+
     const search = options.filter((option: Option) =>
       option.label.toLowerCase().includes(e.target.value.toLowerCase())
     );
+
     setFilteredOptions(search);
   };
+
+  console.log(inputValue);
+  console.log(currentValue?.length);
 
   return (
     <div className={`relative`}>
@@ -111,29 +122,35 @@ export default function SelectDropdown({
           onClick={() => {
             setIsOpen(!isOpen);
           }}
-          value={
-            !isMulti
-              ? currentValue?.label
-              : currentValue?.map((item: Option, index: number) => {
-                  return (
-                    <div
-                      key={index + 1}
-                      className="flex justify-between items-center border rounded-sm px-3 py-1 w-fit"
-                    >
-                      <span key={item.value} className="w-full text-nowrap">
-                        {item.label}
-                      </span>
-                    </div>
-                  );
-                })
-          }
-          disabled={disabled}
-          onChange={handleItemSearch}
+          value={inputValue}
+          // value={
+          //   !isMulti
+          //     ? currentValue?.label
+          //     : currentValue?.map((item: Option, index: number) => {
+          //         return (
+          //           <div
+          //             key={index + 1}
+          //             className="flex justify-between items-center border rounded-sm px-3 py-1 w-fit"
+          //           >
+          //             <span key={item.value} className="w-full text-nowrap">
+          //               {item.label}
+          //             </span>
+          //           </div>
+          //         );
+          //       })
+          // }
+          // disabled={disabled}
+          onChange={(e) => setInputValue(e.target.value)}
+          onKeyDown={(e) => handleItemSearch(e)}
+          disabled={currentValue?.label?.length > 0}
           placeholder={placeholder}
         />
         <ChevronDown
           size={12}
           className={`absolute top-[6px] right-3 h-5 w-5 text-gray-500 transition-transform ${isOpen ? 'rotate-180' : ''}`}
+          onClick={() => {
+            setIsOpen(!isOpen);
+          }}
         />
 
         {/* <button
@@ -209,6 +226,7 @@ export default function SelectDropdown({
           options={filteredOptions}
           selected={currentValue}
           onChange={handleChangesingle}
+          unselect={removeSelectedMulti}
         />
       )}
       {isMulti && (
