@@ -1,4 +1,4 @@
-import { Check } from 'lucide-react';
+import { XCircleIcon } from 'lucide-react';
 
 type Option = {
   value: string;
@@ -11,9 +11,17 @@ type singleSelect = {
   isOpen: boolean;
   selected: Option | null;
   onChange: (val: Option | null) => void;
+  /* eslint-disable  @typescript-eslint/no-explicit-any */
+  unselect: (item: any) => void;
 };
 
-export default function SingleSelect({ isOpen, options, selected, onChange }: singleSelect) {
+export default function SingleSelect({
+  isOpen,
+  options,
+  selected,
+  onChange,
+  unselect,
+}: singleSelect) {
   if (!isOpen) return;
   return (
     <div className="text-xs absolute z-10 mt-1 w-full max-h-60 overflow-auto bg-white rounded-lg shadow-lg border border-gray-200">
@@ -33,7 +41,16 @@ export default function SingleSelect({ isOpen, options, selected, onChange }: si
           >
             {option?.label}
           </option>
-          {option?.value === selected?.value ? <Check size={18} className="w-fit" /> : null}
+          {option?.value === selected?.value ? (
+            <XCircleIcon
+              size={18}
+              className="text-red-500 w-fit cursor-pointer group-hover:bg-red-100 group-hover:rounded-full"
+              onClick={(evt: any) => {
+                evt.stopPropagation();
+                unselect(option);
+              }}
+            />
+          ) : null}
         </div>
       ))}
     </div>

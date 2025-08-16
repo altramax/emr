@@ -24,7 +24,6 @@ export default function MultiSelect({
 }: singleSelect) {
   const filteredOptions = (value: Option) => {
     const result = selected ? selected?.filter((item) => item.value === value.value) : [];
-
     if (result.length > 0) {
       return true;
     }

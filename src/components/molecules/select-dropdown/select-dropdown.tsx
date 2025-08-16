@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Control, useController } from 'react-hook-form';
 import { ErrorMessage } from '@hookform/error-message';
 import { ChevronDown } from 'lucide-react';
@@ -23,7 +23,6 @@ type CustomSelectProps = {
   /* eslint-disable  @typescript-eslint/no-explicit-any */
   control?: Control<any>; // optional
   isMulti?: boolean;
-  defaultValue?: any;
   disabled?: boolean;
 };
 
@@ -41,6 +40,8 @@ export default function SelectDropdown({
   const [isOpen, setIsOpen] = useState(false);
   const [filteredOptions, setFilteredOptions] = useState<Option[]>(options);
   const [inputValue, setInputValue] = useState<string | undefined>('');
+  const inputRefMulti = useRef<HTMLInputElement>(null);
+  const inputRefSingle = useRef<HTMLInputElement>(null);
 
   const {
     field,
@@ -56,21 +57,16 @@ export default function SelectDropdown({
   useEffect(() => {
     if (currentValue !== null) {
       field.onChange(currentValue);
-      let res: string[] = [];
-
-      if (currentValue?.length > 1) {
-        res = currentValue?.map((item: Option) => item.label);
-      } else {
-        res = [currentValue?.label];
-      }
-      setInputValue(res.join(' , '));
     }
   }, []);
 
-  const handleChangesingle = (val: Option | null) => {
-    field.onChange(val);
-    // setInputValue(val?.label);
-    setIsOpen(false);
+  const handleItemSearchMulti = (event: any) => {
+    event.stopPropagation();
+    setInputValue(event.target.value);
+    const search = options.filter((option: Option) =>
+      option.label.toLowerCase().includes(event.target.value.toLowerCase())
+    );
+    setFilteredOptions(search);
   };
 
   const handleChangeMulti = (val: Option | null) => {
@@ -83,31 +79,38 @@ export default function SelectDropdown({
 
     if (field.value === null) {
       field.onChange([val]);
-      // setInputValue(val?.label);
     } else {
-      const values = [...field.value, val];
-      field.onChange(values);
-      const res = values.map((item) => item.label);
-      setInputValue(res.join(' , '));
+      field.onChange([...field.value, val]);
     }
+    setInputValue('');
+    setFilteredOptions(options);
+    inputRefMulti.current?.focus();
   };
 
   const removeSelectedMulti = (val: Option | null) => {
-    if (!isMulti) return;
     field.onChange(field.value.filter((item: Option) => item.value !== val?.value));
+    inputRefMulti.current?.focus();
   };
 
-  const handleItemSearch = (value: string) => {
+  const handleChangesingle = (val: Option | null) => {
+    field.onChange(val);
+    setIsOpen(false);
+    setInputValue('');
+  };
+
+  const handleItemSearchSingle = (event: any) => {
+    event.stopPropagation();
+    setInputValue(event.target.value);
     const search = options.filter((option: Option) =>
-      option.label.toLowerCase().includes(value.toLowerCase())
+      option.label.toLowerCase().includes(event.target.value.toLowerCase())
     );
     setFilteredOptions(search);
   };
 
-  const clearInput = (e: any) => {
-    if (e.key !== 'Backspace') return;
+  const removeSelectedSingle = () => {
     field.onChange(null);
-    setInputValue('');
+    setFilteredOptions(options);
+    inputRefSingle.current?.focus();
   };
 
   return (
@@ -134,13 +137,11 @@ export default function SelectDropdown({
           aria-expanded={isOpen}
           disabled={disabled}
         >
-          <div className="bg-red-400 w-[90%] flex items-center justify-start gap-2">
+          <div className=" flex items-center justify-start gap-2">
             {!isMulti ? (
               <span
                 className={
-                  !currentValue
-                    ? 'text-gray-400 hidden'
-                    : 'text-blue-500 flex items-center gap-2 w-80%]'
+                  !currentValue ? 'text-gray-400 hidden' : 'text-blue-500 flex items-center gap-2]'
                 }
               >
                 {currentValue?.label}
@@ -149,44 +150,48 @@ export default function SelectDropdown({
               <span
                 className={
                   !currentValue
-                    ? 'text-gray-400'
-                    : 'relative text-blue-500 gap-2 flex items-center justify-start no-scrollbar  overflow-x-scroll w-[500px]'
+                    ? 'text-gray-400 hidden w-0'
+                    : 'relative text-blue-500 gap-2 flex items-center justify-start no-scrollbar  overflow-x-scroll w-fit'
                 }
               >
-                {currentValue
-                  ? currentValue?.map((item: Option, index: number) => {
-                      return (
-                        <div
-                          key={index + 1}
-                          className="flex justify-between items-center border rounded-sm px-3 py-1 w-fit"
-                        >
-                          <span key={item.value} className="w-full text-nowrap">
-                            {item.label}
-                          </span>
-                        </div>
-                      );
-                    })
-                  : placeholder}
+                {currentValue?.map((item: Option, index: number) => {
+                  return (
+                    <div
+                      key={index + 1}
+                      className="flex justify-between items-center border rounded-sm px-3 py-1 w-fit"
+                    >
+                      <span key={item.value} className="w-full text-nowrap">
+                        {item.label}
+                      </span>
+                    </div>
+                  );
+                })}
               </span>
             )}
 
-            {
+            {!isMulti && !currentValue && (
               <input
                 type="text"
+                ref={inputRefSingle}
                 className={`text-blue-500 tracking-wide h-[32px] w-full text-xs border-transparent outline-none focus:outline-none
                `}
-                onClick={() => {
-                  setIsOpen(!isOpen);
-                }}
                 value={inputValue}
-                disabled={disabled}
-                onChange={(e) => handleItemSearch(e.target.value)}
+                onChange={(e) => handleItemSearchSingle(e)}
                 placeholder={placeholder}
-                onKeyDown={(e) => {
-                  clearInput(e);
-                }}
               />
-            }
+            )}
+
+            {isMulti && (
+              <input
+                ref={inputRefMulti}
+                type="text"
+                className={`text-blue-500 tracking-wide h-[32px] w-fit text-xs border-transparent outline-none focus:outline-none
+               `}
+                value={inputValue}
+                onChange={(e) => handleItemSearchMulti(e)}
+                placeholder={placeholder}
+              />
+            )}
           </div>
 
           <ChevronDown
@@ -202,6 +207,7 @@ export default function SelectDropdown({
           options={filteredOptions}
           selected={currentValue}
           onChange={handleChangesingle}
+          unselect={removeSelectedSingle}
         />
       )}
       {isMulti && (
