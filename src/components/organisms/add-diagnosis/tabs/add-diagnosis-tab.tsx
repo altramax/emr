@@ -59,8 +59,6 @@ export default function AddDiagnosisTab({ data, refetch }: dataType) {
     setValue('diagnosis', '');
   };
 
-  console.log(data);
-
   return (
     <div className="w-full mt-4">
       <form onSubmit={handleSubmit(submit)}>

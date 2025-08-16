@@ -106,11 +106,11 @@ export default function Medications() {
 
       <SelectDropdown
         options={options}
-        placeholder="Select number of tabs"
-        className="mt-4"
-        label="Number of tabs"
+        placeholder="Search"
+        className=""
         name="number_of_tabs"
         control={control}
+        // isMulti={true}
       />
 
       <Button

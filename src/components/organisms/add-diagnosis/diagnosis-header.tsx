@@ -27,14 +27,20 @@ const DiagnosisHeader = ({ data, back_path, diagnosisStatus, refetch }: PatientI
 
   const { control, watch } = useForm({
     defaultValues: {
-      status: { label: diagnosisStatus, value: diagnosisStatus },
+      status: {
+        value: diagnosisStatus,
+        label: diagnosisStatus
+          ?.split('_')
+          .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+          .join(' '),
+      },
     },
   });
 
   const status = watch('status');
 
   useEffect(() => {
-    if (status.value !== diagnosisStatus) {
+    if (status?.value !== diagnosisStatus) {
       handleChange();
     }
   }, [status?.value, diagnosisStatus]);
@@ -108,6 +114,7 @@ const DiagnosisHeader = ({ data, back_path, diagnosisStatus, refetch }: PatientI
               placeholder="Update status"
               control={control}
               className="text-xs text-blue-500"
+              defaultValue={diagnosisStatus}
             />
           </div>
         </div>

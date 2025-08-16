@@ -23,8 +23,8 @@ type CustomSelectProps = {
   /* eslint-disable  @typescript-eslint/no-explicit-any */
   control?: Control<any>; // optional
   isMulti?: boolean;
-  defaultValue?: Option;
-  // disabled?: boolean;
+  defaultValue?: any;
+  disabled?: boolean;
 };
 
 export default function SelectDropdown({
@@ -35,9 +35,8 @@ export default function SelectDropdown({
   asterisk,
   name,
   control,
-  defaultValue,
   isMulti = false,
-  // disabled = false,
+  disabled = false,
 }: CustomSelectProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [filteredOptions, setFilteredOptions] = useState<Option[]>(options);
@@ -52,55 +51,64 @@ export default function SelectDropdown({
     defaultValue: null,
   });
 
-  const currentValue = field.value;
+  const currentValue: any = field.value;
 
   useEffect(() => {
-    if (defaultValue) {
-      field.onChange(defaultValue);
+    if (currentValue !== null) {
+      field.onChange(currentValue);
+      let res: string[] = [];
+
+      if (currentValue?.length > 1) {
+        res = currentValue?.map((item: Option) => item.label);
+      } else {
+        res = [currentValue?.label];
+      }
+      setInputValue(res.join(' , '));
     }
   }, []);
 
   const handleChangesingle = (val: Option | null) => {
     field.onChange(val);
-    setInputValue(val?.label);
+    // setInputValue(val?.label);
     setIsOpen(false);
   };
 
   const handleChangeMulti = (val: Option | null) => {
-    const exist = field.value
-      ? field.value?.filter((item: Option) => item?.value === val?.value)
-      : [];
+    const exist =
+      field.value !== null
+        ? field?.value?.filter((item: Option) => item?.value === val?.value)
+        : [];
+
     if (exist?.length > 0) return;
-    field.onChange(() => {
-      if (field.value?.length > 0) {
-        field.onChange([...field.value, val]);
-      } else {
-        field.onChange([val]);
-      }
-    });
+
+    if (field.value === null) {
+      field.onChange([val]);
+      // setInputValue(val?.label);
+    } else {
+      const values = [...field.value, val];
+      field.onChange(values);
+      const res = values.map((item) => item.label);
+      setInputValue(res.join(' , '));
+    }
   };
 
   const removeSelectedMulti = (val: Option | null) => {
+    if (!isMulti) return;
     field.onChange(field.value.filter((item: Option) => item.value !== val?.value));
   };
 
-  const handleItemSearch = (e: any) => {
-    setIsOpen(true);
-    if (e.key === 'Backspace') {
-      setInputValue('');
-      console.log(e.key);
-    }
-    console.log(e.key);
-
+  const handleItemSearch = (value: string) => {
     const search = options.filter((option: Option) =>
-      option.label.toLowerCase().includes(e.target.value.toLowerCase())
+      option.label.toLowerCase().includes(value.toLowerCase())
     );
-
     setFilteredOptions(search);
   };
 
-  console.log(inputValue);
-  console.log(currentValue?.length);
+  const clearInput = (e: any) => {
+    if (e.key !== 'Backspace') return;
+    field.onChange(null);
+    setInputValue('');
+  };
 
   return (
     <div className={`relative`}>
@@ -112,48 +120,7 @@ export default function SelectDropdown({
       </label>
 
       <div className={``}>
-        <input
-          type="text"
-          className={`text-blue-500 no-scrollbar overflow-x-scroll h-[32px] text-xs w-full flex items-center justify-between p-2 border rounded-lg bg-white text-left transition-all duration-200 ${
-            isOpen
-              ? 'ring-1 ring-blue-500 border-blue-500'
-              : 'border-blue-300 hover:border-blue-400'
-          } ${className}`}
-          onClick={() => {
-            setIsOpen(!isOpen);
-          }}
-          value={inputValue}
-          // value={
-          //   !isMulti
-          //     ? currentValue?.label
-          //     : currentValue?.map((item: Option, index: number) => {
-          //         return (
-          //           <div
-          //             key={index + 1}
-          //             className="flex justify-between items-center border rounded-sm px-3 py-1 w-fit"
-          //           >
-          //             <span key={item.value} className="w-full text-nowrap">
-          //               {item.label}
-          //             </span>
-          //           </div>
-          //         );
-          //       })
-          // }
-          // disabled={disabled}
-          onChange={(e) => setInputValue(e.target.value)}
-          onKeyDown={(e) => handleItemSearch(e)}
-          disabled={currentValue?.label?.length > 0}
-          placeholder={placeholder}
-        />
-        <ChevronDown
-          size={12}
-          className={`absolute top-[6px] right-3 h-5 w-5 text-gray-500 transition-transform ${isOpen ? 'rotate-180' : ''}`}
-          onClick={() => {
-            setIsOpen(!isOpen);
-          }}
-        />
-
-        {/* <button
+        <button
           type="button"
           className={`no-scrollbar overflow-x-scroll h-[32px] text-xs w-full flex items-center justify-between p-2 border rounded-lg bg-white text-left transition-all duration-200 ${
             isOpen
@@ -167,57 +134,66 @@ export default function SelectDropdown({
           aria-expanded={isOpen}
           disabled={disabled}
         >
-          {!isMulti ? (
-            <>
+          <div className="bg-red-400 w-[90%] flex items-center justify-start gap-2">
+            {!isMulti ? (
+              <span
+                className={
+                  !currentValue
+                    ? 'text-gray-400 hidden'
+                    : 'text-blue-500 flex items-center gap-2 w-80%]'
+                }
+              >
+                {currentValue?.label}
+              </span>
+            ) : (
+              <span
+                className={
+                  !currentValue
+                    ? 'text-gray-400'
+                    : 'relative text-blue-500 gap-2 flex items-center justify-start no-scrollbar  overflow-x-scroll w-[500px]'
+                }
+              >
+                {currentValue
+                  ? currentValue?.map((item: Option, index: number) => {
+                      return (
+                        <div
+                          key={index + 1}
+                          className="flex justify-between items-center border rounded-sm px-3 py-1 w-fit"
+                        >
+                          <span key={item.value} className="w-full text-nowrap">
+                            {item.label}
+                          </span>
+                        </div>
+                      );
+                    })
+                  : placeholder}
+              </span>
+            )}
+
+            {
               <input
                 type="text"
-                className={`no-scrollbar overflow-x-scroll h-[32px] text-xs w-full flex items-center justify-between p-2 border rounded-lg bg-white text-left transition-all duration-200 ${
-                  isOpen
-                    ? 'ring-1 ring-blue-500 border-blue-500'
-                    : 'border-blue-300 hover:border-blue-400'
-                } ${className}`}
+                className={`text-blue-500 tracking-wide h-[32px] w-full text-xs border-transparent outline-none focus:outline-none
+               `}
                 onClick={() => {
                   setIsOpen(!isOpen);
                 }}
+                value={inputValue}
                 disabled={disabled}
-                onChange={handleItemSearch}
+                onChange={(e) => handleItemSearch(e.target.value)}
+                placeholder={placeholder}
+                onKeyDown={(e) => {
+                  clearInput(e);
+                }}
               />
-              <span
-              className={!currentValue ? 'text-gray-400' : 'text-blue-500 flex items-center gap-2'}
-            >
-              {currentValue?.label ?? placeholder}
-            </span>
-            </>
-          ) : (
-            <span
-              className={
-                !currentValue
-                  ? 'text-gray-400'
-                  : 'relative text-blue-500 gap-2 flex items-center justify-start no-scrollbar  overflow-x-scroll w-[500px]'
-              }
-            >
-              {currentValue
-                ? currentValue?.map((item: Option, index: number) => {
-                    return (
-                      <div
-                        key={index + 1}
-                        className="flex justify-between items-center border rounded-sm px-3 py-1 w-fit"
-                      >
-                        <span key={item.value} className="w-full text-nowrap">
-                          {item.label}
-                        </span>
-                      </div>
-                    );
-                  })
-                : placeholder}
-            </span>
-          )}
+            }
+          </div>
 
           <ChevronDown
             size={12}
             className={`h-5 w-5 text-gray-500 transition-transform ${isOpen ? 'rotate-180' : ''}`}
           />
-        </button> */}
+        </button>
       </div>
 
       {!isMulti && (
@@ -226,7 +202,6 @@ export default function SelectDropdown({
           options={filteredOptions}
           selected={currentValue}
           onChange={handleChangesingle}
-          unselect={removeSelectedMulti}
         />
       )}
       {isMulti && (

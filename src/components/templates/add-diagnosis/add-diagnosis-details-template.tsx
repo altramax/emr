@@ -15,7 +15,7 @@ import TestTab from '../../organisms/add-diagnosis/tabs/test-tab';
 export default function AddDiagnosisDetailsTemplate() {
   const param = useParams();
   const id = param?.detailsId ?? '';
-  const [currentTab, setCurrentTab] = useState('Add Diagnosis');
+  const [currentTab, setCurrentTab] = useState('Medication');
 
   const { getDiagnosis, data, loading, refetch } = useGetDiagnosis({
     select: '*',

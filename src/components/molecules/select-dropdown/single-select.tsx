@@ -11,19 +11,9 @@ type singleSelect = {
   isOpen: boolean;
   selected: Option | null;
   onChange: (val: Option | null) => void;
-  /* eslint-disable  @typescript-eslint/no-explicit-any */
-  unselect: (item: any) => void;
 };
 
-export default function SingleSelect({
-  isOpen,
-  options,
-  selected,
-  onChange,
-  unselect,
-}: singleSelect) {
-  console.log(unselect);
-
+export default function SingleSelect({ isOpen, options, selected, onChange }: singleSelect) {
   if (!isOpen) return;
   return (
     <div className="text-xs absolute z-10 mt-1 w-full max-h-60 overflow-auto bg-white rounded-lg shadow-lg border border-gray-200">
