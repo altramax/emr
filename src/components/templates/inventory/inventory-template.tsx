@@ -74,7 +74,7 @@ export default function InventoryTemplate() {
   };
 
   return (
-    <div className=" bg-white min-h-screen">
+    <div className="p-5 bg-white min-h-screen">
       <Header title="Inventory" subTitle="Search for inventory here" />
       <div className=" flex justify-start items-center gap-4 mt-6 w-full border-gray-200 pb-4">
         <div className=" w-[40%] relative gap-8">

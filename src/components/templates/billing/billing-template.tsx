@@ -50,7 +50,7 @@ export default function BillingTemplate() {
   console.log(queryData);
 
   return (
-    <div className=" bg-white min-h-screen">
+    <div className=" bg-white min-h-screen p-5">
       <Header title="Bill Payment" subTitle="Select patient to view bill" />
       <div className=" flex justify-start items-center gap-4 mt-6 w-full border-gray-200 pb-4">
         <div className=" w-[40%] relative gap-8">

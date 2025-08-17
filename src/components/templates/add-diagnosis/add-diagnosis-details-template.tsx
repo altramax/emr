@@ -54,7 +54,7 @@ export default function AddDiagnosisDetailsTemplate() {
   if (loading) return <Loading />;
 
   return (
-    <div className="flex gap-4 min-h-screen bg-gray-100 p-4">
+    <div className="flex gap-4 min-h-screen bg-gray-100 p-5">
       <div className="flex flex-col gap-4">
         <DiagnosisHeader
           data={data ? data[0] : null}

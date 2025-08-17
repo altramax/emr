@@ -119,7 +119,7 @@ export default function BillingDetailsPage() {
   if (loading) return <Loading />;
 
   return (
-    <div className="p-8 max-w-7xl mx-auto text-sm bg-gray-50 min-h-screen">
+    <div className=" p-5 max-w-7xl mx-auto text-sm bg-gray-50 min-h-screen">
       <div className="mb-8">
         <BillingDetailsHeader
           data={billInfo}

@@ -28,7 +28,7 @@ const PatientDetailsTemplate = () => {
   if (loading) return <Loading />;
 
   return (
-    <div className="px-10 py-4 flex flex-col gap-4 bg-white rounded-xl shadow-md border border-gray-100">
+    <div className=" p-5 flex flex-col gap-4 bg-white rounded-xl shadow-md border border-gray-100">
       <div className="flex items-center justify-between">
         <button
           className="flex items-center text-blue-600 hover:text-blue-700 gap-2 transition-colors"
@@ -62,7 +62,6 @@ const PatientDetailsTemplate = () => {
           </span>
         </div>
 
-        {/* Personal Information Section */}
         <div className="flex flex-col border rounded-lg border-gray-100 p-4 bg-gray-50 shadow-sm w-[35%]">
           <h3 className="text-sm font-semibold text-gray-700 border-b border-gray-200 py-2">
             Personal information
@@ -78,7 +77,6 @@ const PatientDetailsTemplate = () => {
           <PatientInfoRow label="Religion" value={patientInfo?.religion} />
         </div>
 
-        {/* Contact Information Section */}
         <div className="flex flex-col border rounded-lg border-gray-100 p-4 bg-gray-50 shadow-sm w-[40%]">
           <h3 className="text-sm font-semibold text-gray-700 border-b border-gray-200 py-2">
             Contact information

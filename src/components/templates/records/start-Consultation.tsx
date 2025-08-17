@@ -61,7 +61,7 @@ const StartConsultationTemplate = () => {
   if (loading) return <Loading />;
 
   return (
-    <div className="px-10 py-4 flex flex-col gap-4 bg-white rounded-xl shadow-md border border-gray-100">
+    <div className=" p-5 flex flex-col gap-4 bg-white rounded-xl shadow-md border border-gray-100">
       <div className="flex items-center justify-between">
         <button
           className="flex items-center text-blue-600 hover:text-blue-700 gap-2 transition-colors"

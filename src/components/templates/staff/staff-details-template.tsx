@@ -40,7 +40,7 @@ const StaffDetailsTemplate = () => {
     defaultValues: { status: { label: '', value: '' } },
   });
 
-  const status = useWatch({ control, name: 'status' });
+  const status: any = useWatch({ control, name: 'status' });
 
   const { updateStaff, loading: insertLoading } = useUpdateStaff({
     columns: { status: status.value },
@@ -59,10 +59,10 @@ const StaffDetailsTemplate = () => {
   }, []);
 
   useEffect(() => {
-    if (status.value && status.value !== staffInfo?.status) {
+    if (status?.value && status?.value !== staffInfo?.status) {
       changeStatus();
     }
-  }, [status.value]);
+  }, [status?.value]);
 
   if (loading || insertLoading) return <LoadingBar />;
 
@@ -84,12 +84,7 @@ const StaffDetailsTemplate = () => {
               options={statusOptions}
               placeholder="Change staff status"
               control={control}
-              defaultValue={
-                staffInfo?.status && {
-                  label: staffInfo?.status.charAt(0).toUpperCase() + staffInfo?.status.slice(1),
-                  value: staffInfo?.status,
-                }
-              }
+
               // onchange={(val) => {
               //   val && changeStatus();
               // }}

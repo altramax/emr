@@ -71,7 +71,7 @@ export default function VitalsReadingCards({ data, id }: vitalsType) {
                   );
                 }
               })}
-              {<VitalCard label="B.M.I" value={`${bmi.toFixed(2)}`} />}
+              {!!bmi && <VitalCard label="B.M.I" value={`${bmi.toFixed(2)}`} />}
             </>
           ) : null}
         </div>

@@ -2,8 +2,8 @@ import PatientDetailsTemplate from '@/src/components/templates/patient/patient-d
 
 export default function Page() {
   return (
-    <div className="min-h-screen bg-gray-100 p-6">
-      <PatientDetailsTemplate />;
+    <div className="min-h-screen bg-gray-100 p-5">
+      <PatientDetailsTemplate />
     </div>
   );
 }

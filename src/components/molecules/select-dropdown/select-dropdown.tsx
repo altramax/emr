@@ -24,7 +24,6 @@ type CustomSelectProps = {
   control?: Control<any>; // optional
   isMulti?: boolean;
   disabled?: boolean;
-  width?: string;
 };
 
 export default function SelectDropdown({
@@ -37,7 +36,6 @@ export default function SelectDropdown({
   control,
   isMulti = false,
   disabled = false,
-  width = 'w-[500px]',
 }: CustomSelectProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [filteredOptions, setFilteredOptions] = useState<Option[]>(options);
@@ -116,7 +114,7 @@ export default function SelectDropdown({
   };
 
   return (
-    <div className={`relative ${width}`}>
+    <div className={`relative`}>
       <label
         className={`text-gray-500 flex items-center gap-1 font-medium text-xs ${label && 'mb-1'}`}
       >
