@@ -114,7 +114,6 @@ const DiagnosisHeader = ({ data, back_path, diagnosisStatus, refetch }: PatientI
               placeholder="Update status"
               control={control}
               className="text-xs text-blue-500"
-              defaultValue={diagnosisStatus}
             />
           </div>
         </div>

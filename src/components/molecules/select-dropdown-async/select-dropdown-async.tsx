@@ -6,6 +6,7 @@ import { ErrorMessage } from '@hookform/error-message';
 import { ChevronDown } from 'lucide-react';
 import SingleSelect from './single-select';
 import MultiSelect from './multi-select';
+import { useDebounce } from '@/src/hooks/debounce/use-debounce';
 
 type Option = {
   value: string;
@@ -14,7 +15,8 @@ type Option = {
 };
 
 type CustomSelectProps = {
-  options: Option[];
+  /* eslint-disable  @typescript-eslint/no-explicit-any */
+  data: any;
   placeholder?: string;
   className?: string;
   label?: string;
@@ -24,24 +26,27 @@ type CustomSelectProps = {
   control?: Control<any>; // optional
   isMulti?: boolean;
   disabled?: boolean;
+  searchTerm: any;
 };
 
-export default function SelectDropdown({
-  options,
+export default function SelectDropdownAsync({
   placeholder = 'Select an option',
   className = '',
+  searchTerm,
   label,
   asterisk,
   name,
   control,
   isMulti = false,
   disabled = false,
+  data,
 }: CustomSelectProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const [filteredOptions, setFilteredOptions] = useState<Option[]>(options);
+  const [options, setOptions] = useState<Option[]>([]);
   const [inputValue, setInputValue] = useState<string | undefined>('');
   const inputRefMulti = useRef<HTMLInputElement>(null);
   const inputRefSingle = useRef<HTMLInputElement>(null);
+  const debounceSearch = useDebounce(inputValue ?? '');
 
   const {
     field,
@@ -51,6 +56,15 @@ export default function SelectDropdown({
     control,
     defaultValue: null,
   });
+
+  useEffect(() => {
+    if (!data) return;
+    const option = data?.map((items: any) => {
+      return { label: items?.name, value: items?.name };
+    });
+
+    setOptions(option);
+  }, [data]);
 
   const currentValue: any = field.value;
 
@@ -63,27 +77,23 @@ export default function SelectDropdown({
   const handleItemSearchMulti = (event: any) => {
     event.stopPropagation();
     setInputValue(event.target.value);
-    const search = options.filter((option: Option) =>
-      option.label.toLowerCase().includes(event.target.value.toLowerCase())
-    );
-    setFilteredOptions(search);
+    searchTerm(debounceSearch);
   };
 
   const handleChangeMulti = (val: Option | null) => {
-    const exist =
-      field.value !== null
-        ? field?.value?.filter((item: Option) => item?.value === val?.value)
-        : [];
+    console.log(field.value);
+    const exist = field?.value?.label
+      ? []
+      : field.value?.filter((item: Option) => item?.value === val?.value);
 
     if (exist?.length > 0) return;
 
-    if (field.value === null) {
+    if (field?.value?.label) {
       field.onChange([val]);
     } else {
       field.onChange([...field.value, val]);
     }
     setInputValue('');
-    setFilteredOptions(options);
     inputRefMulti.current?.focus();
   };
 
@@ -95,26 +105,23 @@ export default function SelectDropdown({
   const handleChangesingle = (val: Option | null) => {
     field.onChange(val);
     setIsOpen(false);
-    setInputValue('');
+    setInputValue(val?.label);
   };
 
   const handleItemSearchSingle = (event: any) => {
     event.stopPropagation();
     setInputValue(event.target.value);
-    const search = options.filter((option: Option) =>
-      option.label.toLowerCase().includes(event.target.value.toLowerCase())
-    );
-    setFilteredOptions(search);
+    field.onChange({ label: event.target.value, value: event.target.value });
   };
 
   const removeSelectedSingle = () => {
     field.onChange(null);
-    setFilteredOptions(options);
+    setInputValue('');
     inputRefSingle.current?.focus();
   };
 
   return (
-    <div className={`relative`}>
+    <div className={`relative w-[500px]`}>
       <label
         className={`text-gray-500 flex items-center gap-1 font-medium text-xs ${label && 'mb-1'}`}
       >
@@ -125,7 +132,7 @@ export default function SelectDropdown({
       <div className={``}>
         <button
           type="button"
-          className={`no-scrollbar overflow-x-scroll h-[32px] text-xs w-full flex items-center justify-between p-2 border rounded-lg bg-white text-left transition-all duration-200 ${
+          className={`no-scrollbar w-full overflow-x-scroll h-[32px] text-xs flex items-center justify-between p-2 border rounded-lg bg-white text-left transition-all duration-200 ${
             isOpen
               ? 'ring-1 ring-blue-500 border-blue-500'
               : 'border-blue-300 hover:border-blue-400'
@@ -137,64 +144,44 @@ export default function SelectDropdown({
           aria-expanded={isOpen}
           disabled={disabled}
         >
-          <div className=" flex items-center justify-start gap-2">
-            {!isMulti ? (
-              <span
-                className={
-                  !currentValue ? 'text-gray-400 hidden' : 'text-blue-500 flex items-center gap-2]'
-                }
-              >
-                {currentValue?.label}
-              </span>
-            ) : (
-              <span
-                className={
-                  !currentValue
-                    ? 'text-gray-400 hidden w-0'
-                    : 'relative text-blue-500 gap-2 flex items-center justify-start no-scrollbar  overflow-x-scroll w-fit'
-                }
-              >
-                {currentValue.length > 0
-                  ? currentValue?.map((item: Option, index: number) => {
-                      return (
-                        <div
-                          key={index + 1}
-                          className="flex justify-between items-center border rounded-sm px-3 py-1 w-fit"
-                        >
-                          <span key={item.value} className="w-full text-nowrap">
-                            {item.label}
-                          </span>
-                        </div>
-                      );
-                    })
-                  : null}
-              </span>
-            )}
-
-            {!isMulti && !currentValue && (
-              <input
-                type="text"
-                ref={inputRefSingle}
-                className={`text-blue-500 tracking-wide h-[32px] w-full text-xs border-transparent outline-none focus:outline-none
-               `}
-                value={inputValue}
-                onChange={(e) => handleItemSearchSingle(e)}
-                placeholder={placeholder}
-              />
-            )}
-
-            {isMulti && (
+          {isMulti && (
+            <div className=" flex items-center justify-start gap-2 w-full">
+              {currentValue?.length > 0 && (
+                <div
+                  className={
+                    'text-blue-500 gap-2 flex items-center justify-start no-scrollbar overflow-x-scroll p-4 w-[70%]'
+                  }
+                >
+                  {currentValue?.map((item: Option, index: number) => (
+                    <p key={index + 1} className="w-fit border rounded-sm px-3 py-1 text-nowrap">
+                      {item.label}
+                    </p>
+                  ))}
+                </div>
+              )}
               <input
                 ref={inputRefMulti}
                 type="text"
-                className={`text-blue-500 tracking-wide h-[32px] w-fit text-xs border-transparent outline-none focus:outline-none
+                className={`text-blue-500 block tracking-wide h-[32px] w-[20%] text-xs border-transparent outline-none focus:outline-none
                `}
                 value={inputValue}
                 onChange={(e) => handleItemSearchMulti(e)}
-                placeholder={placeholder}
+                placeholder={currentValue?.length > 0 ? '' : placeholder}
               />
-            )}
-          </div>
+            </div>
+          )}
+
+          {!isMulti && (
+            <input
+              type="text"
+              ref={inputRefSingle}
+              className={`text-blue-500 tracking-wide h-[32px] w-[100%] text-xs border-transparent outline-none focus:outline-none
+               `}
+              value={inputValue}
+              onChange={(e) => handleItemSearchSingle(e)}
+              placeholder={placeholder}
+            />
+          )}
 
           <ChevronDown
             size={12}
@@ -206,7 +193,7 @@ export default function SelectDropdown({
       {!isMulti && (
         <SingleSelect
           isOpen={isOpen}
-          options={filteredOptions}
+          options={options}
           selected={currentValue}
           onChange={handleChangesingle}
           unselect={removeSelectedSingle}
@@ -215,7 +202,7 @@ export default function SelectDropdown({
       {isMulti && (
         <MultiSelect
           isOpen={isOpen}
-          options={filteredOptions}
+          options={options}
           selected={currentValue}
           onChange={handleChangeMulti}
           unselect={removeSelectedMulti}

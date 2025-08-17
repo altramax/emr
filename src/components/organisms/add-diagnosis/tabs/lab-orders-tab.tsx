@@ -165,7 +165,7 @@ export default function LabOrders({ data }: dataType) {
               options={priorityOptions}
               control={control}
               label="Priority"
-              defaultValue={priorityOptions[0]}
+              // defaultValue={priorityOptions[0]}
             />
           </div>
 

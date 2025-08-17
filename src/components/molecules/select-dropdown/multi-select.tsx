@@ -34,32 +34,42 @@ export default function MultiSelect({
 
   return (
     <div className="text-xs absolute top-17 z-10 mt-1 w-full max-h-60 overflow-x-auto bg-white rounded-lg shadow-lg border border-gray-200 ">
-      {options.map((option) => (
-        <div
-          key={option.value ?? 'no-value'}
-          className={`hover:bg-blue-50 px-3 py-2 cursor-pointer flex items-center justify-start gap-2 mb-2 ${
-            filteredOptions(option) ? 'bg-blue-50 text-blue-700' : 'text-gray-900'
-          } ${option?.isDeactivated ? 'text-black bg-gray-300 opacity-70' : ''}`}
-        >
-          <option
-            onClick={() => !option?.isDeactivated && onChange(option)}
-            aria-selected={filteredOptions(option)}
-            className="w-full"
+      {options?.length === 0 ? (
+        options.map((option) => (
+          <div
+            key={option.value ?? 'no-value'}
+            className={`hover:bg-blue-50 px-3 py-2 cursor-pointer flex items-center justify-start gap-2 mb-2 ${
+              filteredOptions(option) ? 'bg-blue-50 text-blue-700' : 'text-gray-900'
+            } ${option?.isDeactivated ? 'text-black bg-gray-300 opacity-70' : ''}`}
           >
-            {option?.label}
-          </option>
-          {filteredOptions(option) ? (
-            <XCircleIcon
-              size={18}
-              className="text-red-500 w-fit cursor-pointer group-hover:bg-red-100 group-hover:rounded-full"
-              onClick={(evt: any) => {
-                evt.stopPropagation();
-                unselect(option);
-              }}
-            />
-          ) : null}
-        </div>
-      ))}
+            <option
+              onClick={() => !option?.isDeactivated && onChange(option)}
+              aria-selected={filteredOptions(option)}
+              className="w-full"
+            >
+              {option?.label}
+            </option>
+            {filteredOptions(option) && (
+              <XCircleIcon
+                size={18}
+                className="text-red-500 w-fit cursor-pointer group-hover:bg-red-100 group-hover:rounded-full"
+                onClick={(evt: any) => {
+                  evt.stopPropagation();
+                  unselect(option);
+                }}
+              />
+            )}
+          </div>
+        ))
+      ) : (
+        <p
+          key={'no-value'}
+          className={`hover:bg-blue-50 px-3 py-2 cursor-pointer flex items-center justify-start mb-2  'bg-blue-50 text-blue-700 
+          `}
+        >
+          No results found
+        </p>
+      )}
     </div>
   );
 }

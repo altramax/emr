@@ -22,9 +22,11 @@ export const useQueryInventory = ({ select, name, department_id }: GetDataType) 
       if (department_id) {
         query = query.eq('department_id', department_id);
       }
+
       if (name) {
         query = query.or(`name.ilike.%${name}%`);
       }
+
       const { data: response } = await query;
       return setData(response);
     } catch (err) {
