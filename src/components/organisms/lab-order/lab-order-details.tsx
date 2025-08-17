@@ -101,7 +101,6 @@ const LabOrderDetails = ({ data, refetch }: vitalsType) => {
   };
 
   const { control, getValues, reset, handleSubmit, setValue } = useForm({
-    defaultValues: { status: { label: '', value: '' } },
     mode: 'onChange',
   });
 
@@ -294,7 +293,6 @@ const LabOrderDetails = ({ data, refetch }: vitalsType) => {
                       name="status"
                       options={options}
                       label="Test Status"
-                      disabled={initialStatus?.value === 'Completed'}
                     />
                   </div>
                 </div>

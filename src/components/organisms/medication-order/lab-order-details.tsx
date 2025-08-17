@@ -263,7 +263,6 @@ const LabOrderDetails = ({ data, refetch }: vitalsType) => {
                       name="status"
                       options={options}
                       label="Test Status"
-                      defaultValue={initialStatus}
                     />
                   </div>
                 </div>
