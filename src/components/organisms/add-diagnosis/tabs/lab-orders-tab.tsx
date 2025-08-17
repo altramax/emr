@@ -2,11 +2,14 @@ import SelectDropdown from '@/src/components/molecules/select-dropdown/select-dr
 import { useForm } from 'react-hook-form';
 import Textarea from '@/src/components/atoms/TextArea/text-area';
 import Button from '@/src/components/atoms/button/button';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import ConfirmationReviewModal from '@/src/components/molecules/confirmation-review-modal/confirmation-review-modal';
 import { toast } from 'react-toastify';
 import { useInsertTask } from '@/src/hooks/task/use-insert-task';
 // import OrderedTestViewModal from '@/src/components/molecules/ordered-test-view-modal/ordered-test-view-modal';
+import { useGetDepartments } from '@/src/hooks/departments/use-get-departments';
+import { useQueryInventory } from '@/src/hooks/inventory/use-query-inventory';
+import SelectDropdownAsync from '@/src/components/molecules/select-dropdown-async/select-dropdown-async';
 
 type option = {
   label: string;
@@ -21,6 +24,7 @@ type dataType = {
 
 export default function LabOrders({ data }: dataType) {
   const { control, handleSubmit, getValues, setValue } = useForm();
+  const [search, setSearch] = useState<string | undefined>('');
   const formData = getValues();
   const testArr =
     formData?.test && formData?.test.length > 0
@@ -30,42 +34,29 @@ export default function LabOrders({ data }: dataType) {
       : [];
 
   const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState(false);
-  // const [isTestOrderModalOpen, setIsTestOrderModalOpen] = useState(false);
-  // console.log(isTestOrderModalOpen);
 
-  const tests = [
-    { label: 'Complete Blood Count (CBC)', value: 'Complete Blood Count (CBC)', status: 'pending' },
-    { label: 'Basic Metabolic Panel', value: 'Basic Metabolic Panel', status: 'pending' },
-    { label: 'Lipid Profile', value: 'Lipid Profile', status: 'pending' },
-    { label: 'Thyroid Function Tests', value: 'Thyroid Function Tests', status: 'pending' },
-    { label: 'Liver Function Test (LFT)', value: 'Liver Function Test (LFT)', status: 'pending' },
-    { label: 'Hemoglobin A1C', value: 'Hemoglobin A1C', status: 'pending' },
-    { label: 'Blood Glucose (Fasting)', value: 'Blood Glucose Fasting', status: 'pending' },
-    { label: 'Urinalysis', value: 'Urinalysis', status: 'pending' },
-    { label: 'HIV 1 & 2 Antibody', value: 'HIV 1+2 Antibody', status: 'pending' },
-    { label: 'Malaria Parasite Test', value: 'Malaria Parasite Test', status: 'pending' },
-    { label: 'Widal Test', value: 'Widal Test', status: 'pending' },
-    { label: 'Hepatitis B Surface Antigen (HBsAg)', value: 'HBsAg Test', status: 'pending' },
-    { label: 'HCV Antibody', value: 'HCV Antibody Test', status: 'pending' },
-    { label: 'VDRL Test (Syphilis)', value: 'VDRL Test', status: 'pending' },
-    { label: 'Pregnancy Test (β-hCG)', value: 'Pregnancy Test (β-hCG)', status: 'pending' },
-    { label: 'ECG', value: 'ECG', status: 'pending' },
-    { label: 'Troponin I', value: 'Troponin I', status: 'pending' },
-    { label: 'Prothrombin Time / INR', value: 'PT/INR', status: 'pending' },
-    { label: 'Chest X-Ray', value: 'Chest X-Ray', status: 'pending' },
-    { label: 'Abdominal Ultrasound', value: 'Abdominal Ultrasound', status: 'pending' },
-    { label: 'Pelvic Ultrasound', value: 'Pelvic Ultrasound', status: 'pending' },
-    {
-      label: 'CT Scan Head(With Contrast)',
-      value: 'CT Scan Head (with Contrast)',
-      status: 'pending',
-    },
-    {
-      label: 'MRI Brain (Without Contrast)',
-      value: 'MRI Brain (without Contrast)',
-      status: 'pending',
-    },
-  ];
+  const { getDepartments, data: departmentData } = useGetDepartments({
+    select: '*',
+    departmentName: 'Laboratory',
+  });
+
+  const { queryInventory, data: inventoryData } = useQueryInventory({
+    select: '*',
+    department_id: departmentData?.[0]?.id,
+    name: search,
+  });
+
+  useEffect(() => {
+    if (departmentData?.[0]?.id) return;
+    getDepartments();
+  }, []);
+
+  useEffect(() => {
+    if (!departmentData?.[0]?.id) {
+      return;
+    }
+    queryInventory();
+  }, [search]);
 
   const priorityOptions = [
     { label: 'Routine', value: 'routine' },
@@ -138,8 +129,10 @@ export default function LabOrders({ data }: dataType) {
       <div className="flex justify-center items-center gap-5 mb-4 mt-4">
         <div className="w-[60%] space-y-5">
           <div className="">
-            <SelectDropdown
-              options={tests}
+            <SelectDropdownAsync
+              // options={tests}
+              searchTerm={setSearch}
+              data={inventoryData}
               name="test"
               control={control}
               label="Test"

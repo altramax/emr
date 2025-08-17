@@ -34,7 +34,7 @@ export default function MultiSelect({
 
   return (
     <div className="text-xs absolute top-17 z-10 mt-1 w-full max-h-60 overflow-x-auto bg-white rounded-lg shadow-lg border border-gray-200 ">
-      {options?.length === 0 ? (
+      {options?.length !== 0 ? (
         options.map((option) => (
           <div
             key={option.value ?? 'no-value'}

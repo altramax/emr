@@ -45,6 +45,7 @@ const Textarea = (props: TextareaFieldProp) => {
           {asterisk && <span className="text-[#DB1813]">*</span>}
         </label>
       )}
+
       <div className="relative">
         {icon && (
           <div

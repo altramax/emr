@@ -33,8 +33,6 @@ export default function MultiSelect({
     return false;
   };
 
-  console.log(options);
-
   if (!isOpen) return;
 
   return (

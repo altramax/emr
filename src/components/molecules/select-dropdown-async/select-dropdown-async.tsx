@@ -26,7 +26,8 @@ type CustomSelectProps = {
   control?: Control<any>; // optional
   isMulti?: boolean;
   disabled?: boolean;
-  searchTerm: any;
+  searchTerm: (item: string | undefined) => void;
+  width?: string;
 };
 
 export default function SelectDropdownAsync({
@@ -40,13 +41,14 @@ export default function SelectDropdownAsync({
   isMulti = false,
   disabled = false,
   data,
+  width = 'w-[500px]',
 }: CustomSelectProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [options, setOptions] = useState<Option[]>([]);
   const [inputValue, setInputValue] = useState<string | undefined>('');
   const inputRefMulti = useRef<HTMLInputElement>(null);
   const inputRefSingle = useRef<HTMLInputElement>(null);
-  const debounceSearch = useDebounce(inputValue ?? '');
+  const debounceSearch = useDebounce(inputValue);
 
   const {
     field,
@@ -56,6 +58,7 @@ export default function SelectDropdownAsync({
     control,
     defaultValue: null,
   });
+  const currentValue: any = field.value;
 
   useEffect(() => {
     if (!data) return;
@@ -66,35 +69,32 @@ export default function SelectDropdownAsync({
     setOptions(option);
   }, [data]);
 
-  const currentValue: any = field.value;
-
   useEffect(() => {
-    if (currentValue !== null) {
-      field.onChange(currentValue);
-    }
-  }, []);
+    searchTerm(debounceSearch);
+    console.log('ran');
+  }, [debounceSearch, isOpen]);
 
   const handleItemSearchMulti = (event: any) => {
     event.stopPropagation();
     setInputValue(event.target.value);
-    searchTerm(debounceSearch);
   };
 
   const handleChangeMulti = (val: Option | null) => {
     console.log(field.value);
-    const exist = field?.value?.label
-      ? []
-      : field.value?.filter((item: Option) => item?.value === val?.value);
+    const exist =
+      field?.value === null
+        ? []
+        : field.value?.filter((item: Option) => item?.value === val?.value);
 
     if (exist?.length > 0) return;
 
-    if (field?.value?.label) {
+    if (field?.value === null) {
       field.onChange([val]);
     } else {
       field.onChange([...field.value, val]);
     }
-    setInputValue('');
     inputRefMulti.current?.focus();
+    setInputValue('');
   };
 
   const removeSelectedMulti = (val: Option | null) => {
@@ -111,7 +111,6 @@ export default function SelectDropdownAsync({
   const handleItemSearchSingle = (event: any) => {
     event.stopPropagation();
     setInputValue(event.target.value);
-    field.onChange({ label: event.target.value, value: event.target.value });
   };
 
   const removeSelectedSingle = () => {
@@ -121,7 +120,7 @@ export default function SelectDropdownAsync({
   };
 
   return (
-    <div className={`relative w-[500px]`}>
+    <div className={`relative ${width}`}>
       <label
         className={`text-gray-500 flex items-center gap-1 font-medium text-xs ${label && 'mb-1'}`}
       >
@@ -145,11 +144,11 @@ export default function SelectDropdownAsync({
           disabled={disabled}
         >
           {isMulti && (
-            <div className=" flex items-center justify-start gap-2 w-full">
+            <div className="flex items-center justify-start gap-2 w-full">
               {currentValue?.length > 0 && (
                 <div
                   className={
-                    'text-blue-500 gap-2 flex items-center justify-start no-scrollbar overflow-x-scroll p-4 w-[70%]'
+                    'text-blue-500 gap-2 flex items-center justify-start no-scrollbar overflow-x-scroll w-fit p-4 max-w-[59%]'
                   }
                 >
                   {currentValue?.map((item: Option, index: number) => (
@@ -162,7 +161,7 @@ export default function SelectDropdownAsync({
               <input
                 ref={inputRefMulti}
                 type="text"
-                className={`text-blue-500 block tracking-wide h-[32px] w-[20%] text-xs border-transparent outline-none focus:outline-none
+                className={`text-blue-500 block ${currentValue?.length > 0 ? 'w-[40%]' : 'w-full'} tracking-wide h-[32px] text-xs border-transparent outline-none focus:outline-none
                `}
                 value={inputValue}
                 onChange={(e) => handleItemSearchMulti(e)}
