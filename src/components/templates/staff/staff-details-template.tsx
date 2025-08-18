@@ -11,6 +11,10 @@ import { useUpdateStaff } from '@/src/hooks/staff/use-update-staff';
 import SelectDropdown from '../../molecules/select-dropdown/select-dropdown';
 import { useForm, useWatch } from 'react-hook-form';
 import StatusBar from '../../molecules/status-bar/status-bar';
+import Avatar from '../../atoms/Avatar/Avatar';
+import RoleBar from '../../molecules/role-bar/role-bar';
+import { createClient } from '@/src/utils/supabase/client';
+import { toast } from 'react-toastify';
 
 type StaffStatusForm = {
   status: { label: string; value: string };
@@ -21,6 +25,7 @@ const StaffDetailsTemplate = () => {
   const param = useParams();
   /* eslint-disable  @typescript-eslint/no-explicit-any */
   const id: any = param?.detailsId ?? '';
+  const supabase = createClient();
 
   const statusOptions = [
     { label: 'Active', value: 'active' },
@@ -64,7 +69,29 @@ const StaffDetailsTemplate = () => {
     }
   }, [status?.value]);
 
+  const grantEmrAccess = async () => {
+    if (staffInfo?.role !== 'super_admin') {
+      toast.error('Cannot grant EMR access');
+      return;
+    }
+
+    const { data, error } = await supabase.functions.invoke('grant-emr-access', {
+      body: { staff_id: staffInfo?.id },
+    });
+
+    if (error) {
+      console.error('Error granting EMR access:', error);
+      toast.error(error.message || 'Failed to grant EMR access');
+      console.log(error);
+    } else {
+      toast.success('EMR access granted successfully');
+      console.log(data);
+    }
+  };
+
   if (loading || insertLoading) return <LoadingBar />;
+
+  console.log('staffInfo', staffInfo);
 
   return (
     <div className="px-10 py-4 flex flex-col gap-4 bg-white rounded-xl shadow-md border border-gray-100">
@@ -101,12 +128,30 @@ const StaffDetailsTemplate = () => {
       <div className="border-t border-gray-200" />
 
       <div className="flex justify-between items-start gap-6 my-6">
-        {/* Avatar + Status */}
-        <div className="flex flex-col items-center gap-3 w-[15%]">
-          <div className="w-[100px] h-[100px] rounded-full bg-gray-100 border border-gray-300 flex items-center justify-center text-gray-400 shadow-sm">
-            <User2 size={38} />
+        <div className="flex flex-col items-center gap-3 w-[18%]">
+          <div className="w-[90px] h-[90px] rounded-full bg-gray-100 border border-gray-300 flex items-center justify-center text-gray-400 shadow-sm">
+            {staffInfo?.first_name && staffInfo?.last_name ? (
+              <Avatar
+                firstname={staffInfo?.first_name}
+                lastname={staffInfo?.last_name}
+                size={100}
+              />
+            ) : (
+              <User2 size={40} />
+            )}
           </div>
+
           <StatusBar status={staffInfo?.status} />
+          <RoleBar role={staffInfo?.role} />
+
+          {staffInfo?.role !== 'super_admin' && (
+            <button
+              onClick={grantEmrAccess}
+              className="bg-blue-600 text-white rounded-lg px-4 py-1.5 text-xs mt-2 shadow-sm hover:bg-blue-700 transition-colors"
+            >
+              Grant EMR Access
+            </button>
+          )}
         </div>
 
         <div className="w-full flex flex-col gap-8">

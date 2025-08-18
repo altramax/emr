@@ -28,6 +28,7 @@ type CustomSelectProps = {
   disabled?: boolean;
   searchTerm: (item: string | undefined) => void;
   width?: string;
+  isValueId?: boolean;
 };
 
 export default function SelectDropdownAsync({
@@ -42,6 +43,7 @@ export default function SelectDropdownAsync({
   disabled = false,
   data,
   width = 'w-[500px]',
+  isValueId = false,
 }: CustomSelectProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [options, setOptions] = useState<Option[]>([]);
@@ -62,11 +64,19 @@ export default function SelectDropdownAsync({
 
   useEffect(() => {
     if (!data) return;
-    const option = data?.map((items: any) => {
-      return { label: items?.name, value: items?.name };
-    });
 
-    setOptions(option);
+    if (isValueId) {
+      const option = data?.map((items: any) => {
+        return { label: items?.name, value: items?.id };
+      });
+      setOptions(option);
+    } else {
+      const option = data?.map((items: any) => {
+        return { label: items?.name, value: items?.name };
+      });
+
+      setOptions(option);
+    }
   }, [data]);
 
   useEffect(() => {

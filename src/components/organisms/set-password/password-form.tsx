@@ -1,14 +1,14 @@
 import Button from '@/src/components/atoms/button/button';
 import InputField from '@/src/components/atoms/Input/input-field';
 import { useForm } from 'react-hook-form';
-// import { useRouter } from 'next/navigation';
-// import { signInAction } from '@/src/actions/actions';
+import { useRouter } from 'next/navigation';
 import { yupResolver } from '@hookform/resolvers/yup';
-// import { toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import { useUser } from '@/src/hooks/user/user';
 import { useEffect, useState } from 'react';
 import { setPasswordSchema, SigninInputs } from '@/src/validations/set-password';
 import { Eye, EyeOff } from 'lucide-react';
+import { setPasswordAction } from '@/src/actions/actions';
 
 const initialValues = {
   password: '',
@@ -16,13 +16,13 @@ const initialValues = {
 };
 
 export default function PasswordForm() {
-  // const router = useRouter();
-  // const [isPasswordMatch, setIsPasswordMatch] = useState(false);
+  const router = useRouter();
   /* eslint-disable  @typescript-eslint/no-explicit-any */
   const [isPasswordVisible, setIsPasswordVisible] = useState<any>({
     password: false,
     confirmPassword: false,
   });
+  const [isLoading, setIsLoading] = useState(false);
 
   const { control, handleSubmit } = useForm<SigninInputs>({
     resolver: yupResolver(setPasswordSchema),
@@ -31,24 +31,23 @@ export default function PasswordForm() {
   });
 
   const submitForm = async (data: SigninInputs) => {
-    console.log(data);
-    // const form = new FormData();
-    // form.append('email', data.email);
-    // form.append('password', data.password);
-    // try {
-    //   const res = await signInAction(form);
-    //   if (res?.response === 'error') {
-    //     toast.error(res.message);
-    //     return;
-    //   }
-    //   if (res?.response === 'success') {
-    //     router.replace('/dashboard');
-    //     toast.success('Signin Successful');
-    //   }
-    // } catch (error) {
-    //   console.log(error);
-    //   return error;
-    // }
+    setIsLoading(true);
+    try {
+      const res = await setPasswordAction(data.password);
+
+      if (res?.response === 'error') {
+        toast.error(res.message);
+        return;
+      }
+      if (res?.response === 'success') {
+        router.replace('/dashboard');
+        toast.success('Signin Successful');
+      }
+    } catch (error) {
+      console.log(error);
+      return error;
+    }
+    setIsLoading(false);
   };
 
   const { user, getRole } = useUser();
@@ -141,7 +140,7 @@ export default function PasswordForm() {
         value="Submit"
         type="submit"
         className="bg-white text-black hover:bg-gray-600 hover:text-white font-medium text-xs text-center no-underline px-4 py-1 rounded-md mt-2 mx-auto w-[30%]"
-        // loading={loading}
+        loading={isLoading}
       />
     </form>
   );

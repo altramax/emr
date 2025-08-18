@@ -7,7 +7,8 @@ import { SigninInputs, LoginSchema } from '@/src/validations/login-schema';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { toast } from 'react-toastify';
 import { useUser } from '@/src/hooks/user/user';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { Eye, EyeOff } from 'lucide-react';
 
 const initialValues = {
   email: '',
@@ -16,6 +17,8 @@ const initialValues = {
 
 export default function AuthForm() {
   const router = useRouter();
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const { control, handleSubmit } = useForm<SigninInputs>({
     resolver: yupResolver(LoginSchema),
@@ -24,6 +27,7 @@ export default function AuthForm() {
   });
 
   const submitForm = async (data: SigninInputs) => {
+    setIsLoading(true);
     const form = new FormData();
     form.append('email', data.email);
     form.append('password', data.password);
@@ -42,6 +46,7 @@ export default function AuthForm() {
       console.log(error);
       return error;
     }
+    setIsLoading(false);
   };
 
   const { user, getRole } = useUser();
@@ -88,24 +93,35 @@ export default function AuthForm() {
         />
       </div>
 
-      <div className="text-xs flex flex-col items-start justify-start gap-1">
+      <div className="relative text-xs flex flex-col items-start justify-start gap-1">
         <label htmlFor="password" className="">
           Password
         </label>
         <InputField
           id="password"
-          type="password"
+          type={isPasswordVisible ? 'text' : 'password'}
           name="password"
           placeholder="Enter your password"
           className="w-[300px] px-2 py-2 rounded-md outline-none border-none"
           control={control}
         />
+        <button
+          className="absolute right-3 top-6 flex items-center justify-center w-fit h-fit"
+          onClick={() => setIsPasswordVisible(!isPasswordVisible)}
+        >
+          {isPasswordVisible ? (
+            <EyeOff size={24} className="text-blue-500" />
+          ) : (
+            <Eye size={24} className="text-blue-500" />
+          )}
+        </button>
       </div>
 
       <Button
         value="Signin"
         type="submit"
         className="bg-white text-black hover:bg-gray-600 hover:text-white font-medium text-xs text-center no-underline px-4 py-1 rounded-md mt-2 mx-auto w-[30%]"
+        loading={isLoading}
       />
     </form>
   );

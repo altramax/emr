@@ -1,9 +1,12 @@
-export default async function Layout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="max-w-7xl flex flex-col gap-12 items-start">{children}</div>
+    <main
+      className="h-screen flex items-center justify-center bg-cover bg-center"
+      style={{
+        backgroundImage: `url('https://res.cloudinary.com/dn9dkcxvs/image/upload/v1734379774/freepik__upload__86387_usfbsr.jpg')`,
+      }}
+    >
+      {children}
+    </main>
   );
 }

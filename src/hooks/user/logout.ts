@@ -17,7 +17,7 @@ export const Logout = () => {
         vital?.setCalled(false);
         diagnosis?.clear();
         diagnosis?.setCalled(false);
-        router.replace('/');
+        router.replace('/signin');
         toast.success('Successfully logged out');
       }
     } catch (err) {

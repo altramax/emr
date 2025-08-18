@@ -96,6 +96,43 @@ export const signInAction = async (queryData: any) => {
   }
 };
 
+/* eslint-disable  @typescript-eslint/no-explicit-any */
+export const setPasswordAction = async (queryData: any) => {
+  const password = queryData.get('password') as string;
+
+  try {
+    const supabase = await createClient();
+
+    // update the currently authenticated user's password
+    const { error } = await supabase.auth.updateUser({
+      password,
+    });
+
+    if (error) {
+      switch (error.code) {
+        case 'AuthApiError':
+          return { response: 'error', message: 'auth_api_error' };
+
+        case 'AuthRetryableError':
+          return { response: 'error', message: 'network_issue' };
+
+        case 'AuthInvalidCredentialsError':
+          return { response: 'error', message: 'invalid_password' };
+
+        default:
+          console.error('Unexpected set-password error:', error.code);
+          return { response: 'error', message: 'unexpected_error' };
+      }
+    }
+
+    // optionally update user metadata (like role) after password reset
+    return { response: 'success', message: 'password_updated' };
+  } catch (error) {
+    console.error('setPasswordAction error:', error);
+    return { response: 'error', message: 'unexpected_failure' };
+  }
+};
+
 export const forgotPasswordAction = async (formData: FormData) => {
   const email = formData.get('email')?.toString();
   const supabase = await createClient();

@@ -81,7 +81,7 @@ export default function StaffReviewStep({ staff_id }: StaffReviewStep) {
       label: 'Emergency Contact Relationship',
       value: values?.emergency_contact_relationship,
     },
-    { key: 'role', label: 'Role', value: values?.role?.value },
+    { key: 'role', label: 'Role', value: values?.role?.label },
     { key: 'department', label: 'Department', value: values?.department?.label },
     { key: 'job_title', label: 'Job Title', value: values?.job_title },
     { key: 'employment_type', label: 'Employment Type', value: values?.employment_type?.value },

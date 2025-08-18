@@ -7,6 +7,7 @@ import { useFormContext } from 'react-hook-form';
 import { useNewStaffStore } from '@/src/store/new-staff-store';
 import { useGetDepartments } from '@/src/hooks/departments/use-get-departments';
 import { useEffect, useState } from 'react';
+import SelectDropdownAsync from '../../molecules/select-dropdown-async/select-dropdown-async';
 
 type staffType = {
   /* eslint-disable  @typescript-eslint/no-explicit-any */
@@ -16,20 +17,14 @@ type staffType = {
 export default function StaffEmploymentInfo({ defaultData }: staffType) {
   const { control, trigger, setValue } = useFormContext();
   const { currentStep, setStep } = useNewStaffStore();
-  const { getDepartments, data } = useGetDepartments({ select: '*' });
-  const [departmentOptions, setDepartmentOptions] = useState<{ label: string; value: string }[]>(
-    []
-  );
+  const [search, setSearch] = useState<string | undefined>('');
+
+  const { getDepartments, data } = useGetDepartments({ select: '*', departmentName: search });
 
   useEffect(() => {
     if (!data) {
       getDepartments();
     }
-
-    if (data) {
-      handleOptions();
-    }
-
     if (defaultData) {
       setValue('role', { label: defaultData?.role, value: defaultData?.role });
       setValue('department', { label: defaultData?.department, value: defaultData?.department_id });
@@ -41,6 +36,10 @@ export default function StaffEmploymentInfo({ defaultData }: staffType) {
       setValue('date_hired', defaultData?.date_hired);
     }
   }, [data, defaultData]);
+
+  useEffect(() => {
+    getDepartments();
+  }, [search]);
 
   const roleOptions = [
     { label: 'Doctor', value: 'doctor' },
@@ -54,6 +53,7 @@ export default function StaffEmploymentInfo({ defaultData }: staffType) {
     { label: 'Cleaner', value: 'cleaner' },
     { label: 'Security', value: 'security' },
     { label: 'Other', value: 'other' },
+    { label: 'Super Admin', value: 'super_admin' },
   ];
 
   const employmentTypeOptions = [
@@ -85,20 +85,7 @@ export default function StaffEmploymentInfo({ defaultData }: staffType) {
     setStep(currentStep - 1);
   };
 
-  const handleOptions = () => {
-    /* eslint-disable  @typescript-eslint/no-explicit-any */
-    const options = data
-      ? data?.map((items: any) => {
-          return {
-            label: items?.name,
-            value: items?.id,
-            isDeactivated: items?.status !== 'active',
-          };
-        })
-      : [];
-
-    setDepartmentOptions(options);
-  };
+  console.log(data);
 
   return (
     <div className="space-y-4">
@@ -116,8 +103,10 @@ export default function StaffEmploymentInfo({ defaultData }: staffType) {
 
       {/* Department */}
       <div className="w-full">
-        <SelectDropdown
-          options={departmentOptions}
+        <SelectDropdownAsync
+          isValueId={true}
+          data={data}
+          searchTerm={setSearch}
           label="Department"
           asterisk
           name="department"

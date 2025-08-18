@@ -39,12 +39,16 @@ export const updateSession = async (request: NextRequest) => {
 
     const pathname = request.nextUrl.pathname;
 
-    if (!session && pathname !== '/') {
-      return NextResponse.redirect(new URL('/', request.url));
+    if (!session) {
+      if (!pathname.includes('/signin') && !pathname.includes('/set-password')) {
+        return NextResponse.redirect(new URL('/signin', request.url));
+      }
     }
 
-    if (session && pathname === '/') {
-      return NextResponse.redirect(new URL('/dashboard', request.url));
+    if (session) {
+      if (pathname.includes('/set-password')) {
+        return NextResponse.redirect(new URL('/dashboard', request.url));
+      }
     }
 
     // reinject role into usermetadata when token refreshes

@@ -1,5 +1,7 @@
-import SetPasswordTemplate from '@/src/components/templates/set-password/set-password';
+'use client';
 
-export default async function ForgotPassword() {
-  return <SetPasswordTemplate />;
+import PasswordForm from '@/src/components/organisms/set-password/password-form';
+
+export default function ForgotPassword() {
+  return <PasswordForm />;
 }
