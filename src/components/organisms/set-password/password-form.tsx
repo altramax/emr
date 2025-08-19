@@ -1,14 +1,15 @@
 import Button from '@/src/components/atoms/button/button';
 import InputField from '@/src/components/atoms/Input/input-field';
 import { useForm } from 'react-hook-form';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { toast } from 'react-toastify';
-import { useUser } from '@/src/hooks/user/user';
 import { useEffect, useState } from 'react';
 import { setPasswordSchema, SigninInputs } from '@/src/validations/set-password';
 import { Eye, EyeOff } from 'lucide-react';
-import { setPasswordAction } from '@/src/actions/actions';
+import { UseUpdateUser } from '@/src/hooks/user/update-user';
+import Loading from '@/src/components/atoms/loading-bar/loading-bar-page';
+import { createClient } from '@/src/utils/supabase/client';
 
 const initialValues = {
   password: '',
@@ -17,29 +18,62 @@ const initialValues = {
 
 export default function PasswordForm() {
   const router = useRouter();
+  const pathname = usePathname();
+  const supabase = createClient();
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+
+  const hash = pathname.split('#')[1];
+  const params = new URLSearchParams(hash);
+  const obj = Object.fromEntries(params.entries());
+  const access_token = obj.access_token;
+  const refresh_token = obj.refresh_token;
+
+  useEffect(() => {
+    if (access_token && refresh_token) {
+      verifySession();
+    } else {
+      toast.error('Invalid or expired access token');
+      router.replace('/signin');
+    }
+  }, [access_token, refresh_token]);
+
+  const verifySession = async () => {
+    const { error } = await supabase.auth.setSession({
+      access_token,
+      refresh_token,
+    });
+
+    if (error) {
+      console.error('Failed to set session', error);
+      router.replace('/signin');
+      return;
+    }
+    setIsLoading(false);
+  };
+
   /* eslint-disable  @typescript-eslint/no-explicit-any */
   const [isPasswordVisible, setIsPasswordVisible] = useState<any>({
     password: false,
     confirmPassword: false,
   });
-  const [isLoading, setIsLoading] = useState(false);
 
-  const { control, handleSubmit } = useForm<SigninInputs>({
+  const { control, watch } = useForm<SigninInputs>({
     resolver: yupResolver(setPasswordSchema),
     mode: 'onChange',
     defaultValues: initialValues,
   });
 
-  const submitForm = async (data: SigninInputs) => {
-    setIsLoading(true);
-    try {
-      const res = await setPasswordAction(data.password);
+  const password = watch('password');
 
-      if (res?.response === 'error') {
-        toast.error(res.message);
+  const { updateUser, loading, error } = UseUpdateUser({ password: password });
+
+  const submitForm = async () => {
+    try {
+      updateUser();
+      if (error) {
+        toast.error(error.message);
         return;
-      }
-      if (res?.response === 'success') {
+      } else {
         router.replace('/dashboard');
         toast.success('Signin Successful');
       }
@@ -47,15 +81,7 @@ export default function PasswordForm() {
       console.log(error);
       return error;
     }
-    setIsLoading(false);
   };
-
-  const { user, getRole } = useUser();
-
-  useEffect(() => {
-    getRole();
-  }, []);
-  console.log(user);
 
   const handlePasswordVisibility = (e: string) => {
     setIsPasswordVisible({
@@ -64,11 +90,10 @@ export default function PasswordForm() {
     });
   };
 
+  if (loading || isLoading) return <Loading />;
+
   return (
-    <form
-      onSubmit={handleSubmit(submitForm)}
-      className="bg-slate-300 rounded-lg flex flex-col items-start justify-start gap-5 px-10 py-5 text-black"
-    >
+    <div className="bg-slate-300 rounded-lg flex flex-col items-start justify-start gap-5 px-10 py-5 text-black">
       <div className="text-center w-full text-xl font-bold flex items-center justify-center gap-2 text-blue-800">
         <div className="w-fit mt-[-10px]">
           <svg
@@ -128,7 +153,7 @@ export default function PasswordForm() {
           className="absolute right-3 top-6 flex items-center justify-center w-fit h-fit"
           onClick={() => handlePasswordVisibility('confirmPassword')}
         >
-          {isPasswordVisible.password ? (
+          {isPasswordVisible.confirmPassword ? (
             <EyeOff size={24} className="text-blue-500" />
           ) : (
             <Eye size={24} className="text-blue-500" />
@@ -139,9 +164,10 @@ export default function PasswordForm() {
       <Button
         value="Submit"
         type="submit"
+        onClick={submitForm}
         className="bg-white text-black hover:bg-gray-600 hover:text-white font-medium text-xs text-center no-underline px-4 py-1 rounded-md mt-2 mx-auto w-[30%]"
-        loading={isLoading}
+        loading={loading}
       />
-    </form>
+    </div>
   );
 }
