@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form';
 import { useRouter, usePathname } from 'next/navigation';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { toast } from 'react-toastify';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { setPasswordSchema, SigninInputs } from '@/src/validations/set-password';
 import { Eye, EyeOff } from 'lucide-react';
 import { UseUpdateUser } from '@/src/hooks/user/update-user';
@@ -20,35 +20,24 @@ export default function PasswordForm() {
   const router = useRouter();
   const pathname = usePathname();
   const supabase = createClient();
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-
-  const hash = pathname.split('#')[1];
-  const params = new URLSearchParams(hash);
-  const obj = Object.fromEntries(params.entries());
-  const access_token = obj.access_token;
-  const refresh_token = obj.refresh_token;
-
-  useEffect(() => {
-    if (access_token && refresh_token) {
-      verifySession();
-    } else {
-      toast.error('Invalid or expired access token');
-      router.replace('/signin');
-    }
-  }, [access_token, refresh_token]);
 
   const verifySession = async () => {
+    const hash = pathname.split('#')[1];
+    const params = new URLSearchParams(hash);
+    const obj = Object.fromEntries(params.entries());
+    const access_token = obj.access_token;
+    const refresh_token = obj.refresh_token;
     const { error } = await supabase.auth.setSession({
       access_token,
       refresh_token,
     });
 
     if (error) {
-      console.error('Failed to set session', error);
+      toast.error('Failed to set session');
       router.replace('/signin');
-      return;
+    } else {
+      submitForm();
     }
-    setIsLoading(false);
   };
 
   /* eslint-disable  @typescript-eslint/no-explicit-any */
@@ -90,7 +79,7 @@ export default function PasswordForm() {
     });
   };
 
-  if (loading || isLoading) return <Loading />;
+  if (loading) return <Loading />;
 
   return (
     <div className="bg-slate-300 rounded-lg flex flex-col items-start justify-start gap-5 px-10 py-5 text-black">
@@ -164,7 +153,7 @@ export default function PasswordForm() {
       <Button
         value="Submit"
         type="submit"
-        onClick={submitForm}
+        onClick={verifySession}
         className="bg-white text-black hover:bg-gray-600 hover:text-white font-medium text-xs text-center no-underline px-4 py-1 rounded-md mt-2 mx-auto w-[30%]"
         loading={loading}
       />
