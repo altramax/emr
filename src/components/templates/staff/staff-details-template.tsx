@@ -70,11 +70,6 @@ const StaffDetailsTemplate = () => {
   }, [status?.value]);
 
   const grantEmrAccess = async () => {
-    if (staffInfo?.role !== 'super_admin') {
-      toast.error('Cannot grant EMR access');
-      return;
-    }
-
     const { data, error } = await supabase.functions.invoke('grant-emr-access', {
       body: { staff_id: staffInfo?.id },
     });

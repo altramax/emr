@@ -96,24 +96,30 @@ export const signInAction = async (queryData: any) => {
   }
 };
 
-export const setSessionAction = async (access_token: string, refresh_token: string) => {
+export const setPasswordAction = async (password: string) => {
   const supabase = await createClient();
-  const { data, error } = await supabase.auth.setSession({
-    access_token,
-    refresh_token,
-  });
+  try {
+    // Get the current session
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
 
-  if (error) {
-    console.error('Failed to set session', error);
-    return;
+    if (!session) {
+      return { response: 'error', message: 'Invalid session' };
+    }
+
+    // Update user password using the server-side client
+    const { error } = await supabase.auth.updateUser({
+      password: password,
+    });
+
+    if (error) {
+      console.error('Error setting password:', error);
+      return { response: 'error', message: error.message };
+    }
+  } catch (error: any) {
+    console.error('Server error:', error);
   }
-
-  console.log('User logged in:', data.user);
-
-  return { response: 'success', message: 'password_updated' };
-
-  console.error('setPasswordAction error:', error);
-  return { response: 'error', message: 'unexpected_failure' };
 };
 
 export const forgotPasswordAction = async (formData: FormData) => {
