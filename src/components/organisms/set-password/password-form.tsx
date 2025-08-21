@@ -22,8 +22,8 @@ export default function PasswordForm() {
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    setIsLoading(true);
     const processInviteToken = async () => {
+      setIsLoading(true);
       // Get hash parameters from URL
       const hashParams = new URLSearchParams(window.location.hash.substring(1));
       const type = hashParams.get('type');
@@ -50,10 +50,9 @@ export default function PasswordForm() {
         } catch (error: any) {
           console.error('Error setting session:', error);
           toast.error('Failed to set session: ' + error.message);
-        } finally {
-          setIsLoading(false);
         }
       }
+      setIsLoading(false);
     };
 
     processInviteToken();
