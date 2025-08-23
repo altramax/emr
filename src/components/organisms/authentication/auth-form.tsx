@@ -118,6 +118,7 @@ export default function AuthForm() {
         type="submit"
         className=" text-white bg-gray-600 font-medium text-xs text-center no-underline px-4 py-1 rounded-md mt-2 mx-auto w-[30%]"
         loading={isLoading}
+        disabled={isLoading}
       />
     </form>
   );

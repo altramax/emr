@@ -4,6 +4,7 @@ import Image from 'next/image';
 import { useUserStore } from '@/src/store/user-store';
 import SunImage from '@/src/components/assets/image/day.jpg';
 import MoonImage from '@/src/components/assets/image/moon.jpg';
+import capitalizeName from '../../atoms/capitalize-name/capitalize_name';
 
 export default function WelcomeModal() {
   const [fadeOut, setFadeOut] = useState(false);
@@ -48,7 +49,7 @@ export default function WelcomeModal() {
         <h2 className="text-4xl font-bold mb-3">{getGreeting()}</h2>
 
         <p className="text-4xl font-bold ">
-          {`${state.user?.role?.toUpperCase()} ${state.user?.first_name} ${state.user?.last_name}`}
+          {`${capitalizeName(state.user?.role)} ${state.user?.first_name} ${state.user?.last_name}`}
         </p>
 
         <p className="text-lg italic mt-[100px]">“Caring for patients, one step at a time.”</p>

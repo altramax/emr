@@ -9,6 +9,7 @@ import { Expand, Minimize, LogOut } from 'lucide-react';
 import Logo from '../../assets/icons/logo-icon';
 import { Logout } from '@/src/hooks/user/logout';
 import { useUserStore } from '@/src/store/user-store';
+import capitalizeName from '../../atoms/capitalize-name/capitalize_name';
 
 type dashboardType = {
   isNavOpen: boolean;
@@ -41,7 +42,7 @@ export default function DashboardMenu({ isNavOpen, expandNavHandler }: dashboard
         />
       </div>
 
-      <div className="flex flex-col space-y-5 ">
+      <div className="flex flex-col space-y-5 pb-32 ">
         {/* <NursesDashboard isOpen={isNavOpen} /> */}
         <DoctorsDashboard isOpen={isNavOpen} />
         <RecordsDashboard isOpen={isNavOpen} />
@@ -49,7 +50,9 @@ export default function DashboardMenu({ isNavOpen, expandNavHandler }: dashboard
         {/* <DashboardMen /> */}
       </div>
 
-      <div className={`${isNavOpen ? 'w-[80%]' : ''} border-t border-gray-500 mt-auto`}>
+      <div
+        className={`${isNavOpen ? 'w-[80%]' : ''} border-t border-gray-500 mt-auto bg-blue-600  z-50 absolute bottom-0 pb-10 `}
+      >
         <button
           onClick={() => signOut()}
           className="flex items-center hover:bg-blue-500 p-2 rounded w-full text-left text-white mt-4 text-sm"
@@ -58,14 +61,14 @@ export default function DashboardMenu({ isNavOpen, expandNavHandler }: dashboard
           <span className={`${isNavOpen ? '' : 'hidden'}`}>Logout</span>
         </button>
         {staff && (
-          <div className=" flex justify-start items-center text-xs text-gray-300 gap-4 pt-4">
+          <div className="flex justify-start items-center text-gray-300 gap-4 pt-4">
             <Avatar firstname={staff?.first_name} lastname={staff?.last_name} size={10} />
 
             <div className={`${isNavOpen ? '' : 'hidden'}`}>
-              <div className="">
+              <div className=" text-sm">
                 {staff?.first_name} {staff?.last_name}
               </div>
-              <div>{staff?.role.charAt(0).toUpperCase() + staff?.role.slice(1)}</div>
+              <div className=" text-xs">{capitalizeName(staff?.role)}</div>
             </div>
           </div>
         )}

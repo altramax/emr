@@ -133,7 +133,7 @@ const StaffDetailsTemplate = () => {
           <StatusBar status={staffInfo?.status} />
           <RoleBar role={staffInfo?.role} />
 
-          {staffInfo?.role !== 'super_admin' && (
+          {staffInfo?.role === 'Super_admin' && (
             <button
               onClick={grantEmrAccess}
               className="bg-blue-600 text-white rounded-lg px-4 py-1.5 text-xs mt-2 shadow-sm hover:bg-blue-700 transition-colors"
