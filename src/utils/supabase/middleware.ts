@@ -31,7 +31,7 @@ export const updateSession = async (request: NextRequest) => {
       }
     );
 
-    const user = await supabase.auth.getUser();
+    await supabase.auth.getUser();
 
     const {
       data: { session },
@@ -48,23 +48,6 @@ export const updateSession = async (request: NextRequest) => {
     if (session) {
       if (pathname.includes('/set-password')) {
         return NextResponse.redirect(new URL('/dashboard', request.url));
-      }
-    }
-
-    // reinject role into usermetadata when token refreshes
-    if (session && !user?.data?.user?.user_metadata?.role) {
-      const { data: userRole } = await supabase
-        .from('role')
-        .select('role')
-        .eq('user_id', user?.data?.user?.id)
-        .single();
-
-      if (userRole) {
-        await supabase.auth.updateUser({
-          data: {
-            role: userRole.role,
-          },
-        });
       }
     }
 

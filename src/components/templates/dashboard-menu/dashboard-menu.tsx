@@ -1,8 +1,6 @@
 'use client';
 
 import Avatar from '../../atoms/Avatar/Avatar';
-import { useUser } from '@/src/hooks/user/user';
-import { useEffect } from 'react';
 import Button from '../../atoms/button/button';
 import DoctorsDashboard from '../../organisms/dashboard-menu/doctors-dashboard';
 import RecordsDashboard from '../../organisms/dashboard-menu/records-dashboard';
@@ -10,6 +8,7 @@ import AdminDashboard from '../../organisms/dashboard-menu/admin-dashboard';
 import { Expand, Minimize, LogOut } from 'lucide-react';
 import Logo from '../../assets/icons/logo-icon';
 import { Logout } from '@/src/hooks/user/logout';
+import { useUserStore } from '@/src/store/user-store';
 
 type dashboardType = {
   isNavOpen: boolean;
@@ -17,13 +16,11 @@ type dashboardType = {
 };
 
 export default function DashboardMenu({ isNavOpen, expandNavHandler }: dashboardType) {
-  const { getRole, user } = useUser();
+  const { user: staff } = useUserStore();
 
   const { signOut } = Logout();
 
-  useEffect(() => {
-    getRole();
-  }, []);
+  console.log(staff);
 
   return (
     <aside
@@ -60,14 +57,18 @@ export default function DashboardMenu({ isNavOpen, expandNavHandler }: dashboard
           <LogOut size={18} className=" mr-2" />
           <span className={`${isNavOpen ? '' : 'hidden'}`}>Logout</span>
         </button>
-        <div className=" flex justify-start items-center text-sm text-gray-300 gap-4 pt-4">
-          <Avatar firstname="Doe" lastname="John" size={10} />
+        {staff && (
+          <div className=" flex justify-start items-center text-xs text-gray-300 gap-4 pt-4">
+            <Avatar firstname={staff?.first_name} lastname={staff?.last_name} size={10} />
 
-          <div className={`${isNavOpen ? '' : 'hidden'}`}>
-            <div className="mt-2">{user?.name}</div>
-            <div>{user?.role}</div>
+            <div className={`${isNavOpen ? '' : 'hidden'}`}>
+              <div className="">
+                {staff?.first_name} {staff?.last_name}
+              </div>
+              <div>{staff?.role.charAt(0).toUpperCase() + staff?.role.slice(1)}</div>
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </aside>
   );

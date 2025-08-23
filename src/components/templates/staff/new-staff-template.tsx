@@ -55,8 +55,8 @@ export default function NewStaffTemplate() {
   };
 
   return (
-    <div className="text-sm w-full h-[100vh] p-8 flex flex-col justify-center items-center">
-      <div className="w-[550px] rounded-xl shadow-xl bg-white py-4  relative overflow-auto no-scrollbar">
+    <div className="text-sm w-full h-screen p-8 flex justify-center items-center">
+      <div className="w-[550px]  h-[700px] rounded-xl shadow-xl bg-white py-4  relative overflow-auto no-scrollbar">
         <div className="px-4 flex items-center justify-start pb-4 border-b">
           <div className=" text-sm flex items-center text-blue-400 px-2 py-1 rounded-md">
             <IdCard size={20} />
@@ -82,7 +82,7 @@ export default function NewStaffTemplate() {
         </div>
 
         <FormProvider {...methods}>
-          <form className="px-8">{renderForm()}</form>
+          <form className="px-8 h-[550px] overflow-auto no-scrollbar">{renderForm()}</form>
         </FormProvider>
       </div>
     </div>

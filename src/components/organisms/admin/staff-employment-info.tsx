@@ -149,6 +149,7 @@ export default function StaffEmploymentInfo({ defaultData }: staffType) {
           name="date_hired"
           placeholder="YYYY-MM-DD"
           type="date"
+          max={new Date().toISOString().split('T')[0]}
           control={control}
           className="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 border h-9 text-xs"
         />

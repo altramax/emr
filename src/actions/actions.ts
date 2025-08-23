@@ -44,50 +44,16 @@ export const signInAction = async (queryData: any) => {
   try {
     const supabase = await createClient();
 
-    const { data: user, error } = await supabase.auth.signInWithPassword({
+    const { data, error } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
 
     if (error) {
-      switch (error.code) {
-        case 'AuthApiError':
-          if (error.message.includes('Invalid login credentials')) {
-            return { response: 'error', message: 'invalid_credentials' };
-          }
-          return { response: 'error', message: 'auth_api_error' };
-
-        case 'AuthRetryableError':
-          return { response: 'error', message: 'network_issue' };
-
-        case 'AuthInvalidCredentialsError':
-          return { response: 'error', message: 'invalid_account_credentials' };
-
-        case 'AuthEmailNotConfirmedError':
-          return { response: 'error', message: 'email_not_confirmed' };
-
-        default:
-          console.error('Unexpected sign-in error:', error.code);
-          return { response: 'error', message: 'unexpected_error' };
-      }
+      console.error('Sign-in error:', error);
+      return { response: 'error', message: error.message, data: null };
     }
-
-    if (user) {
-      const { data: userRole } = await supabase
-        .from('role')
-        .select('role')
-        .eq('user_id', user?.user?.id)
-        .single();
-
-      if (userRole) {
-        await supabase.auth.updateUser({
-          data: {
-            role: userRole?.role,
-          },
-        });
-      }
-    }
-    return { response: 'success', message: 'signin_successful' };
+    return { response: 'success', message: 'signin_successful', data: data.user };
   } catch (error) {
     if (error) {
       encodedRedirect('error', '/', 'error signing in');

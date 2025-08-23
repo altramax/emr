@@ -5,9 +5,11 @@ type getDataType = {
   /* eslint-disable  @typescript-eslint/no-explicit-any */
   department_id?: any;
   select?: string;
+  staff_id?: number;
+  emr_id?: number;
 };
 
-export const useGetStaff = ({ department_id, select }: getDataType) => {
+export const useGetStaff = ({ department_id, select, staff_id, emr_id }: getDataType) => {
   const supabase = createClient();
   /* eslint-disable  @typescript-eslint/no-explicit-any */
   const [data, setData] = useState<any>(null);
@@ -24,6 +26,14 @@ export const useGetStaff = ({ department_id, select }: getDataType) => {
 
       if (department_id) {
         query = query.eq('department_id', department_id);
+      }
+
+      if (staff_id) {
+        query = query.eq('id', staff_id);
+      }
+
+      if (emr_id) {
+        query = query.eq('emr_user_id', emr_id);
       }
 
       const { data: response, error: fetchError } = await query;

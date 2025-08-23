@@ -32,8 +32,8 @@ export default function StaffReviewStep({ staff_id }: StaffReviewStep) {
     department_id: values?.department?.value,
   };
 
-  const { insertStaff } = useInsertStaff({ columns: staffData });
-  const { updateStaff } = useUpdateStaff({
+  const { insertStaff, loading } = useInsertStaff({ columns: staffData });
+  const { updateStaff, loading: updateLoading } = useUpdateStaff({
     columns: staffData,
     staff_id: staff_id ?? '',
   });
@@ -111,6 +111,7 @@ export default function StaffReviewStep({ staff_id }: StaffReviewStep) {
           value="Submit"
           onClick={pathname.includes('edit-staff') ? updateForm : insertForm}
           className="text-sm bg-blue-500 w-[100px] py-2 text-white rounded-lg hover:bg-blue-600 focus:outline-none"
+          loading={loading || updateLoading}
         />
       </div>
     </div>

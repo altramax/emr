@@ -3,11 +3,13 @@ import { useRouter } from 'next/navigation';
 import { useVitalsAlertStore } from '@/src/store/vitals-alert-store';
 import { useDiagnosisAlertStore } from '@/src/store/diagnosis-alert-store';
 import { toast } from 'react-toastify';
+import { useUserStore } from '@/src/store/user-store';
 
 export const Logout = () => {
   const router = useRouter();
   const vital = useVitalsAlertStore((state) => state);
   const diagnosis = useDiagnosisAlertStore((state) => state);
+  const { clearUser } = useUserStore();
 
   const signOut = async () => {
     try {
@@ -18,6 +20,7 @@ export const Logout = () => {
         diagnosis?.clear();
         diagnosis?.setCalled(false);
         router.replace('/signin');
+        clearUser();
         toast.success('Successfully logged out');
       }
     } catch (err) {

@@ -2,6 +2,7 @@
 
 import DashboardMenu from '@/src/components/templates/dashboard-menu/dashboard-menu';
 import { useState } from 'react';
+import WelcomeModal from '@/src/components/molecules/welcome-modal/welcome-modal';
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   const [isNavOpen, setIsNavOpen] = useState(false);
@@ -21,6 +22,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         >
           {children}
         </div>
+        <WelcomeModal />
       </div>
     </section>
   );

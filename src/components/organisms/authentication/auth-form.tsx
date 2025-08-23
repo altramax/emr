@@ -6,9 +6,9 @@ import { signInAction } from '@/src/actions/actions';
 import { SigninInputs, LoginSchema } from '@/src/validations/login-schema';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { toast } from 'react-toastify';
-import { useUser } from '@/src/hooks/user/user';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Eye, EyeOff } from 'lucide-react';
+import { useGetAuthStaff } from '@/src/hooks/user/use-get-auth-staff';
 
 const initialValues = {
   email: '',
@@ -19,6 +19,7 @@ export default function AuthForm() {
   const router = useRouter();
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const { getAuthStaff } = useGetAuthStaff();
 
   const { control, handleSubmit } = useForm<SigninInputs>({
     resolver: yupResolver(LoginSchema),
@@ -27,34 +28,29 @@ export default function AuthForm() {
   });
 
   const submitForm = async (data: SigninInputs) => {
-    setIsLoading(true);
     const form = new FormData();
     form.append('email', data.email);
     form.append('password', data.password);
 
     try {
+      setIsLoading(true);
       const res = await signInAction(form);
       if (res?.response === 'error') {
         toast.error(res.message);
         return;
       }
       if (res?.response === 'success') {
+        getAuthStaff({ emr_id: res?.data?.id });
         router.replace('/dashboard');
         toast.success('Signin Successful');
       }
     } catch (error) {
       console.log(error);
       return error;
+    } finally {
+      setIsLoading(false);
     }
-    setIsLoading(false);
   };
-
-  const { user, getRole } = useUser();
-
-  useEffect(() => {
-    getRole();
-  }, []);
-  console.log(user);
 
   return (
     <form
@@ -120,7 +116,7 @@ export default function AuthForm() {
       <Button
         value="Signin"
         type="submit"
-        className="bg-white text-black hover:bg-gray-600 hover:text-white font-medium text-xs text-center no-underline px-4 py-1 rounded-md mt-2 mx-auto w-[30%]"
+        className=" text-white bg-gray-600 font-medium text-xs text-center no-underline px-4 py-1 rounded-md mt-2 mx-auto w-[30%]"
         loading={isLoading}
       />
     </form>
