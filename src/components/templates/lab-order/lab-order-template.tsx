@@ -10,7 +10,7 @@ import SelectDropdown from '@/src/components/molecules/select-dropdown/select-dr
 import { useForm } from 'react-hook-form';
 import Input from '@/src/components/atoms/Input/input-field';
 import Pagination from '../../organisms/pagination/pagination';
-import SummaryCards from '../../molecules/dashboard-molecules/summary-cards';
+import SummaryCards from '../../molecules/summary-card/summary-cards';
 import { useGetSummary } from '@/src/hooks/RPC/get-table-summary';
 
 export default function LabOrderTemplate() {

@@ -9,12 +9,13 @@ import StaffInfoRow from '../../molecules/staff-info-row/staff-info-row';
 import { useQueryStaff } from '@/src/hooks/staff/use-query-staff';
 import { useUpdateStaff } from '@/src/hooks/staff/use-update-staff';
 import SelectDropdown from '../../molecules/select-dropdown/select-dropdown';
-import { useForm, useWatch } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import StatusBar from '../../molecules/status-bar/status-bar';
 import Avatar from '../../atoms/Avatar/Avatar';
 import RoleBar from '../../molecules/role-bar/role-bar';
 import { createClient } from '@/src/utils/supabase/client';
 import { toast } from 'react-toastify';
+import { useUserStore } from '@/src/store/user-store';
 
 type StaffStatusForm = {
   status: { label: string; value: string };
@@ -23,6 +24,7 @@ type StaffStatusForm = {
 const StaffDetailsTemplate = () => {
   const router = useRouter();
   const param = useParams();
+  const user = useUserStore((state) => state.user);
   /* eslint-disable  @typescript-eslint/no-explicit-any */
   const id: any = param?.detailsId ?? '';
   const supabase = createClient();
@@ -41,14 +43,12 @@ const StaffDetailsTemplate = () => {
 
   const staffInfo = data ? data[0] : '';
 
-  const { control } = useForm<StaffStatusForm>({
-    defaultValues: { status: { label: '', value: '' } },
-  });
+  const { control, reset, watch } = useForm();
 
-  const status: any = useWatch({ control, name: 'status' });
+  const status: StaffStatusForm['status'] = watch('status');
 
   const { updateStaff, loading: insertLoading } = useUpdateStaff({
-    columns: { status: status.value },
+    columns: { status: status?.value },
     staff_id: staffInfo?.id,
   });
 
@@ -69,6 +69,20 @@ const StaffDetailsTemplate = () => {
     }
   }, [status?.value]);
 
+  useEffect(() => {
+    console.log('reset ran');
+    reset({
+      status: {
+        label: staffInfo?.status
+          ?.split('_')
+          .map((word: string) => word.charAt(0).toUpperCase() + word.slice(1))
+          .join(' '),
+
+        value: staffInfo?.status,
+      },
+    });
+  }, [staffInfo?.status]);
+
   const grantEmrAccess = async () => {
     const { data, error } = await supabase.functions.invoke('grant-emr-access', {
       body: { staff_id: staffInfo?.id },
@@ -84,6 +98,8 @@ const StaffDetailsTemplate = () => {
     }
   };
 
+  console.log(staffInfo);
+
   if (loading || insertLoading) return <LoadingBar />;
 
   return (
@@ -97,7 +113,7 @@ const StaffDetailsTemplate = () => {
           <span className="text-sm font-medium">Back</span>
         </button>
 
-        <div className="flex items-bottom gap-4">
+        <div className="flex items-center gap-4">
           <div className="w-[200px]">
             <SelectDropdown
               name="status"
@@ -106,12 +122,14 @@ const StaffDetailsTemplate = () => {
               control={control}
             />
           </div>
-          <Button
-            className="flex items-center gap-2 text-xs px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md shadow-sm transition-all"
-            loading={loading}
-            value="Edit"
-            onClick={() => router.push(`/admin/edit-staff/${staffInfo?.id}`)}
-          />
+          {user?.role === 'super_admin' && staffInfo?.emr_user_id === null ? (
+            <button
+              onClick={grantEmrAccess}
+              className="bg-blue-600 text-white rounded-lg px-4 py-2 text-xs shadow-sm hover:bg-blue-700 transition-colors"
+            >
+              Grant EMR Access
+            </button>
+          ) : null}
         </div>
       </div>
       <div className="border-t border-gray-200" />
@@ -132,15 +150,12 @@ const StaffDetailsTemplate = () => {
 
           <StatusBar status={staffInfo?.status} />
           <RoleBar role={staffInfo?.role} />
-
-          {staffInfo?.role === 'Super_admin' && (
-            <button
-              onClick={grantEmrAccess}
-              className="bg-blue-600 text-white rounded-lg px-4 py-1.5 text-xs mt-2 shadow-sm hover:bg-blue-700 transition-colors"
-            >
-              Grant EMR Access
-            </button>
-          )}
+          <Button
+            className="flex items-center gap-2 text-xs px-5 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg shadow-sm transition-all"
+            loading={loading}
+            value="Edit staff"
+            onClick={() => router.push(`/admin/edit-staff/${staffInfo?.id}`)}
+          />
         </div>
 
         <div className="w-full flex flex-col gap-8">

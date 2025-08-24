@@ -18,10 +18,10 @@ export default function BillingTable({ patients }: PatientCareTableProps) {
     <table className="w-full border-collapse">
       <thead>
         <tr className="bg-gray-100 text-left text-xs text-gray-600">
-          <th className="px-4 py-2">Name</th>
-          <th className="px-4 py-2">Patient id</th>
-          <th className="px-4 py-2">Age</th>
-          <th className="px-4 py-2">Gender</th>
+          <th className="px-4 py-1">Name</th>
+          <th className="px-4 py-1">Patient id</th>
+          <th className="px-4 py-1">Age</th>
+          <th className="px-4 py-1">Gender</th>
         </tr>
       </thead>
       <tbody>

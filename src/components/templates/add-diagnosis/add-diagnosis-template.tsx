@@ -6,7 +6,7 @@ import { Search, Loader, XIcon } from 'lucide-react';
 import { useDebounce } from '@/src/hooks/debounce/use-debounce';
 import { useQueryDiagnosis } from '@/src/hooks/diagnosis/use-query-diagnosis';
 import EmptyState from '@/src/components/molecules/empty-state/empty-state';
-import SummaryCards from '../../molecules/dashboard-molecules/summary-cards';
+import SummaryCards from '../../molecules/summary-card/summary-cards';
 import Input from '../../atoms/Input/input-field';
 import { useForm } from 'react-hook-form';
 import SelectDropdown from '../../molecules/select-dropdown/select-dropdown';

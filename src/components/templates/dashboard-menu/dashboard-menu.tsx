@@ -21,8 +21,6 @@ export default function DashboardMenu({ isNavOpen, expandNavHandler }: dashboard
 
   const { signOut } = Logout();
 
-  console.log(staff);
-
   return (
     <aside
       className={`${isNavOpen ? 'w-full px-5  items-start' : 'w-14  items-center'} transition-all duration-400 ease-in-out no-scrollbar overflow-auto h-full min-h-screen bg-blue-600 text-sm text-white pb-9 flex flex-col justify-start`}

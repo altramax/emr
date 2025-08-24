@@ -47,8 +47,6 @@ export default function BillingTemplate() {
     { label: 'Unpaid', value: 'unpaid' },
   ];
 
-  console.log(queryData);
-
   return (
     <div className=" bg-white min-h-screen p-5">
       <Header title="Bill Payment" subTitle="Select patient to view bill" />
