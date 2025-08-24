@@ -11,7 +11,7 @@ import Input from '../../atoms/Input/input-field';
 import { useForm } from 'react-hook-form';
 import SelectDropdown from '../../molecules/select-dropdown/select-dropdown';
 import Pagination from '../../organisms/pagination/pagination';
-import { useDiagnosisCount } from '@/src/hooks/RPC/get-diagnosis-count';
+import { useGetSummary } from '@/src/hooks/RPC/get-table-summary';
 
 export default function AddDiagnoseTemplate() {
   const [page, setPage] = useState(1);
@@ -47,7 +47,9 @@ export default function AddDiagnoseTemplate() {
     to: to,
   });
 
-  const { getDiagnosisCount, data: diagnosisData } = useDiagnosisCount();
+  const { getSummary, data: diagnosisSummary } = useGetSummary({
+    tableName: 'get_diagnosis_status_counts',
+  });
 
   useEffect(() => {
     if (count) {
@@ -58,7 +60,7 @@ export default function AddDiagnoseTemplate() {
 
   useEffect(() => {
     queryDiagnosis();
-    getDiagnosisCount();
+    getSummary();
   }, [debouncedName, status, from]);
 
   const resetField = () => {
@@ -73,25 +75,23 @@ export default function AddDiagnoseTemplate() {
     { label: 'Evaluation Completed', value: 'evaluation_completed' },
   ];
 
-  console.log(diagnosisData);
-
   return (
     <div className=" bg-white min-h-screen p-5">
       <Header title=" Diagnose patient" subTitle="Select patient to add diagnosis" />
       <div className="flex justify-start gap-4 items-start mt-4 w-full border-gray-200">
         <SummaryCards
           title="Awaiting Examination"
-          count={`${diagnosisData?.[0].awaiting_examination_count ?? 0}`}
+          count={`${diagnosisSummary?.[0].awaiting_examination_count ?? 0}`}
           variant="pending"
         />
         <SummaryCards
           title="Under Evaluation"
-          count={`${diagnosisData?.[0].under_evaluation_count ?? 0}`}
+          count={`${diagnosisSummary?.[0].under_evaluation_count ?? 0}`}
           variant="inprogress"
         />
         <SummaryCards
           title="Evaluation Completed"
-          count={`${diagnosisData?.[0].evaluation_completed_count ?? 0}`}
+          count={`${diagnosisSummary?.[0].evaluation_completed_count ?? 0}`}
           variant="success"
         />
       </div>

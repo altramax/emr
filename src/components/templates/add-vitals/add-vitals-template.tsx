@@ -7,7 +7,7 @@ import { useDebounce } from '@/src/hooks/debounce/use-debounce';
 import { useQueryTask } from '@/src/hooks/task/use-query-task';
 import EmptyState from '@/src/components/molecules/empty-state/empty-state';
 import SummaryCards from '../../molecules/dashboard-molecules/summary-cards';
-import { useVitalsCount } from '@/src/hooks/RPC/get-vitals-count';
+import { useGetSummary } from '@/src/hooks/RPC/get-table-summary';
 import Input from '../../atoms/Input/input-field';
 import SelectDropdown from '../../molecules/select-dropdown/select-dropdown';
 import { useForm } from 'react-hook-form';
@@ -44,11 +44,13 @@ export default function AddVitalsTemplate() {
     to: to,
   });
 
-  const { getVitalsCount, data: vitalsData } = useVitalsCount();
+  const { getSummary, data: vitalsSummary } = useGetSummary({
+    tableName: 'get_vitals_task_counts_today',
+  });
 
   useEffect(() => {
     queryTask();
-    getVitalsCount();
+    getSummary();
   }, [debouncedName, status, from]);
 
   useEffect(() => {
@@ -76,12 +78,12 @@ export default function AddVitalsTemplate() {
       <div className="flex justify-start gap-4 items-start mt-4 w-full border-gray-200">
         <SummaryCards
           title="Pending vitals"
-          count={vitalsData?.[0].pending_count}
+          count={vitalsSummary?.[0].pending_count}
           variant="pending"
         />
         <SummaryCards
           title="Completed vitals"
-          count={vitalsData?.[0].completed_count}
+          count={vitalsSummary?.[0].completed_count}
           variant="success"
         />
       </div>

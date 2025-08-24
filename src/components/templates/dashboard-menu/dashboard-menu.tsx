@@ -51,17 +51,10 @@ export default function DashboardMenu({ isNavOpen, expandNavHandler }: dashboard
       </div>
 
       <div
-        className={`${isNavOpen ? 'w-[80%]' : ''} border-t border-gray-500 mt-auto bg-blue-600  z-50 absolute bottom-0 pb-10 `}
+        className={`${isNavOpen ? 'w-[80%]' : ''} border-t border-gray-500 mt-auto bg-blue-600  z-50 absolute bottom-0 pb-6 `}
       >
-        <button
-          onClick={() => signOut()}
-          className="flex items-center hover:bg-blue-500 p-2 rounded w-full text-left text-white mt-4 text-sm"
-        >
-          <LogOut size={18} className=" mr-2" />
-          <span className={`${isNavOpen ? '' : 'hidden'}`}>Logout</span>
-        </button>
         {staff && (
-          <div className="flex justify-start items-center text-gray-300 gap-4 pt-4">
+          <div className="flex justify-start items-center text-gray-300 gap-2 pt-4">
             <Avatar firstname={staff?.first_name} lastname={staff?.last_name} size={10} />
 
             <div className={`${isNavOpen ? '' : 'hidden'}`}>
@@ -72,6 +65,13 @@ export default function DashboardMenu({ isNavOpen, expandNavHandler }: dashboard
             </div>
           </div>
         )}
+        <button
+          onClick={() => signOut()}
+          className="flex items-center hover:bg-blue-500 p-2 rounded w-full text-left text-white mt-2 text-sm"
+        >
+          <LogOut size={18} className=" mr-2" />
+          <span className={`${isNavOpen ? '' : 'hidden'}`}>Logout</span>
+        </button>
       </div>
     </aside>
   );

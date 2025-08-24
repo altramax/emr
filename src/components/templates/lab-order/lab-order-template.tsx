@@ -1,5 +1,5 @@
 'use client';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import LabOrderTable from '@/src/components/organisms/lab-order/lab-order-table';
 import Header from '@/src/components/organisms/patient/header';
 import { Search, Loader, XIcon } from 'lucide-react';
@@ -9,8 +9,13 @@ import EmptyState from '@/src/components/molecules/empty-state/empty-state';
 import SelectDropdown from '@/src/components/molecules/select-dropdown/select-dropdown';
 import { useForm } from 'react-hook-form';
 import Input from '@/src/components/atoms/Input/input-field';
+import Pagination from '../../organisms/pagination/pagination';
+import SummaryCards from '../../molecules/dashboard-molecules/summary-cards';
+import { useGetSummary } from '@/src/hooks/RPC/get-table-summary';
 
 export default function LabOrderTemplate() {
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
   const { control, watch, setValue } = useForm({
     defaultValues: { search: '', status: { label: 'Pending', value: 'pending' } },
     mode: 'onChange',
@@ -21,21 +26,40 @@ export default function LabOrderTemplate() {
   const searchValue: any = watch('search');
   const debouncedName = useDebounce(searchValue, 500);
 
+  const pageSize = 10;
+  const from = (page - 1) * pageSize;
+  const to = from + pageSize - 1;
+
+  const { getSummary, data: labSummary } = useGetSummary({
+    tableName: 'get_lab_order_count',
+  });
+
   const {
     queryTask,
     data: queryData,
     loading,
     clearData,
+    count,
   } = useQueryTask({
     task_name: 'lab_order',
     select: '*',
     name: debouncedName,
     status: status ? status?.value : 'pending',
+    from: from,
+    to: to,
   });
 
   useEffect(() => {
     queryTask();
-  }, [debouncedName, status]);
+    getSummary();
+  }, [debouncedName, status, from]);
+
+  useEffect(() => {
+    if (count) {
+      setTotalPages(Math.ceil(count / 10));
+      setTotalPages(Math.ceil((count || 0) / pageSize));
+    }
+  }, [count]);
 
   const resetField = () => {
     setValue('search', '');
@@ -52,6 +76,23 @@ export default function LabOrderTemplate() {
   return (
     <div className="p-5 bg-white min-h-screen">
       <Header title="Lab orders" subTitle="Select patient to begin test" />
+      <div className="flex justify-start gap-4 items-start mt-4 w-full border-gray-200">
+        <SummaryCards
+          title="Pending Test"
+          count={`${labSummary?.pending ?? 0}`}
+          variant="pending"
+        />
+        <SummaryCards
+          title="Test In Progress"
+          count={`${labSummary?.in_progress ?? 0}`}
+          variant="inprogress"
+        />
+        <SummaryCards
+          title="Completed Test"
+          count={`${labSummary?.completed ?? 0}`}
+          variant="success"
+        />
+      </div>
       <div className=" flex justify-start items-center gap-4 mt-6 w-full border-gray-200 pb-4">
         <div className=" w-[40%] relative gap-8">
           <Input
@@ -90,10 +131,13 @@ export default function LabOrderTemplate() {
           <SelectDropdown name="status" options={options} control={control} />
         </div>
       </div>
-      <div className="overflow-x-auto mt-4">
+      <div className="overflow-x-auto mt-2">
         {!loading &&
           (queryData?.length > 0 ? (
-            <LabOrderTable patients={queryData} />
+            <>
+              <LabOrderTable patients={queryData} />
+              <Pagination totalPages={totalPages} currentPage={page} onPageChange={setPage} />
+            </>
           ) : (
             <EmptyState title="No task found" message="No task found for lab order" />
           ))}

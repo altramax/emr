@@ -2,20 +2,22 @@ import { createClient } from '../../utils/supabase/client';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
 
-export const useDiagnosisCount = () => {
+type summary = {
+  tableName: string;
+};
+
+export const useGetSummary = ({ tableName }: summary) => {
   const supabase = createClient();
   /* eslint-disable  @typescript-eslint/no-explicit-any */
   const [data, setData] = useState<any>(null);
   const [error, setError] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
-  const getDiagnosisCount = async () => {
+  const getSummary = async () => {
     try {
       setLoading(true);
 
-      const { data: response, error: fetchError } = await supabase.rpc(
-        'get_diagnosis_status_counts'
-      );
+      const { data: response, error: fetchError } = await supabase.rpc(tableName);
 
       if (fetchError) {
         setError(fetchError);
@@ -31,8 +33,8 @@ export const useDiagnosisCount = () => {
   };
 
   const refetch = () => {
-    getDiagnosisCount();
+    getSummary();
   };
 
-  return { getDiagnosisCount, error, loading, data, refetch };
+  return { getSummary, error, loading, data, refetch };
 };

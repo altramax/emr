@@ -45,7 +45,7 @@ export default function AddVitalsTable({ patients }: PatientCareTableProps) {
 
             <td className="p-4">{patient?.patient?.id}</td>
             <td className="p-4">{CalculateAge(patient?.patient?.date_of_birth)}</td>
-            <td className="p-4">
+            <td className="p-4 item">
               {patient?.patient?.gender.charAt(0).toUpperCase() + patient?.patient?.gender.slice(1)}
             </td>
             <td className="p-4">

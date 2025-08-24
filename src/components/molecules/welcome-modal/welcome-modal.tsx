@@ -37,22 +37,22 @@ export default function WelcomeModal() {
       <Image
         src={getGreeting() !== 'Good Evening' ? SunImage : MoonImage}
         alt="Cloud"
-        width={700}
-        height={700}
+        width={500}
+        height={500}
         priority
         className="drop-shadow-2xl rounded-lg"
       />
 
       <div
-        className={`mt-[70px] absolute h-full inset-0 flex flex-col items-center justify-center px-8 ${getGreeting() !== 'Good Evening' ? 'text-gray-900' : 'text-white ml-10'} tracking-wide`}
+        className={`mt-[40px] absolute h-full inset-0 flex flex-col items-center justify-center px-8 ${getGreeting() !== 'Good Evening' ? 'text-gray-900' : 'text-white ml-10'} tracking-wide`}
       >
-        <h2 className="text-4xl font-bold mb-3">{getGreeting()}</h2>
+        <h2 className="text-2xl font-bold mb-1">{getGreeting()}</h2>
 
-        <p className="text-4xl font-bold ">
+        <p className="text-2xl font-bold ">
           {`${capitalizeName(state.user?.role)} ${state.user?.first_name} ${state.user?.last_name}`}
         </p>
 
-        <p className="text-lg italic mt-[100px]">“Caring for patients, one step at a time.”</p>
+        <p className="text-sm italic mt-[70px]">“Caring for patients, one step at a time.”</p>
       </div>
     </div>
   );
