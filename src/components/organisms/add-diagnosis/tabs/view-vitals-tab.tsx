@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useGetTasks } from '@/src/hooks/task/use-get-tasks';
+import { useGetData } from '@/src/hooks/use-get-data';
 import Loading from '@/src/components/atoms/loading-bar/loading-bar-page';
 import VitalsReadingCards from '@/src/components/molecules/vitals-reading-cards/vitals-reading-cards';
 
@@ -9,15 +9,28 @@ interface PatientCareTableProps {
 }
 
 export default function ViewVitalsTab({ visit_id, id }: PatientCareTableProps) {
-  const { getTask, data, loading } = useGetTasks({
-    task_name: 'vitals',
+  const { getData, data, loading } = useGetData({
+    table: 'tasks',
+    params: [
+      {
+        column: 'task_name',
+        value: 'vitals',
+      },
+      {
+        column: 'visit_id',
+        value: visit_id,
+      },
+      {
+        column: 'status',
+        value: 'completed',
+      },
+    ],
     select: '*',
-    visit_id: visit_id,
-    status: 'completed',
   });
 
   useEffect(() => {
-    getTask();
+    if (!visit_id) return;
+    getData();
   }, [visit_id]);
 
   if (loading) return <Loading />;

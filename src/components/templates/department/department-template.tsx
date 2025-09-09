@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react';
 import Header from '@/src/components/organisms/patient/header';
 import { Search, Loader, XIcon } from 'lucide-react';
 import { useDebounce } from '@/src/hooks/debounce/use-debounce';
-import { useQueryDepartment } from '@/src/hooks/departments/use-query-department';
+import { useQueryData } from '@/src/hooks/use-query-data';
 import EmptyState from '@/src/components/molecules/empty-state/empty-state';
 import Button from '@/src/components/atoms/button/button';
 import DepartmentTable from '../../organisms/admin/department-table';
@@ -17,13 +17,14 @@ export default function DepartmentTemplate() {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const {
-    queryDepartment,
+    queryData: queryDepartment,
     data: queryData,
     loading,
     clearData,
     refetch,
-  } = useQueryDepartment({
-    name: debouncedName,
+  } = useQueryData({
+    table: 'departments',
+    singleName: debouncedName,
   });
 
   useEffect(() => {

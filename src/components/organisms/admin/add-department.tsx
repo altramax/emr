@@ -2,7 +2,7 @@
 
 import { useForm } from 'react-hook-form';
 import Button from '@/src/components/atoms/button/button';
-import { useInsertDepartment } from '@/src/hooks/departments/use-insert-department';
+import { useInsertData } from '@/src/hooks/use-insert-data';
 import Input from '../../atoms/Input/input-field';
 import { toast } from 'react-toastify';
 
@@ -26,8 +26,9 @@ export default function AddDepartmentModal({ onclose, refetch }: departmentType)
 
   const values = watch();
 
-  const { insertDepartment, error, loading } = useInsertDepartment({
-    columns: { name: values?.name, description: values?.description },
+  const { insertData: insertDepartment, loading } = useInsertData({
+    table: 'departments',
+    params: { name: values?.name, description: values?.description },
   });
 
   const submit = async (data: FormValues) => {
@@ -37,8 +38,8 @@ export default function AddDepartmentModal({ onclose, refetch }: departmentType)
     }
 
     try {
-      await insertDepartment();
-      if (!error) {
+      const res = await insertDepartment();
+      if (res === 'success') {
         toast.success('Department added successfully');
         refetch();
         onclose();

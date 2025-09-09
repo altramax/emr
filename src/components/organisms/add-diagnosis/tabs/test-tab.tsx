@@ -28,11 +28,7 @@ export default function TestTab({ data }: dataType) {
         </button>
       </div>
 
-      {activeTab === 'labs' ? (
-        <LabOrders data={data} />
-      ) : (
-        <TestResults visitId={data?.visit_id} patientId={data?.patient_id} />
-      )}
+      {activeTab === 'labs' ? <LabOrders data={data} /> : <TestResults visitId={data?.visit_id} />}
     </div>
   );
 }

@@ -4,7 +4,6 @@ import AddDiagnosisTable from '@/src/components/organisms/add-diagnosis/add-diag
 import Header from '@/src/components/organisms/patient/header';
 import { Search, Loader, XIcon } from 'lucide-react';
 import { useDebounce } from '@/src/hooks/debounce/use-debounce';
-import { useQueryDiagnosis } from '@/src/hooks/diagnosis/use-query-diagnosis';
 import EmptyState from '@/src/components/molecules/empty-state/empty-state';
 import SummaryCards from '../../molecules/summary-card/summary-cards';
 import Input from '../../atoms/Input/input-field';
@@ -12,10 +11,13 @@ import { useForm } from 'react-hook-form';
 import SelectDropdown from '../../molecules/select-dropdown/select-dropdown';
 import Pagination from '../../organisms/pagination/pagination';
 import { useGetSummary } from '@/src/hooks/RPC/get-table-summary';
+import { useGetDiagnosisAlert } from '@/src/hooks/alerts/diagnosis-alert';
+import { useQueryData } from '@/src/hooks/use-query-data';
 
 export default function AddDiagnoseTemplate() {
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const { data: alert } = useGetDiagnosisAlert();
   const { control, watch, setValue } = useForm({
     defaultValues: {
       search: '',
@@ -34,15 +36,21 @@ export default function AddDiagnoseTemplate() {
   const debouncedName = useDebounce(searchValue, 500);
 
   const {
-    queryDiagnosis,
+    queryData: queryDiagnosis,
     data: queryData,
     loading,
     clearData,
     count,
-  } = useQueryDiagnosis({
+  } = useQueryData({
+    table: 'diagnosis',
     select: '*',
-    name: debouncedName,
-    status: status.value ?? 'awaiting_examination',
+    nestedPatientName: debouncedName,
+    params: [
+      {
+        column: 'status',
+        value: status.value ?? 'awaiting_examination',
+      },
+    ],
     from: from,
     to: to,
   });
@@ -61,7 +69,7 @@ export default function AddDiagnoseTemplate() {
   useEffect(() => {
     queryDiagnosis();
     getSummary();
-  }, [debouncedName, status, from]);
+  }, [debouncedName, status, from, alert]);
 
   const resetField = () => {
     setValue('search', '');
@@ -138,7 +146,12 @@ export default function AddDiagnoseTemplate() {
           (queryData?.length > 0 ? (
             <>
               <AddDiagnosisTable patients={queryData} />
-              <Pagination totalPages={totalPages} currentPage={page} onPageChange={setPage} />
+              <Pagination
+                totalPages={totalPages}
+                currentPage={page}
+                onPageChange={setPage}
+                count={count}
+              />
             </>
           ) : (
             <EmptyState title="No task found" message="No task found for this patient" />

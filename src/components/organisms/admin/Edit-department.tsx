@@ -3,7 +3,7 @@
 import { useForm } from 'react-hook-form';
 import { useEffect } from 'react';
 import Button from '@/src/components/atoms/button/button';
-import { useUpdateDepartment } from '@/src/hooks/departments/use-update-department';
+import { useUpdateData } from '@/src/hooks/use-update-data';
 import Input from '../../atoms/Input/input-field';
 import { toast } from 'react-toastify';
 
@@ -36,13 +36,10 @@ export default function EditDepartmentModal({ onclose, refetch, data }: departme
     }
   }, [data]);
 
-  const {
-    updateDepartment,
-    data: updateData,
-    loading,
-  } = useUpdateDepartment({
-    columns: { name: values?.name, description: values?.description },
-    dept_id: data?.id,
+  const { updateData: updateDepartment, loading } = useUpdateData({
+    table: 'departments',
+    params: { name: values?.name, description: values?.description },
+    id: data?.id,
   });
 
   const submit = async (data: FormValues) => {
@@ -51,8 +48,8 @@ export default function EditDepartmentModal({ onclose, refetch, data }: departme
       return;
     }
     try {
-      await updateDepartment();
-      if (updateData === 'success') {
+      const res = await updateDepartment();
+      if (res === 'success') {
         refetch();
       }
     } catch (err) {

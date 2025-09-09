@@ -5,13 +5,13 @@ import { useParams, useRouter } from 'next/navigation';
 import { ArrowLeft } from 'lucide-react';
 import LoadingBar from '@/src/components/atoms/loading-bar/loading-bar-page';
 import StatusBar from '@/src/components/molecules/status-bar/status-bar';
-import { useQueryDepartment } from '@/src/hooks/departments/use-query-department';
-import { useGetStaff } from '@/src/hooks/staff/use-get-staff';
 import StaffCard from '../../organisms/admin/staff-card';
 import Button from '../../atoms/button/button';
 import DepartmentActionMenu from '../../molecules/action-menu/department-action-menu';
 import EditDepartmentModal from '../../organisms/admin/Edit-department';
-import { useUpdateDepartment } from '@/src/hooks/departments/use-update-department';
+import { useGetData } from '@/src/hooks/use-get-data';
+import { useQueryData } from '@/src/hooks/use-query-data';
+import { useUpdateData } from '@/src/hooks/use-update-data';
 
 const DepartmentDetailsPage = () => {
   const router = useRouter();
@@ -21,23 +21,41 @@ const DepartmentDetailsPage = () => {
   const [isActionMenuopen, setIsActionMenuopen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [manualRefetch, setManualRefetch] = useState(false);
-  const { queryDepartment, data, loading } = useQueryDepartment({
-    id: id,
+  const {
+    queryData: queryDepartment,
+    data,
+    loading,
+  } = useQueryData({
+    table: 'departments',
+    params: [
+      {
+        column: 'id',
+        value: id,
+      },
+    ],
   });
 
   const {
-    getStaff,
+    getData: getStaff,
     data: staffData,
     loading: staffLoading,
-  } = useGetStaff({
-    department_id: id,
+  } = useGetData({
+    table: 'staff',
+    select: '*',
+    params: [
+      {
+        column: 'department_id',
+        value: id,
+      },
+    ],
   });
 
   const deptInfo = data ? data[0] : '';
 
-  const { updateDepartment, data: updateData } = useUpdateDepartment({
-    columns: { status: deptInfo?.status === 'active' ? 'deactivated' : 'active' },
-    dept_id: id,
+  const { updateData: updateDepartment } = useUpdateData({
+    table: 'departments',
+    params: { status: deptInfo?.status === 'active' ? 'deactivated' : 'active' },
+    id: id,
   });
 
   useEffect(() => {
@@ -72,8 +90,8 @@ const DepartmentDetailsPage = () => {
 
   const handleStatusChange = async () => {
     try {
-      await updateDepartment();
-      if (updateData === 'success') {
+      const res = await updateDepartment();
+      if (res === 'success') {
         handleManualRefetch();
       }
     } catch (err) {

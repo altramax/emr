@@ -2,17 +2,16 @@
 import { useState, useEffect } from 'react';
 import BillingDetailsHeader from '../../organisms/patient/patient-details-header-with-button';
 import { useParams } from 'next/navigation';
-import { useQueryBillableTask } from '@/src/hooks/task/use-query-billable-task';
+import { useQueryBillableTask } from '@/src/hooks/RPC/use-query-billable-task';
 import Loading from '../../atoms/loading-bar/loading-bar-page';
-import BillingDetailsTable from '../../organisms/billing/billing-details-table';
-import { UseCalculateSubtotal } from '@/src/hooks/billing/use-calculate-subtotal';
+import BillingDetailsTable, { TaskItem } from '../../organisms/billing/billing-details-table';
+import { UseCalculateSubtotal } from '@/src/hooks/RPC/use-calculate-subtotal';
 import Button from '../../atoms/button/button';
-import { useInsertBilling } from '@/src/hooks/billing/use-insert-billing';
 import { toast } from 'react-toastify';
 import { usePDF } from 'react-to-pdf';
 import ReceiptLayout from '../../organisms/billing/receipt-layout';
-import { TaskItem } from '../../organisms/billing/billing-details-table';
 import LoadingIcon from '../../atoms/loading-bar/loading-bar-fit';
+import { useInsertData } from '@/src/hooks/use-insert-data';
 
 export interface SelectedTask {
   name: string;
@@ -70,7 +69,7 @@ export default function BillingDetailsPage() {
     paid_items: selectedTasks,
   };
 
-  const { insertBill } = useInsertBilling({ column: paymentData });
+  const { insertData: insertBill } = useInsertData({ table: 'billing', params: paymentData });
 
   const payBill = async () => {
     const response = await insertBill();

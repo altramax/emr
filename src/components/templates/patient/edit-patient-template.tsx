@@ -9,9 +9,9 @@ import PatientContactInfo from '@/src/components/organisms/records/patient-conta
 import PatientReviewStep from '../../organisms/records/patient-form-review-step';
 import { useParams } from 'next/navigation';
 import { IdCard } from 'lucide-react';
-import { useGetPatients } from '@/src/hooks/patient/use-get-patients';
 import { useEffect } from 'react';
 import Loading from '@/src/components/atoms/loading-bar/loading-bar-page';
+import { useGetData } from '@/src/hooks/use-get-data';
 
 const initialValues = {
   first_name: '',
@@ -39,9 +39,19 @@ export default function EditPatientTemplate() {
   const param = useParams();
   const id = param?.id ?? '';
 
-  const { getPatient, data, loading } = useGetPatients({
+  const {
+    getData: getPatient,
+    data,
+    loading,
+  } = useGetData({
+    table: 'patients',
     select: '*',
-    id: id,
+    params: [
+      {
+        column: 'id',
+        value: id,
+      },
+    ],
   });
 
   useEffect(() => {

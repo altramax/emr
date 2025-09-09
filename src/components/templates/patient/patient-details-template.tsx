@@ -1,24 +1,35 @@
 'use client';
 
-'use client';
-
 import { useRouter, useParams } from 'next/navigation';
 import { ArrowLeft, User2 } from 'lucide-react';
-import { useGetPatients } from '@/src/hooks/patient/use-get-patients';
 import { useEffect } from 'react';
 import Button from '../../atoms/button/button';
 import Loading from '@/src/components/atoms/loading-bar/loading-bar-page';
 import PatientInfoRow from '../../molecules/patient-info-row/patient-info-row';
+import { useGetData } from '@/src/hooks/use-get-data';
+import StatusBar from '../../molecules/status-bar/status-bar';
+import Avatar from '../../atoms/Avatar/Avatar';
 
 const PatientDetailsTemplate = () => {
   const router = useRouter();
   const param = useParams();
   const id = param?.details ?? '';
 
-  const { getPatient, data, loading } = useGetPatients({
+  const {
+    getData: getPatient,
+    data,
+    loading,
+  } = useGetData({
+    table: 'patients',
     select: '*',
-    id: id,
+    params: [
+      {
+        column: 'id',
+        value: id,
+      },
+    ],
   });
+
   const patientInfo = data ? data[0] : '';
 
   useEffect(() => {
@@ -30,13 +41,17 @@ const PatientDetailsTemplate = () => {
   return (
     <div className=" p-5 flex flex-col gap-4 bg-white rounded-xl shadow-md border border-gray-100">
       <div className="flex items-center justify-between">
-        <button
-          className="flex items-center text-blue-600 hover:text-blue-700 gap-2 transition-colors"
-          onClick={() => router.push('/patients')}
-        >
-          <ArrowLeft size={18} />
-          <span className="text-sm font-medium">Back</span>
-        </button>
+        <div className="flex items-center justify-start gap-4">
+          <button
+            className="flex items-center text-blue-600 hover:text-blue-700 gap-2 transition-colors"
+            onClick={() => router.push('/records')}
+          >
+            <ArrowLeft size={18} />
+            <span className="text-sm font-medium">Back</span>
+          </button>
+          <p className="px-4 text-blue-600 text-sm font-medium ">{patientInfo?.id}</p>
+        </div>
+
         <Button
           className="flex items-center gap-2 text-xs px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md shadow-sm transition-all"
           loading={loading}
@@ -47,19 +62,20 @@ const PatientDetailsTemplate = () => {
       <div className="border-t border-gray-200"></div>
 
       <div className="flex justify-between items-start gap-6 mt-6">
-        <div className="flex flex-col items-center gap-3 w-[15%]">
-          <div className="w-[100px] h-[100px] rounded-full bg-gray-100 border border-gray-300 flex items-center justify-center text-gray-400 shadow-sm">
-            <User2 size={38} />
+        <div className="flex flex-col items-center gap-2 w-[20%]">
+          <div className="w-[90px] h-[90px] rounded-full bg-gray-100 border border-gray-300 flex items-center justify-center text-gray-400 shadow-sm">
+            {patientInfo.first_name && patientInfo.last_name ? (
+              <Avatar
+                firstname={patientInfo.first_name}
+                lastname={patientInfo.last_name}
+                size={100}
+              />
+            ) : (
+              <User2 size={40} />
+            )}
           </div>
-          <span
-            className={`px-4 py-1 rounded-full text-sm font-medium shadow-sm ${
-              patientInfo?.status === 'admitted'
-                ? 'text-green-700 bg-green-100'
-                : 'text-blue-700 bg-blue-100'
-            }`}
-          >
-            {patientInfo?.status ?? 'Active'}
-          </span>
+
+          <StatusBar status={patientInfo.status} />
         </div>
 
         <div className="flex flex-col border rounded-lg border-gray-100 p-4 bg-gray-50 shadow-sm w-[35%]">

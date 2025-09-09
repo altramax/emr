@@ -4,8 +4,8 @@ import { useFormContext } from 'react-hook-form';
 import { useNewPatientStore } from '@/src/store/new-patient-store';
 import Button from '../../atoms/button/button';
 import { useRouter, usePathname } from 'next/navigation';
-import { useInsertPatient } from '@/src/hooks/patient/use-insert-patient';
-import { useUpdatePatient } from '@/src/hooks/patient/use-update-patient';
+import { useInsertData } from '@/src/hooks/use-insert-data';
+import { useUpdateData } from '@/src/hooks/use-update-data';
 
 type patientReviewStep = {
   /* eslint-disable  @typescript-eslint/no-explicit-any */
@@ -28,10 +28,15 @@ export default function PatientReviewStep({ id }: patientReviewStep) {
     // genotype: values?.genotype?.value,
   };
 
-  const { insertPatient } = useInsertPatient({ columns: submitData });
-  const { updatePatient } = useUpdatePatient({
-    columns: submitData,
-    id: id,
+  const { insertData: insertPatient } = useInsertData({
+    table: 'patients',
+    params: submitData,
+  });
+
+  const { updateData: updatePatient } = useUpdateData({
+    table: 'patients',
+    params: submitData,
+    id: id ?? '',
   });
 
   const insertForm = async () => {

@@ -1,25 +1,29 @@
 'use client';
 import React, { useEffect, useState } from 'react';
-import { useQueryPatient } from '@/src/hooks/patient/use-query-patient';
+
 import Header from '@/src/components/organisms/patient/header';
 import { Search, Loader, XIcon } from 'lucide-react';
 import { useDebounce } from '@/src/hooks/debounce/use-debounce';
 import PatientCard from '../../organisms/patient/patient-card';
 import EmptyState from '../../molecules/empty-state/empty-state';
 import { useRouter } from 'next/navigation';
+import { useQueryData } from '@/src/hooks/use-query-data';
 
 export default function PatientTemplate() {
   const [name, setName] = useState('');
   const debouncedName = useDebounce(name, 500);
+
   const {
-    queryPatient,
+    queryData: queryPatient,
     data: patients,
     loading,
     clearData,
-  } = useQueryPatient({
+  } = useQueryData({
+    table: 'patients',
     select: 'first_name,last_name,id,gender,date_of_birth,status',
-    name: debouncedName ?? '',
+    nameSearch: debouncedName,
   });
+
   const router = useRouter();
 
   useEffect(() => {

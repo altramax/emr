@@ -3,7 +3,7 @@
 import { useEffect } from 'react';
 import Textarea from '@/src/components/atoms/TextArea/text-area';
 import { useForm } from 'react-hook-form';
-import { useUpdateDiagnosis } from '@/src/hooks/diagnosis/use-update-diagnosis';
+import { useUpdateData } from '@/src/hooks/use-update-data';
 import { toast } from 'react-toastify';
 import Button from '@/src/components/atoms/button/button';
 
@@ -32,8 +32,9 @@ export default function AddDiagnosisTab({ data, refetch }: dataType) {
     setValue('diagnosis', data?.data?.diagnosis);
   }, [data?.data]);
 
-  const { UpdateDiagnosis, loading } = useUpdateDiagnosis({
-    columns: {
+  const { updateData: UpdateDiagnosis, loading } = useUpdateData({
+    table: 'diagnosis',
+    params: {
       data: {
         staff_id: '',
         symptoms: getValues('symptoms'),

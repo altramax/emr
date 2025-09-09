@@ -1,13 +1,9 @@
 'use client';
 import { useRouter, usePathname } from 'next/navigation';
-import { useEffect } from 'react';
 import Button from '../../atoms/button/button';
 import { Minus, Activity, CirclePlay, User } from 'lucide-react';
-
 import Notification from '../../molecules/notification/notification';
 import { useVitalsAlertStore } from '@/src/store/vitals-alert-store';
-import { useTasksAlert } from '@/src/hooks/task/use-tasks-alert';
-import { useGetTasks } from '@/src/hooks/task/use-get-tasks';
 
 type nursesDashboardType = {
   isOpen: boolean;
@@ -21,31 +17,6 @@ export default function NursesDashboard({ isOpen }: nursesDashboardType) {
   const handleClick = (item: string) => {
     router.push(`/${item}`);
   };
-
-  const { data: taskAlert } = useTasksAlert();
-  const { getTask, data } = useGetTasks({
-    select: '*',
-    task_name: 'vitals',
-  });
-
-  useEffect(() => {
-    getTask();
-  }, []);
-
-  useEffect(() => {
-    if (vitalState?.called === false) {
-      vitalState?.setVitals(data);
-    }
-    if (data?.length > 0) {
-      vitalState?.setCalled(true);
-    }
-  }, [data]);
-
-  useEffect(() => {
-    if (taskAlert) {
-      vitalState.updateVital(taskAlert);
-    }
-  }, [taskAlert]);
 
   return (
     <nav className={` ${isOpen ? 'w-[80%]' : ''}`}>

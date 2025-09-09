@@ -2,40 +2,51 @@
 
 import { useEffect } from 'react';
 import PatientDetailsHeader from '@/src/components/organisms/patient/patient-details-header';
-import { useGetTasks } from '@/src/hooks/task/use-get-tasks';
 import { useParams, useSearchParams } from 'next/navigation';
 import LoadingBar from '@/src/components/atoms/loading-bar/loading-bar-page';
 import AddVitals from '@/src/components/organisms/add-vitals/add-vitals-details';
 import { HeartPulse } from 'lucide-react';
-import { useGetVisit } from '@/src/hooks/visits/use-get-visit';
+import { useGetData } from '@/src/hooks/use-get-data';
+import { useQueryData } from '@/src/hooks/use-query-data';
 
 export default function AddVitalsDetailsTemplate() {
   const param = useParams();
   const pathname = useSearchParams();
   const id = param?.detailsId ?? '';
 
-  const { getTask, data, loading } = useGetTasks({
+  const { getData, data, loading } = useGetData({
+    table: 'tasks',
     select: '*',
     patient_lhc_id: id,
-    task_name: 'vitals',
-    status: 'pending',
+    params: [
+      {
+        column: 'task_name',
+        value: 'vitals',
+      },
+    ],
   });
 
   const {
-    getVisit,
+    queryData,
     data: visitData,
     loading: visitLoading,
-  } = useGetVisit({
+  } = useQueryData({
+    table: 'visits',
     select: '*',
     patient_lhc_id: id,
-    status: 'open',
+    params: [
+      {
+        column: 'status',
+        value: 'open',
+      },
+    ],
   });
 
   useEffect(() => {
     if (pathname.get('from') === '/diagnosis') {
-      getVisit();
+      queryData();
     } else {
-      getTask();
+      getData();
     }
   }, []);
 

@@ -4,11 +4,11 @@ import MedicationOrderTable from '@/src/components/organisms/medication-order/me
 import Header from '@/src/components/organisms/patient/header';
 import { Search, Loader, XIcon } from 'lucide-react';
 import { useDebounce } from '@/src/hooks/debounce/use-debounce';
-import { useQueryTask } from '@/src/hooks/task/use-query-task';
 import EmptyState from '@/src/components/molecules/empty-state/empty-state';
 import SelectDropdown from '@/src/components/molecules/select-dropdown/select-dropdown';
 import { useForm } from 'react-hook-form';
 import Input from '@/src/components/atoms/Input/input-field';
+import { useQueryData } from '@/src/hooks/use-query-data';
 
 export default function MedOrderTemplate() {
   const { control, watch, setValue } = useForm({
@@ -22,15 +22,26 @@ export default function MedOrderTemplate() {
   const debouncedName = useDebounce(searchValue, 500);
 
   const {
-    queryTask,
+    queryData: queryTask,
     data: queryData,
     loading,
     clearData,
-  } = useQueryTask({
-    task_name: 'lab_order',
-    select: '*',
+    // count,
+  } = useQueryData({
+    table: 'tasks',
+    params: [
+      {
+        column: 'task_name',
+        value: 'lab_order',
+      },
+      {
+        column: 'status',
+        value: status.value ?? '',
+      },
+    ],
     name: debouncedName,
-    status: status ? status?.value : 'pending',
+    // from: from,
+    // to: to,
   });
 
   useEffect(() => {

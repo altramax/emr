@@ -4,9 +4,15 @@ type PaginationProps = {
   currentPage: number;
   totalPages: number;
   onPageChange: (page: number) => void;
+  count: number | null;
 };
 
-export default function Pagination({ currentPage, totalPages, onPageChange }: PaginationProps) {
+export default function Pagination({
+  currentPage,
+  totalPages,
+  onPageChange,
+  count,
+}: PaginationProps) {
   //   if (totalPages <= 1) return null;
 
   const createPageNumbers = () => {
@@ -32,48 +38,59 @@ export default function Pagination({ currentPage, totalPages, onPageChange }: Pa
   };
 
   return (
-    <div className="flex justify-center items-center gap-2 text-black mt-6">
-      {/* Prev Button */}
-      <button
-        onClick={() => onPageChange(currentPage - 1)}
-        disabled={currentPage === 1}
-        className={`px-3 py-1 text-xs  text-blue-500
-          ${currentPage === 1 ? 'opacity-60 cursor-not-allowed' : 'hover:text-blue-600 hover:bg-gray-50'}`}
-      >
-        <ChevronsLeft size={23} />
-      </button>
+    <div className="mt-6 flex items-center justify-start gap-2">
+      <p className="min-w-[150px] py-1 text-xs  text-blue-500">
+        Showing{' '}
+        <span className="font-semibold text-blue-600 text-sm">
+          {Number(count) > 10 ? `10` : `${count}`}
+        </span>{' '}
+        of
+        <span className="font-semibold text-blue-600 text-sm"> {count}</span>
+      </p>
 
-      {/* Page Numbers */}
-      {createPageNumbers().map((page, idx) =>
-        page === '...' ? (
-          <span key={idx} className="px-2">
-            ...
-          </span>
-        ) : (
-          <button
-            key={page}
-            onClick={() => onPageChange(page as number)}
-            className={`px-3 py-1 rounded-lg border text-xs
+      <div className="w-full flex justify-center items-center gap-2 text-black">
+        {/* Prev Button */}
+        <button
+          onClick={() => onPageChange(currentPage - 1)}
+          disabled={currentPage === 1}
+          className={`px-3 py-1 text-xs  text-blue-500
+          ${currentPage === 1 ? 'opacity-60 cursor-not-allowed' : 'hover:text-blue-600 hover:bg-gray-50'}`}
+        >
+          <ChevronsLeft size={23} />
+        </button>
+
+        {/* Page Numbers */}
+        {createPageNumbers().map((page, idx) =>
+          page === '...' ? (
+            <span key={idx} className="px-2">
+              ...
+            </span>
+          ) : (
+            <button
+              key={page}
+              onClick={() => onPageChange(page as number)}
+              className={`px-3 py-1 rounded-lg border text-xs
               ${
                 page === currentPage
                   ? 'bg-blue-500 text-white border-blue-500'
                   : 'hover:bg-gray-100'
               }`}
-          >
-            {page}
-          </button>
-        )
-      )}
+            >
+              {page}
+            </button>
+          )
+        )}
 
-      {/* Next Button */}
-      <button
-        onClick={() => onPageChange(currentPage + 1)}
-        disabled={currentPage === totalPages}
-        className={`px-2 py-1 text-xs text-blue-500
+        {/* Next Button */}
+        <button
+          onClick={() => onPageChange(currentPage + 1)}
+          disabled={currentPage === totalPages}
+          className={`px-2 py-1 text-xs text-blue-500
           ${currentPage === totalPages ? 'opacity-60 cursor-not-allowed' : 'hover:text-blue-600 hover:bg-gray-50'}`}
-      >
-        <ChevronsRight size={23} />
-      </button>
+        >
+          <ChevronsRight size={23} />
+        </button>
+      </div>
     </div>
   );
 }

@@ -10,7 +10,7 @@ interface buttonProp {
   readonly loading?: boolean;
   readonly className?: string;
   readonly disabled?: boolean;
-  readonly onClick?: () => void;
+  readonly onClick?: (e: any) => void;
 }
 export default function Button({
   value,

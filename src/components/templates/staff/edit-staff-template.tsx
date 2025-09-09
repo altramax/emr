@@ -10,9 +10,9 @@ import StaffReviewStep from '@/src/components/organisms/admin/Staff-form-review-
 import StaffEmploymentInfo from '../../organisms/admin/staff-employment-info';
 import { useParams } from 'next/navigation';
 import { IdCard } from 'lucide-react';
-import { useQueryStaff } from '@/src/hooks/staff/use-query-staff';
 import { useEffect } from 'react';
 import Loading from '../../atoms/loading-bar/loading-bar-page';
+import { useQueryData } from '@/src/hooks/use-query-data';
 
 const initialValues = {
   first_name: '',
@@ -44,7 +44,20 @@ export default function EditStaffTemplate() {
   /* eslint-disable  @typescript-eslint/no-explicit-any */
   const id: any = param ? param?.editstaffid : '';
 
-  const { queryStaff, data, loading } = useQueryStaff({ staff_id: id });
+  const {
+    queryData: queryStaff,
+    data,
+    loading,
+  } = useQueryData({
+    table: 'staff',
+    select: '*',
+    params: [
+      {
+        column: 'id',
+        value: id,
+      },
+    ],
+  });
 
   useEffect(() => {
     queryStaff();

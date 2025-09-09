@@ -4,7 +4,6 @@ import AddVitalsTable from '@/src/components/organisms/add-vitals/add-vitals-tab
 import Header from '@/src/components/organisms/patient/header';
 import { Search, Loader, XIcon } from 'lucide-react';
 import { useDebounce } from '@/src/hooks/debounce/use-debounce';
-import { useQueryTask } from '@/src/hooks/task/use-query-task';
 import EmptyState from '@/src/components/molecules/empty-state/empty-state';
 import SummaryCards from '../../molecules/summary-card/summary-cards';
 import { useGetSummary } from '@/src/hooks/RPC/get-table-summary';
@@ -12,10 +11,13 @@ import Input from '../../atoms/Input/input-field';
 import SelectDropdown from '../../molecules/select-dropdown/select-dropdown';
 import { useForm } from 'react-hook-form';
 import Pagination from '../../organisms/pagination/pagination';
+import { useGetTasksAlert } from '@/src/hooks/alerts/task-alert';
+import { useQueryData } from '@/src/hooks/use-query-data';
 
 export default function AddVitalsTemplate() {
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const { data: alert } = useGetTasksAlert();
   const { control, watch, setValue } = useForm({
     defaultValues: { search: '', status: { label: 'Pending', value: 'pending' } },
     mode: 'onChange',
@@ -31,15 +33,24 @@ export default function AddVitalsTemplate() {
   const debouncedName = useDebounce(searchValue, 500);
 
   const {
-    queryTask,
+    queryData: queryTask,
     data: queryData,
     count,
-    loading,
     clearData,
-  } = useQueryTask({
-    name: debouncedName,
-    task_name: 'vitals',
-    status: status ? status?.value : '',
+    loading,
+  } = useQueryData({
+    table: 'tasks',
+    params: [
+      {
+        column: 'task_name',
+        value: 'vitals',
+      },
+      {
+        column: 'status',
+        value: status.value ?? '',
+      },
+    ],
+    nameSearch: debouncedName,
     from: from,
     to: to,
   });
@@ -51,7 +62,7 @@ export default function AddVitalsTemplate() {
   useEffect(() => {
     queryTask();
     getSummary();
-  }, [debouncedName, status, from]);
+  }, [debouncedName, status, from, alert?.task_name === 'vitals']);
 
   useEffect(() => {
     if (count) {
@@ -130,7 +141,12 @@ export default function AddVitalsTemplate() {
           (queryData?.length > 0 ? (
             <>
               <AddVitalsTable patients={queryData} />
-              <Pagination totalPages={totalPages} currentPage={page} onPageChange={setPage} />
+              <Pagination
+                totalPages={totalPages}
+                currentPage={page}
+                onPageChange={setPage}
+                count={count}
+              />
             </>
           ) : (
             <EmptyState title="No task found" message="No task found for this patient" />

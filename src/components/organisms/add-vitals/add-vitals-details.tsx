@@ -5,11 +5,12 @@ import { HeartPulse, Thermometer, Activity, Droplets, Wind, Ruler } from 'lucide
 import { useForm } from 'react-hook-form';
 import Input from '@/src/components/atoms/Input/input-field';
 import { inputType } from '@/src/validations/add-vitals-schema';
-import { useUpdateTask } from '@/src/hooks/task/use-update-task';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
-import { useInsertTask } from '@/src/hooks/task/use-insert-task';
 import ConfirmationReviewModal from '@/src/components/molecules/confirmation-review-modal/confirmation-review-modal';
+import Button from '../../atoms/button/button';
+import { useInsertData } from '@/src/hooks/use-insert-data';
+import { useUpdateData } from '@/src/hooks/use-update-data';
 
 type vitalsType = {
   /* eslint-disable  @typescript-eslint/no-explicit-any */
@@ -21,14 +22,14 @@ const AddVitals = ({ data, from }: vitalsType) => {
   const router = useRouter();
   const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState<boolean>(false);
   const initialVitals = {
-    heartRate: '',
-    systolic: '',
-    diastolic: '',
-    temperature: '',
-    respiration: '',
-    oxygenSaturation: '',
-    height: '',
-    weight: '',
+    heartRate: data?.task_result?.heart_rate ?? '',
+    systolic: data?.task_result?.blood_pressure?.systolic ?? '',
+    diastolic: data?.task_result?.blood_pressure.diastolic ?? '',
+    temperature: data?.task_result?.temperature ?? '',
+    respiration: data?.task_result?.respiration_rate ?? '',
+    oxygenSaturation: data?.task_result?.oxygen_saturation ?? '',
+    height: data?.task_result?.height ?? '',
+    weight: data?.task_result?.weight ?? '',
   };
 
   const { control, getValues } = useForm<inputType>({
@@ -76,25 +77,39 @@ const AddVitals = ({ data, from }: vitalsType) => {
     ],
   };
 
-  const { updateTask, error } = useUpdateTask({ columns: submitData, id: `${data?.id}` });
-  const { insertTask } = useInsertTask({ tableName: 'tasks', columns: createData });
+  const { updateData: updateTask, loading } = useUpdateData({
+    table: 'task',
+    params: submitData,
+    id: `${data?.id}`,
+  });
+  const { insertData: insertTask, loading: isLoading } = useInsertData({
+    table: 'tasks',
+    params: createData,
+  });
 
   const submitVitals = async () => {
     try {
-      let response;
       if (from) {
-        response = await insertTask();
-        toast.success('Vitals added successfully');
-        router.push(`/add-diagnosis/${data?.patient?.id}`);
+        const res = await insertTask();
+
+        if (res === 'failed') {
+          return;
+        } else {
+          toast.success('Vitals added successfully');
+          router.push(`/add-diagnosis/${data?.patient?.id}`);
+        }
       } else {
-        response = await updateTask();
-        toast.success('Vitals updated successfully');
-        router.push('/add-vitals');
+        const res = await updateTask();
+        if (res === 'failed') {
+          return;
+        } else {
+          toast.success('Vitals added successfully');
+          router.push('/add-vitals');
+        }
       }
-      console.log(response);
     } catch (err) {
       toast.error('Error saving vitals');
-      console.log(err, error);
+      console.log(err);
     }
   };
 
@@ -115,6 +130,7 @@ const AddVitals = ({ data, from }: vitalsType) => {
           onConfirm={submitVitals}
           title="Confirm Vitals Submission"
           formdata={values}
+          loading={isLoading || loading}
         />
       );
     }
@@ -302,14 +318,14 @@ const AddVitals = ({ data, from }: vitalsType) => {
         </div>
       </div>
 
-      <div className="text-right mt-4">
-        <button
+      <div className="mt-6 flex justify-end">
+        <Button
           type="button"
           onClick={openConfirmationModal}
-          className="text-xs px-6 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition"
-        >
-          Save Vitals
-        </button>
+          className="text-xs px-6 py-2 bg-blue-500 text-white rounded  transition"
+          disabled={!from && data?.task_result !== null}
+          value={'Save Vitals'}
+        />
       </div>
     </form>
   );

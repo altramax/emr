@@ -2,23 +2,32 @@
 
 import { useEffect } from 'react';
 import PatientDetailsHeader from '@/src/components/organisms/patient/patient-details-header';
-import { useGetTasks } from '@/src/hooks/task/use-get-tasks';
 import { useParams } from 'next/navigation';
 import Loading from '@/src/components/atoms/loading-bar/loading-bar-page';
 import LabOrderDetails from '@/src/components/organisms/lab-order/lab-order-details';
+import { useGetData } from '@/src/hooks/use-get-data';
 
 export default function LabOrderDetailsTemplate() {
   const param = useParams();
   const id = param?.detailsId ?? '';
 
-  const { getTask, data, loading, refetch } = useGetTasks({
+  const { getData, data, loading, refetch } = useGetData({
+    table: 'tasks',
     select: '*',
-    task_name: 'lab_order',
-    task_id: id,
+    params: [
+      {
+        column: 'task_name',
+        value: 'lab_order',
+      },
+      {
+        column: 'id',
+        value: id,
+      },
+    ],
   });
 
   useEffect(() => {
-    getTask();
+    getData();
   }, []);
 
   const pageData = data ? data[0] : null;

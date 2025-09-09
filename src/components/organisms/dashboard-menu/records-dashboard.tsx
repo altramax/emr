@@ -2,10 +2,6 @@
 
 import { Minus, FileChartColumn, UserRoundPlusIcon, CirclePlay, UserSearch } from 'lucide-react';
 import { useRouter, usePathname } from 'next/navigation';
-import { useEffect } from 'react';
-import { useDiagnosisAlertStore } from '@/src/store/diagnosis-alert-store';
-import { useGetDiagnosis } from '@/src/hooks/diagnosis/use-get-diagnosis';
-import { useDiagnosisAlert } from '@/src/hooks/diagnosis/use-diagnosis-alert';
 import Button from '../../atoms/button/button';
 
 type nursesDashboardType = {
@@ -13,39 +9,12 @@ type nursesDashboardType = {
 };
 
 export default function RecordsDashboard({ isOpen }: nursesDashboardType) {
-  const diagnosisState = useDiagnosisAlertStore((state) => state);
   const pathname = usePathname();
   const router = useRouter();
 
   const handleClick = (item: string) => {
     router.push(`/${item}`);
   };
-
-  const { data: alert } = useDiagnosisAlert();
-
-  const { getDiagnosis, data } = useGetDiagnosis({
-    select: '*',
-    status: 'pending',
-  });
-
-  useEffect(() => {
-    getDiagnosis();
-  }, []);
-
-  useEffect(() => {
-    if (diagnosisState?.called === false) {
-      diagnosisState?.setDiagnosis(data);
-    }
-    if (data?.length > 0) {
-      diagnosisState?.setCalled(true);
-    }
-  }, [data]);
-
-  useEffect(() => {
-    if (alert) {
-      diagnosisState.updateVital(alert);
-    }
-  }, [alert]);
 
   return (
     <nav className={` ${isOpen ? 'w-full' : ''}`}>

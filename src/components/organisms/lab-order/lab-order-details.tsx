@@ -8,12 +8,11 @@ import { toast } from 'react-toastify';
 import Button from '@/src/components/atoms/button/button';
 import SelectDropdown from '@/src/components/molecules/select-dropdown/select-dropdown';
 import RenderForm from './test/render-test-form';
-import { useInsertLabResult } from '@/src/hooks/lab-test-result/use-insert-lab-result';
-import { useQueryLabResult } from '@/src/hooks/lab-test-result/use-query-lab-result';
+import { useQueryData } from '@/src/hooks/use-query-data';
 import dayjs from 'dayjs';
 import Loading from '@/src/components/atoms/loading-bar/loading-bar-section';
 import StatusBar from '@/src/components/molecules/status-bar/status-bar';
-import { useUpdateLabResult } from '@/src/hooks/lab-test-result/use-update-lab-result';
+import { useUpdateData } from '@/src/hooks/use-update-data';
 import {
   cbcDefaultValue,
   basicmetabolicpanelDefaultValue,
@@ -42,6 +41,7 @@ import {
   lipidprofileDefaultValue,
 } from '@/src/utils/test-initial-values';
 import PriorityBar from '@/src/components/molecules/priority-bar/priority-bar';
+import { useInsertData } from '@/src/hooks/use-insert-data';
 
 type vitalsType = {
   /* eslint-disable  @typescript-eslint/no-explicit-any */
@@ -55,14 +55,23 @@ const LabOrderDetails = ({ data, refetch }: vitalsType) => {
   const [testName, setTestName] = useState('');
 
   const {
-    queryLabResult,
+    queryData: queryLabResult,
     data: queryData,
     loading: isResultLoading,
     refetch: refetchLabResult,
-  } = useQueryLabResult({
+  } = useQueryData({
+    table: 'lab_test_results',
     select: '*',
-    test_name: testName,
-    task_id: data ? data?.id : '',
+    params: [
+      {
+        column: 'test_name',
+        value: testName,
+      },
+      {
+        column: 'task_id',
+        value: data ? data?.id : '',
+      },
+    ],
   });
 
   useEffect(() => {
@@ -121,13 +130,14 @@ const LabOrderDetails = ({ data, refetch }: vitalsType) => {
   //   ? queryData.filter((item: any) => item.test_name === testName)[0]
   //   : null;
 
-  const { insertLabResult, error, loading } = useInsertLabResult({ columns: submitData });
-  const {
-    updateLabResult,
-    error: updateError,
-    loading: updateLoading,
-  } = useUpdateLabResult({
-    columns: submitData,
+  const { insertData: insertLabResult, loading } = useInsertData({
+    table: 'lab_test_results',
+    params: submitData,
+  });
+
+  const { updateData: updateLabResult, loading: updateLoading } = useUpdateData({
+    table: 'lab_test_results',
+    params: submitData,
     id: queryData ? queryData[0]?.id : '',
   });
 
@@ -144,16 +154,16 @@ const LabOrderDetails = ({ data, refetch }: vitalsType) => {
 
     try {
       if (queryData[0]?.id) {
-        await updateLabResult();
-        if (updateError) {
+        const res = await updateLabResult();
+        if (res === 'failed') {
           toast.error('error saving test results');
         } else {
           toast.success('Test results updated successfully');
           handleIsConfirmationModalOpen();
         }
       } else {
-        await insertLabResult();
-        if (error) {
+        const res = await insertLabResult();
+        if (res === 'failed') {
           toast.error('error saving test results');
         } else {
           toast.success('Test results saved successfully');
@@ -162,7 +172,7 @@ const LabOrderDetails = ({ data, refetch }: vitalsType) => {
       }
     } catch (err) {
       toast.error('Error saving test results');
-      console.error(err, error);
+      console.log(err);
     } finally {
       refetch();
       refetchLabResult();

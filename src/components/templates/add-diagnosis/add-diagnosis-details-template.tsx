@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from 'react';
 import DiagnosisHeader from '../../organisms/add-diagnosis/diagnosis-header';
-import { useGetDiagnosis } from '@/src/hooks/diagnosis/use-get-diagnosis';
 import { useParams } from 'next/navigation';
 import Loading from '@/src/components/atoms/loading-bar/loading-bar-page';
 import AddDiagnosisTab from '@/src/components/organisms/add-diagnosis/tabs/add-diagnosis-tab';
@@ -11,15 +10,22 @@ import VitalsViewTab from '@/src/components/organisms/add-diagnosis/tabs/view-vi
 import Medications from '@/src/components/organisms/add-diagnosis/tabs/medication-orders-tab';
 import { Stethoscope, ClipboardList, FlaskConical, Pill } from 'lucide-react';
 import TestTab from '../../organisms/add-diagnosis/tabs/test-tab';
+import { useQueryData } from '@/src/hooks/use-query-data';
 
 export default function AddDiagnosisDetailsTemplate() {
   const param = useParams();
   const id = param?.detailsId ?? '';
   const [currentTab, setCurrentTab] = useState('Medication');
 
-  const { getDiagnosis, data, loading, refetch } = useGetDiagnosis({
+  const {
+    queryData: getDiagnosis,
+    data,
+    loading,
+    refetch,
+  } = useQueryData({
+    table: 'diagnosis',
     select: '*',
-    filter: id,
+    nestedPatientName: id,
   });
 
   useEffect(() => {

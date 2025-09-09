@@ -12,49 +12,27 @@ import {
   Pill,
   HandCoins,
 } from 'lucide-react';
-import Notification from '../../molecules/notification/notification';
-import { useDiagnosisAlertStore } from '@/src/store/diagnosis-alert-store';
-import { useGetDiagnosis } from '@/src/hooks/diagnosis/use-get-diagnosis';
-import { useDiagnosisAlert } from '@/src/hooks/diagnosis/use-diagnosis-alert';
+// import Notification from '../../molecules/notification/notification';
+import { useGetTasksAlert } from '@/src/hooks/alerts/task-alert';
 
 type nursesDashboardType = {
   isOpen: boolean;
 };
 
 export default function DoctorsDashboard({ isOpen }: nursesDashboardType) {
-  const diagnosisState = useDiagnosisAlertStore((state) => state);
   const pathname = usePathname();
   const router = useRouter();
+  const { data } = useGetTasksAlert();
 
   const handleClick = (item: string) => {
     router.push(`/${item}`);
   };
 
-  const { data: alert } = useDiagnosisAlert();
-
-  const { getDiagnosis, data } = useGetDiagnosis({
-    select: '*',
-    status: 'pending',
-  });
-
   useEffect(() => {
-    getDiagnosis();
-  }, []);
-
-  useEffect(() => {
-    if (diagnosisState?.called === false) {
-      diagnosisState?.setDiagnosis(data);
-    }
-    if (data?.length > 0) {
-      diagnosisState?.setCalled(true);
-    }
+    console.log(data);
   }, [data]);
 
-  useEffect(() => {
-    if (alert) {
-      diagnosisState.updateVital(alert);
-    }
-  }, [alert]);
+  console.log(data);
 
   return (
     <nav className={` ${isOpen ? 'w-full ' : ''}`}>
@@ -87,9 +65,7 @@ export default function DoctorsDashboard({ isOpen }: nursesDashboardType) {
             <span
               className={` ${isOpen ? 'relative bottom-0 left-0' : 'absolute bottom-8 left-4 '} `}
             >
-              {diagnosisState?.diagnosis?.length > 0 && (
-                <Notification count={diagnosisState?.diagnosis?.length} />
-              )}
+              {/* <Notification count={0} /> */}
             </span>
           </button>
         </div>
@@ -108,9 +84,7 @@ export default function DoctorsDashboard({ isOpen }: nursesDashboardType) {
             <span
               className={` ${isOpen ? 'relative bottom-0 left-0' : 'absolute bottom-8 left-4 '} `}
             >
-              {diagnosisState?.diagnosis?.length > 0 && (
-                <Notification count={diagnosisState?.diagnosis?.length} />
-              )}
+              {/* <Notification count={0} /> */}
             </span>
           </button>
         </div>

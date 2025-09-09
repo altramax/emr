@@ -2,16 +2,23 @@
 import React, { useEffect, useState } from 'react';
 import StaffTable from '../../organisms/admin/staff-table';
 import Header from '@/src/components/organisms/patient/header';
-import { useQueryStaff } from '@/src/hooks/staff/use-query-staff';
 import { Search, Loader, XIcon } from 'lucide-react';
 import { useDebounce } from '@/src/hooks/debounce/use-debounce';
+import { useQueryData } from '@/src/hooks/use-query-data';
 
 export default function StaffTemplate() {
   const [name, setName] = useState('');
   const debouncedName = useDebounce(name, 500);
-  const { queryStaff, data, loading, clearData } = useQueryStaff({
+
+  const {
+    queryData: queryStaff,
+    data,
+    loading,
+    clearData,
+  } = useQueryData({
+    table: 'staff',
     select: 'first_name,last_name,department,id,gender,date_of_birth,status',
-    name: debouncedName,
+    nameSearch: debouncedName,
   });
 
   useEffect(() => {

@@ -2,13 +2,12 @@
 
 import { useForm } from 'react-hook-form';
 import Button from '@/src/components/atoms/button/button';
-// import { toast } from 'react-toastify';
 import { useEffect, useState } from 'react';
 import ConfirmationReviewModalMedsOrder from '@/src/components/molecules/confirmation-review-modal-meds-order/confirmation-review-modal-meds-order';
 import SelectDropdownAsync from '@/src/components/molecules/select-dropdown-async/select-dropdown-async';
-import { useQueryInventory } from '@/src/hooks/inventory/use-query-inventory';
-import { useGetDepartments } from '@/src/hooks/departments/use-get-departments';
 import Textarea from '@/src/components/atoms/TextArea/text-area';
+import { useQueryData } from '@/src/hooks/use-query-data';
+import { useGetData } from '@/src/hooks/use-get-data';
 
 export default function Medications() {
   const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState(false);
@@ -16,17 +15,22 @@ export default function Medications() {
   const { control, handleSubmit, watch } = useForm({});
 
   const medicine = watch('medicine');
-  // const medicineInstructions = watch('instructions');
 
-  const { getDepartments, data: departmentData } = useGetDepartments({
-    select: '*',
-    departmentName: 'Pharmacy',
+  const { getData: getDepartments, data: departmentData } = useGetData({
+    table: 'departments',
+    params: [{ column: 'name', value: 'Pharmacy' }],
   });
 
-  const { queryInventory, data } = useQueryInventory({
+  const { queryData: queryInventory, data } = useQueryData({
+    table: 'inventory',
     select: '*',
-    department_id: departmentData?.[0]?.id,
-    name: search,
+    params: [
+      {
+        column: 'department_id',
+        value: departmentData?.[0]?.id,
+      },
+    ],
+    singleName: search,
   });
 
   useEffect(() => {

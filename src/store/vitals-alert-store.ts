@@ -60,3 +60,29 @@ export const useVitalsAlertStore = create(
     }
   )
 );
+
+// alert update code for Notification
+//   const { data: taskAlert } = useTasksAlert();
+//   const { getTask, data } = useGetTasks({
+//     select: '*',
+//     task_name: 'vitals',
+//   });
+
+//   useEffect(() => {
+//     getTask();
+//   }, []);
+
+//   useEffect(() => {
+//     if (vitalState?.called === false) {
+//       vitalState?.setVitals(data);
+//     }
+//     if (data?.length > 0) {
+//       vitalState?.setCalled(true);
+//     }
+//   }, [data]);
+
+//   useEffect(() => {
+//     if (taskAlert) {
+//       vitalState.updateVital(taskAlert);
+//     }
+//   }, [taskAlert]);

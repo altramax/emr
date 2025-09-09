@@ -4,7 +4,6 @@ import LabOrderTable from '@/src/components/organisms/lab-order/lab-order-table'
 import Header from '@/src/components/organisms/patient/header';
 import { Search, Loader, XIcon } from 'lucide-react';
 import { useDebounce } from '@/src/hooks/debounce/use-debounce';
-import { useQueryTask } from '@/src/hooks/task/use-query-task';
 import EmptyState from '@/src/components/molecules/empty-state/empty-state';
 import SelectDropdown from '@/src/components/molecules/select-dropdown/select-dropdown';
 import { useForm } from 'react-hook-form';
@@ -12,6 +11,7 @@ import Input from '@/src/components/atoms/Input/input-field';
 import Pagination from '../../organisms/pagination/pagination';
 import SummaryCards from '../../molecules/summary-card/summary-cards';
 import { useGetSummary } from '@/src/hooks/RPC/get-table-summary';
+import { useQueryData } from '@/src/hooks/use-query-data';
 
 export default function LabOrderTemplate() {
   const [page, setPage] = useState(1);
@@ -35,16 +35,24 @@ export default function LabOrderTemplate() {
   });
 
   const {
-    queryTask,
+    queryData: queryTask,
     data: queryData,
     loading,
     clearData,
     count,
-  } = useQueryTask({
-    task_name: 'lab_order',
-    select: '*',
-    name: debouncedName,
-    status: status ? status?.value : 'pending',
+  } = useQueryData({
+    table: 'tasks',
+    params: [
+      {
+        column: 'task_name',
+        value: 'lab_order',
+      },
+      {
+        column: 'status',
+        value: status.value ?? 'all',
+      },
+    ],
+    nameSearch: debouncedName,
     from: from,
     to: to,
   });
@@ -136,7 +144,12 @@ export default function LabOrderTemplate() {
           (queryData?.length > 0 ? (
             <>
               <LabOrderTable patients={queryData} />
-              <Pagination totalPages={totalPages} currentPage={page} onPageChange={setPage} />
+              <Pagination
+                totalPages={totalPages}
+                currentPage={page}
+                onPageChange={setPage}
+                count={count}
+              />
             </>
           ) : (
             <EmptyState title="No task found" message="No task found for lab order" />

@@ -4,12 +4,12 @@ import { useForm } from 'react-hook-form';
 import { useState, useEffect } from 'react';
 import Input from '../../atoms/Input/input-field';
 import SelectDropdown from '../../molecules/select-dropdown/select-dropdown';
-import { useGetDepartments } from '@/src/hooks/departments/use-get-departments';
 import Button from '../../atoms/button/button';
 import { ClipboardList } from 'lucide-react';
-import { useInsertInventory } from '@/src/hooks/inventory/use-insert-inventory';
 import { useRouter } from 'next/navigation';
 import { inputType } from '@/src/validations/inventory-schema';
+import { useGetData } from '@/src/hooks/use-get-data';
+import { useInsertData } from '@/src/hooks/use-insert-data';
 
 const initialValues = {
   name: '',
@@ -39,9 +39,14 @@ export default function AddInventoryTemplate() {
     type: value?.type?.value,
   };
 
-  const { loading } = useInsertInventory({ columns: inventoryData });
+  const { insertData, loading } = useInsertData({ table: 'inventory', params: inventoryData });
 
-  const { getDepartments, data } = useGetDepartments({ select: '*' });
+  const { getData: getDepartments, data } = useGetData({
+    table: 'departments',
+    select: '*',
+    from: 0,
+    to: 30,
+  });
 
   const typeOptions = [
     { label: 'Lab Test', value: 'lab_test' },
@@ -90,12 +95,12 @@ export default function AddInventoryTemplate() {
     console.log(isValid);
     console.log(inventoryData);
 
-    // if (isValid) {
-    //   let response = await insertInventory();
-    //   if (response === 'success') {
-    //     router.push('/admin/inventory');
-    //   }
-    // }
+    if (isValid) {
+      const response = await insertData();
+      if (response === 'success') {
+        router.push('/admin/inventory');
+      }
+    }
   };
 
   return (
@@ -136,6 +141,7 @@ export default function AddInventoryTemplate() {
             control={control}
             options={typeOptions}
             placeholder="Select type"
+            isSearchable={false}
           />
         </div>
 

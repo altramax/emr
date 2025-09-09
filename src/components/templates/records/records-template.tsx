@@ -2,16 +2,23 @@
 import React, { useEffect, useState } from 'react';
 import RecordTable from '../../organisms/records/record-table';
 import Header from '@/src/components/organisms/patient/header';
-import { useQueryPatient } from '@/src/hooks/patient/use-query-patient';
 import { Search, Loader, XIcon } from 'lucide-react';
 import { useDebounce } from '@/src/hooks/debounce/use-debounce';
+import { useQueryData } from '@/src/hooks/use-query-data';
 
 export default function RecordsTemplate() {
   const [name, setName] = useState('');
   const debouncedName = useDebounce(name, 500);
-  const { queryPatient, data, loading, clearData } = useQueryPatient({
+
+  const {
+    queryData: queryPatient,
+    data,
+    loading,
+    clearData,
+  } = useQueryData({
+    table: 'patients',
     select: 'first_name,last_name,id,gender,date_of_birth,status',
-    name: debouncedName ?? '',
+    nameSearch: debouncedName ?? '',
   });
 
   useEffect(() => {

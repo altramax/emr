@@ -4,45 +4,66 @@ import InventoryTable from '@/src/components/organisms/admin/inventory-table';
 import Header from '@/src/components/organisms/patient/header';
 import { Search, Loader, XIcon } from 'lucide-react';
 import { useDebounce } from '@/src/hooks/debounce/use-debounce';
-import { useQueryInventory } from '@/src/hooks/inventory/use-query-inventory';
+import { useQueryData } from '@/src/hooks/use-query-data';
+import { useGetData } from '@/src/hooks/use-get-data';
 import EmptyState from '@/src/components/molecules/empty-state/empty-state';
 import SelectDropdown from '@/src/components/molecules/select-dropdown/select-dropdown';
 import { useForm } from 'react-hook-form';
 import Input from '@/src/components/atoms/Input/input-field';
-import { useGetDepartments } from '@/src/hooks/departments/use-get-departments';
 import Button from '@/src/components/atoms/button/button';
 import { useRouter } from 'next/navigation';
 import Loading from '../../atoms/loading-bar/loading-bar-page';
+import Pagination from '@/src/components/organisms/pagination/pagination';
 
 export default function InventoryTemplate() {
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
   const { control, watch, setValue } = useForm({
     mode: 'onChange',
   });
   const [departmentOptions, setDepartmentOptions] = useState<{ label: string; value: string }[]>(
     []
   );
-  const router = useRouter();
 
+  const router = useRouter();
   const department_id = watch('department_id');
   /* eslint-disable  @typescript-eslint/no-explicit-any */
   const searchValue: any = watch('search');
   const debouncedName = useDebounce(searchValue, 500);
 
-  const { getDepartments, data } = useGetDepartments({ select: '*' });
+  const { getData: getDepartments, data } = useGetData({
+    table: 'departments',
+    from: 0,
+    to: 50,
+  });
+
+  const param = department_id?.value
+    ? [{ column: 'department_id', value: department_id?.value }]
+    : [];
+
+  const pageSize = 10;
+  const from = (page - 1) * pageSize;
+  const to = from + pageSize - 1;
 
   const {
-    queryInventory,
+    queryData: queryInventory,
     data: queryData,
     loading,
     clearData,
-  } = useQueryInventory({
-    name: debouncedName,
-    department_id: department_id?.value ?? '',
+    count,
+  } = useQueryData({
+    table: 'inventory',
+    select: '*',
+    params: param,
+    singleName: debouncedName,
+    from: from,
+    to: to,
   });
 
   useEffect(() => {
+    if (param?.length === 0) return;
     queryInventory();
-  }, [debouncedName, department_id]);
+  }, [debouncedName, department_id, from, to]);
 
   const resetField = () => {
     setValue('search', '');
@@ -57,6 +78,13 @@ export default function InventoryTemplate() {
       handleOptions();
     }
   }, [data]);
+
+  useEffect(() => {
+    if (count) {
+      setTotalPages(Math.ceil(count / 10));
+      setTotalPages(Math.ceil((count || 0) / pageSize));
+    }
+  }, [count]);
 
   const handleOptions = () => {
     /* eslint-disable  @typescript-eslint/no-explicit-any */
@@ -130,9 +158,20 @@ export default function InventoryTemplate() {
       <div className="overflow-x-auto mt-4">
         {!loading &&
           (queryData?.length > 0 ? (
-            <InventoryTable items={queryData} department={departmentOptions} />
+            <>
+              <InventoryTable items={queryData} department={departmentOptions} />
+              <Pagination
+                totalPages={totalPages}
+                currentPage={page}
+                onPageChange={setPage}
+                count={count}
+              />
+            </>
           ) : (
-            <EmptyState title="No item found" message="No item found for this department" />
+            <EmptyState
+              title="Nothing to show"
+              message="search or filter by departments to view items"
+            />
           ))}
         {loading && <Loading />}
       </div>

@@ -24,6 +24,7 @@ type CustomSelectProps = {
   control?: Control<any>; // optional
   isMulti?: boolean;
   disabled?: boolean;
+  isSearchable?: boolean;
 };
 
 export default function SelectDropdown({
@@ -36,6 +37,7 @@ export default function SelectDropdown({
   control,
   isMulti = false,
   disabled = false,
+  isSearchable = false,
 }: CustomSelectProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [filteredOptions, setFilteredOptions] = useState<Option[]>(options);
@@ -141,10 +143,12 @@ export default function SelectDropdown({
             {!isMulti ? (
               <span
                 className={
-                  !currentValue ? 'text-gray-400 hidden' : 'text-blue-500 flex items-center gap-2]'
+                  !isSearchable && !currentValue
+                    ? 'text-gray-400'
+                    : 'text-blue-500 flex items-center gap-2]'
                 }
               >
-                {currentValue?.label}
+                {!isSearchable && !currentValue ? placeholder : currentValue?.label}
               </span>
             ) : (
               <span
@@ -171,7 +175,7 @@ export default function SelectDropdown({
               </span>
             )}
 
-            {!isMulti && !currentValue && (
+            {isSearchable && !isMulti && !currentValue && (
               <input
                 type="text"
                 ref={inputRefSingle}
@@ -183,7 +187,7 @@ export default function SelectDropdown({
               />
             )}
 
-            {isMulti && (
+            {isSearchable && isMulti && (
               <input
                 ref={inputRefMulti}
                 type="text"
@@ -206,7 +210,7 @@ export default function SelectDropdown({
       {!isMulti && (
         <SingleSelect
           isOpen={isOpen}
-          options={filteredOptions}
+          options={isSearchable ? filteredOptions : options}
           selected={currentValue}
           onChange={handleChangesingle}
           unselect={removeSelectedSingle}
@@ -215,7 +219,7 @@ export default function SelectDropdown({
       {isMulti && (
         <MultiSelect
           isOpen={isOpen}
-          options={filteredOptions}
+          options={isSearchable ? filteredOptions : options}
           selected={currentValue}
           onChange={handleChangeMulti}
           unselect={removeSelectedMulti}

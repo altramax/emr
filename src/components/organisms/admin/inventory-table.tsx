@@ -6,6 +6,7 @@ interface PatientCareTableProps {
 }
 
 export default function InventoryTable({ items, department }: PatientCareTableProps) {
+  console.log(department);
   return (
     <table className="w-full border-collapse">
       <thead>

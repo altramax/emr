@@ -5,11 +5,11 @@ import Button from '@/src/components/atoms/button/button';
 import { useState, useEffect } from 'react';
 import ConfirmationReviewModal from '@/src/components/molecules/confirmation-review-modal/confirmation-review-modal';
 import { toast } from 'react-toastify';
-import { useInsertTask } from '@/src/hooks/task/use-insert-task';
 // import OrderedTestViewModal from '@/src/components/molecules/ordered-test-view-modal/ordered-test-view-modal';
-import { useGetDepartments } from '@/src/hooks/departments/use-get-departments';
-import { useQueryInventory } from '@/src/hooks/inventory/use-query-inventory';
 import SelectDropdownAsync from '@/src/components/molecules/select-dropdown-async/select-dropdown-async';
+import { useQueryData } from '@/src/hooks/use-query-data';
+import { useGetData } from '@/src/hooks/use-get-data';
+import { useInsertData } from '@/src/hooks/use-insert-data';
 
 type option = {
   label: string;
@@ -35,15 +35,21 @@ export default function LabOrders({ data }: dataType) {
 
   const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState(false);
 
-  const { getDepartments, data: departmentData } = useGetDepartments({
-    select: '*',
-    departmentName: 'Laboratory',
+  const { getData: getDepartments, data: departmentData } = useGetData({
+    table: 'departments',
+    params: [{ column: 'name', value: 'Laboratory' }],
   });
 
-  const { queryInventory, data: inventoryData } = useQueryInventory({
+  const { queryData: queryInventory, data: inventoryData } = useQueryData({
+    table: 'inventory',
     select: '*',
-    department_id: departmentData?.[0]?.id,
-    name: search,
+    params: [
+      {
+        column: 'department_id',
+        value: departmentData?.[0]?.id,
+      },
+    ],
+    singleName: search,
   });
 
   useEffect(() => {
@@ -74,12 +80,12 @@ export default function LabOrders({ data }: dataType) {
     note: formData?.notes,
   };
 
-  const { insertTask, error } = useInsertTask({ tableName: 'tasks', columns: submitValue });
+  const { insertData: insertTask } = useInsertData({ table: 'tasks', params: submitValue });
 
   const submitForm = async () => {
     try {
-      await insertTask();
-      if (!error) {
+      const res = await insertTask();
+      if (res === 'success') {
         toast.success('Lab order created successfully');
         handleIsConfirmationModalOpen();
         setValue('test', []);

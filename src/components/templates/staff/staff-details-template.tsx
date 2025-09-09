@@ -6,7 +6,6 @@ import { useEffect } from 'react';
 import Button from '../../atoms/button/button';
 import LoadingBar from '../../atoms/loading-bar/loading-bar-page';
 import StaffInfoRow from '../../molecules/staff-info-row/staff-info-row';
-import { useQueryStaff } from '@/src/hooks/staff/use-query-staff';
 import { useUpdateStaff } from '@/src/hooks/staff/use-update-staff';
 import SelectDropdown from '../../molecules/select-dropdown/select-dropdown';
 import { useForm } from 'react-hook-form';
@@ -16,6 +15,7 @@ import RoleBar from '../../molecules/role-bar/role-bar';
 import { createClient } from '@/src/utils/supabase/client';
 import { toast } from 'react-toastify';
 import { useUserStore } from '@/src/store/user-store';
+import { useQueryData } from '@/src/hooks/use-query-data';
 
 type StaffStatusForm = {
   status: { label: string; value: string };
@@ -37,8 +37,20 @@ const StaffDetailsTemplate = () => {
     { label: 'Terminated', value: 'terminated' },
   ];
 
-  const { queryStaff, data, loading, refetch } = useQueryStaff({
-    staff_id: id,
+  const {
+    queryData: queryStaff,
+    data,
+    loading,
+    refetch,
+  } = useQueryData({
+    table: 'staff',
+    select: '*',
+    params: [
+      {
+        column: 'id',
+        value: id,
+      },
+    ],
   });
 
   const staffInfo = data ? data[0] : '';

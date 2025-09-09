@@ -5,9 +5,9 @@ import SelectDropdown from '../../molecules/select-dropdown/select-dropdown';
 import Button from '../../atoms/button/button';
 import { useFormContext } from 'react-hook-form';
 import { useNewStaffStore } from '@/src/store/new-staff-store';
-import { useGetDepartments } from '@/src/hooks/departments/use-get-departments';
 import { useEffect, useState } from 'react';
 import SelectDropdownAsync from '../../molecules/select-dropdown-async/select-dropdown-async';
+import { useQueryData } from '@/src/hooks/use-query-data';
 
 type staffType = {
   /* eslint-disable  @typescript-eslint/no-explicit-any */
@@ -19,7 +19,10 @@ export default function StaffEmploymentInfo({ defaultData }: staffType) {
   const { currentStep, setStep } = useNewStaffStore();
   const [search, setSearch] = useState<string | undefined>('');
 
-  const { getDepartments, data } = useGetDepartments({ select: '*', departmentName: search });
+  const { queryData: getDepartments, data } = useQueryData({
+    table: 'departments',
+    singleName: search,
+  });
 
   useEffect(() => {
     if (!data) {

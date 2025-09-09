@@ -8,7 +8,7 @@ import EmptyState from '@/src/components/molecules/empty-state/empty-state';
 import SelectDropdown from '@/src/components/molecules/select-dropdown/select-dropdown';
 import { useForm } from 'react-hook-form';
 import Input from '@/src/components/atoms/Input/input-field';
-import { useQueryBillableTask } from '@/src/hooks/task/use-query-billable-task';
+import { useQueryBillableTask } from '@/src/hooks/RPC/use-query-billable-task';
 
 export default function BillingTemplate() {
   const { control, watch, setValue } = useForm({
@@ -44,6 +44,7 @@ export default function BillingTemplate() {
   const options = [
     { label: 'All', value: 'all' },
     { label: 'Paid', value: 'paid' },
+    { label: 'Part payment', value: 'part_payment' },
     { label: 'Unpaid', value: 'unpaid' },
   ];
 

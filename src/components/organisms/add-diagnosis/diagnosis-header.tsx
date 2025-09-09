@@ -6,7 +6,7 @@ import Avatar from '../../atoms/Avatar/Avatar';
 import StatusBar from '../../molecules/status-bar/status-bar';
 import SelectDropdown from '../../molecules/select-dropdown/select-dropdown';
 import { useForm } from 'react-hook-form';
-import { useUpdateDiagnosis } from '@/src/hooks/diagnosis/use-update-diagnosis';
+import { useUpdateData } from '@/src/hooks/use-update-data';
 import { useEffect } from 'react';
 
 type PatientInfoRowProps = {
@@ -50,8 +50,9 @@ const DiagnosisHeader = ({ data, back_path, diagnosisStatus, refetch }: PatientI
     refetch();
   };
 
-  const { UpdateDiagnosis } = useUpdateDiagnosis({
-    columns: { status: status?.value },
+  const { updateData: UpdateDiagnosis } = useUpdateData({
+    table: 'diagnosis',
+    params: { status: status?.value },
     id: data?.id,
   });
 

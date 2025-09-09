@@ -2,11 +2,13 @@
 
 import { X, CheckCircle, AlertTriangle } from 'lucide-react';
 import React from 'react';
+import Button from '../../atoms/button/button';
 
 type ConfirmationModalProps = {
   isOpen: boolean;
   onCancel: () => void;
   onConfirm: () => void;
+  loading?: boolean;
   title: string;
   /* eslint-disable  @typescript-eslint/no-explicit-any */
   formdata?: any;
@@ -18,6 +20,7 @@ const ConfirmationReviewModal = ({
   onConfirm,
   title,
   formdata,
+  loading,
 }: ConfirmationModalProps) => {
   if (!isOpen) return null;
 
@@ -53,17 +56,21 @@ const ConfirmationReviewModal = ({
             <X size={18} /> Cancel
           </button>
 
-          <button
+          <Button
             type="button"
             /* eslint-disable  @typescript-eslint/no-explicit-any */
             onClick={(e: any) => {
               e.preventDefault();
               onConfirm();
             }}
-            className={`flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-md`}
-          >
-            <CheckCircle size={18} /> Confirm
-          </button>
+            value={
+              <>
+                <CheckCircle size={18} /> Confirm
+              </>
+            }
+            loading={loading}
+            className={`min-w-[100px] flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-md`}
+          />
         </div>
       </div>
     </div>

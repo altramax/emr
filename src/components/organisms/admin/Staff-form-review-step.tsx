@@ -4,8 +4,8 @@ import { useFormContext } from 'react-hook-form';
 import { useNewStaffStore } from '@/src/store/new-staff-store';
 import Button from '../../atoms/button/button';
 import { usePathname, useRouter } from 'next/navigation';
-import { useInsertStaff } from '@/src/hooks/staff/use-insert-staff';
-import { useUpdateStaff } from '@/src/hooks/staff/use-update-staff';
+import { useInsertData } from '@/src/hooks/use-insert-data';
+import { useUpdateData } from '@/src/hooks/use-update-data';
 
 type StaffReviewStep = {
   staff_id?: string;
@@ -32,10 +32,11 @@ export default function StaffReviewStep({ staff_id }: StaffReviewStep) {
     department_id: values?.department?.value,
   };
 
-  const { insertStaff, loading } = useInsertStaff({ columns: staffData });
-  const { updateStaff, loading: updateLoading } = useUpdateStaff({
-    columns: staffData,
-    staff_id: staff_id ?? '',
+  const { insertData: insertStaff, loading } = useInsertData({ table: 'staff', params: staffData });
+  const { updateData: updateStaff, loading: updateLoading } = useUpdateData({
+    table: 'staff',
+    params: staffData,
+    id: staff_id ?? '',
   });
 
   const insertForm = async () => {

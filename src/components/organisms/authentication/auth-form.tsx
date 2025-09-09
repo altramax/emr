@@ -6,9 +6,11 @@ import { signInAction } from '@/src/actions/actions';
 import { SigninInputs, LoginSchema } from '@/src/validations/login-schema';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { toast } from 'react-toastify';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Eye, EyeOff } from 'lucide-react';
 import { useGetAuthStaff } from '@/src/hooks/user/use-get-auth-staff';
+import { useVitalsAlertStore } from '@/src/store/vitals-alert-store';
+import { useUserStore } from '@/src/store/user-store';
 
 const initialValues = {
   email: '',
@@ -20,6 +22,15 @@ export default function AuthForm() {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const { getAuthStaff } = useGetAuthStaff();
+  const vital = useVitalsAlertStore((state) => state);
+  const { clearUser } = useUserStore();
+
+  // clear user data on middleware logout action
+  useEffect(() => {
+    vital?.clear();
+    vital?.setCalled(false);
+    clearUser();
+  }, []);
 
   const { control, handleSubmit } = useForm<SigninInputs>({
     resolver: yupResolver(LoginSchema),
@@ -104,6 +115,7 @@ export default function AuthForm() {
         <button
           className="absolute right-3 top-6 flex items-center justify-center w-fit h-fit"
           onClick={() => setIsPasswordVisible(!isPasswordVisible)}
+          type="button"
         >
           {isPasswordVisible ? (
             <EyeOff size={24} className="text-blue-500" />
