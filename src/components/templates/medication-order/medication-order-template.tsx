@@ -39,7 +39,7 @@ export default function MedOrderTemplate() {
         value: status.value ?? '',
       },
     ],
-    name: debouncedName,
+    nestedPatientName: debouncedName,
     // from: from,
     // to: to,
   });
