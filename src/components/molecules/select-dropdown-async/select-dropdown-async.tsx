@@ -81,7 +81,6 @@ export default function SelectDropdownAsync({
 
   useEffect(() => {
     searchTerm(debounceSearch);
-    console.log('ran');
   }, [debounceSearch, isOpen]);
 
   const handleItemSearchMulti = (event: any) => {
@@ -141,7 +140,7 @@ export default function SelectDropdownAsync({
       <div className={``}>
         <button
           type="button"
-          className={`no-scrollbar w-full overflow-x-scroll h-[32px] text-xs flex items-center justify-between p-2 border rounded-lg bg-white text-left transition-all duration-200 ${
+          className={`no-scrollbar w-full overflow-x-scroll h-[32px] text-xs flex items-center justify-between px-2 border rounded-lg bg-white text-left transition-all duration-200 ${
             isOpen
               ? 'ring-1 ring-blue-500 border-blue-500'
               : 'border-blue-300 hover:border-blue-400'
@@ -158,11 +157,11 @@ export default function SelectDropdownAsync({
               {currentValue?.length > 0 && (
                 <div
                   className={
-                    'text-blue-500 gap-2 flex items-center justify-start no-scrollbar overflow-x-scroll w-fit p-4 max-w-[59%]'
+                    'text-blue-500 gap-2 flex justify-start no-scrollbar overflow-x-scroll w-fit px-4 max-w-[59%] h-fit'
                   }
                 >
                   {currentValue?.map((item: Option, index: number) => (
-                    <p key={index + 1} className="w-fit border rounded-sm px-3 py-1 text-nowrap">
+                    <p key={index + 1} className="w-fit border rounded-sm px-3 text-nowrap">
                       {item.label}
                     </p>
                   ))}

@@ -133,7 +133,7 @@ export default function DoctorsDashboard({ isOpen }: nursesDashboardType) {
           </span>
 
           <button
-            // onClick={() => handleClick('medication-order')}
+            onClick={() => handleClick('medication-order')}
             className={`relative ${pathname?.includes('medication-order') ? 'bg-blue-500' : ''} flex items-center gap-2 hover:bg-blue-500 p-2 rounded w-full text-left`}
           >
             <Pill size={18} />

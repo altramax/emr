@@ -49,7 +49,7 @@ export default function AddDiagnosisDetailsTemplate() {
       case 'Test':
         return <TestTab data={data ? data[0] : null} />;
       case 'Medication':
-        return <Medications />;
+        return <Medications data={data ? data[0] : null} />;
       case 'Patient history':
         return <div>History</div>;
       default:

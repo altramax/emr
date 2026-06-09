@@ -8,20 +8,33 @@ import SelectDropdownAsync from '@/src/components/molecules/select-dropdown-asyn
 import Textarea from '@/src/components/atoms/TextArea/text-area';
 import { useQueryData } from '@/src/hooks/use-query-data';
 import { useGetData } from '@/src/hooks/use-get-data';
+import { toast } from 'react-toastify';
+import { useInsertData } from '@/src/hooks/use-insert-data';
 
-export default function Medications() {
+type option = {
+  label: string;
+  value: string;
+};
+
+type dataType = {
+  /* eslint-disable  @typescript-eslint/no-explicit-any */
+  data: any;
+};
+
+export default function Medications({ data }: dataType) {
   const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState(false);
   const [search, setSearch] = useState<string | undefined>('');
-  const { control, handleSubmit, watch } = useForm({});
+  const { control, handleSubmit, watch, setValue } = useForm({});
 
   const medicine = watch('medicine');
+  const instructions = watch('instructions');
 
   const { getData: getDepartments, data: departmentData } = useGetData({
     table: 'departments',
     params: [{ column: 'name', value: 'Pharmacy' }],
   });
 
-  const { queryData: queryInventory, data } = useQueryData({
+  const { queryData: queryInventory, data: inventoryData } = useQueryData({
     table: 'inventory',
     select: '*',
     params: [
@@ -45,7 +58,40 @@ export default function Medications() {
     queryInventory();
   }, [search]);
 
-  const submitForm = () => {};
+  const testArr =
+    medicine?.length > 0
+      ? medicine?.map((item: option) => {
+          return { name: item.value, bill: 'unpaid' };
+        })
+      : [];
+
+  const submitValue = {
+    status: 'pending',
+    patient_id: data?.patient_id,
+    task_name: 'medication_order',
+    visit_id: data?.visit_id,
+    task_data: testArr,
+    note: instructions,
+  };
+
+  const { insertData: insertTask } = useInsertData({ table: 'tasks', params: submitValue });
+
+  const submitForm = async () => {
+    try {
+      const res = await insertTask();
+      if (res === 'success') {
+        toast.success('Medication order created successfully');
+        handleIsConfirmationModalOpen();
+        setValue('medicine', []);
+        setValue('instructions', '');
+      } else {
+        toast.error('Error saving medication order');
+      }
+    } catch (err) {
+      toast.error('Error saving medication order');
+      console.log(err);
+    }
+  };
 
   const handleIsConfirmationModalOpen = () => {
     setIsConfirmationModalOpen(!isConfirmationModalOpen);
@@ -58,8 +104,8 @@ export default function Medications() {
           isOpen={isConfirmationModalOpen}
           onCancel={handleIsConfirmationModalOpen}
           onConfirm={submitForm}
-          title="Confirm Test Order"
-          formdata={search}
+          title="Confirm Medication"
+          formdata={{ medicine: medicine, instructions: instructions }}
         />
       );
     }
@@ -68,11 +114,11 @@ export default function Medications() {
   return (
     <form onSubmit={handleSubmit(submitForm)} className="bg-white p-4">
       {renderConfirmationModal()}
-      <div className="flex items-start gap-4">
+      <div className="flex items-center justify-center gap-4">
         <div>
           <SelectDropdownAsync
             label="Select medicine"
-            data={data}
+            data={inventoryData}
             placeholder="Search for medicine"
             className=""
             name="medicine"
@@ -93,12 +139,13 @@ export default function Medications() {
           <Button
             type="button"
             onClick={handleIsConfirmationModalOpen}
-            className="mt-4 px-3 py-2 bg-blue-400 text-white rounded hover:bg-blue-500 text-xs"
+            className={`mt-4 px-3 py-2 bg-blue-500 text-white rounded text-xs m-auto`}
             value="Prescribe Medication"
+            disabled={!medicine?.length}
           />
         </div>
 
-        <div className="min-h-[300px] bg-gray-300 w-0.5 "></div>
+        {/* <div className="min-h-[300px] bg-gray-300 w-0.5 "></div>
         <div className="bg-gray-50 rounded-lg p-4 w-full min-h-[270px]">
           <h2 className="text-sm text-blue-500 font-bold mb-4 text-center">Selected Medicine</h2>
           {medicine
@@ -108,7 +155,7 @@ export default function Medications() {
                 </p>
               ))
             : null}
-        </div>
+        </div> */}
       </div>
     </form>
   );

@@ -1,5 +1,5 @@
 'use client';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import MedicationOrderTable from '@/src/components/organisms/medication-order/medication-order-table';
 import Header from '@/src/components/organisms/patient/header';
 import { Search, Loader, XIcon } from 'lucide-react';
@@ -9,12 +9,19 @@ import SelectDropdown from '@/src/components/molecules/select-dropdown/select-dr
 import { useForm } from 'react-hook-form';
 import Input from '@/src/components/atoms/Input/input-field';
 import { useQueryData } from '@/src/hooks/use-query-data';
+import Pagination from '../../organisms/pagination/pagination';
 
 export default function MedOrderTemplate() {
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
   const { control, watch, setValue } = useForm({
     defaultValues: { search: '', status: { label: 'Pending', value: 'pending' } },
     mode: 'onChange',
   });
+
+  const pageSize = 10;
+  const from = (page - 1) * pageSize;
+  const to = from + pageSize - 1;
 
   const status = watch('status');
   /* eslint-disable  @typescript-eslint/no-explicit-any */
@@ -26,7 +33,7 @@ export default function MedOrderTemplate() {
     data: queryData,
     loading,
     clearData,
-    // count,
+    count,
   } = useQueryData({
     table: 'tasks',
     params: [
@@ -40,13 +47,20 @@ export default function MedOrderTemplate() {
       },
     ],
     nestedPatientName: debouncedName,
-    // from: from,
-    // to: to,
+    from: from,
+    to: to,
   });
 
   useEffect(() => {
     queryTask();
   }, [debouncedName, status]);
+
+  useEffect(() => {
+    if (count) {
+      setTotalPages(Math.ceil(count / 10));
+      setTotalPages(Math.ceil((count || 0) / pageSize));
+    }
+  }, [count]);
 
   const resetField = () => {
     setValue('search', '');
@@ -61,7 +75,7 @@ export default function MedOrderTemplate() {
   ];
 
   return (
-    <div className=" bg-white min-h-screen">
+    <div className=" bg-white min-h-screen p-5">
       <Header title="Medication orders" subTitle="Select patient to view medication order" />
       <div className=" flex justify-start items-center gap-4 mt-6 w-full border-gray-200 pb-4">
         <div className=" w-[40%] relative gap-8">
@@ -101,10 +115,18 @@ export default function MedOrderTemplate() {
           <SelectDropdown name="status" options={options} control={control} />
         </div>
       </div>
-      <div className="overflow-x-auto mt-4">
+      <div className="overflow-x-auto mt-2">
         {!loading &&
           (queryData?.length > 0 ? (
-            <MedicationOrderTable patients={queryData} />
+            <>
+              <MedicationOrderTable patients={queryData} />
+              <Pagination
+                totalPages={totalPages}
+                currentPage={page}
+                onPageChange={setPage}
+                count={count}
+              />
+            </>
           ) : (
             <EmptyState title="No task found" message="No task found for lab order" />
           ))}

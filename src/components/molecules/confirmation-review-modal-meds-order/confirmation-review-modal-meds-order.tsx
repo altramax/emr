@@ -19,19 +19,17 @@ const ConfirmationReviewModalMedsOrder = ({
   title,
   formdata,
 }: ConfirmationModalProps) => {
-  console.log(formdata);
-
   if (!isOpen) return null;
 
   return (
     <div className="text-black fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-      <div className="bg-white w-[700px] p-6 rounded-xl shadow-xl space-y-4">
+      <div className="bg-white w-[550px] p-6 rounded-xl shadow-xl space-y-4">
         <div className="flex items-center gap-3">
-          <AlertTriangle className="text-yellow-500" size={28} />
-          <h2 className="text-lg font-semibold text-gray-800">{title}</h2>
+          <AlertTriangle className="text-yellow-500" size={24} />
+          <h2 className="text-md font-semibold text-gray-800">{title}</h2>
         </div>
 
-        <table className="w-full text-sm ">
+        {/* <table className="w-full text-sm ">
           <thead>
             <tr className="text-xs text-gray-600 font-medium flex justify-between items-center gap-4">
               <th>#</th>
@@ -43,7 +41,7 @@ const ConfirmationReviewModalMedsOrder = ({
             </tr>
           </thead>
           <tbody>
-            {/* eslint-disable  @typescript-eslint/no-explicit-any */}
+      
             {formdata.map((item: any, index: number) => {
               return (
                 <tr
@@ -60,7 +58,18 @@ const ConfirmationReviewModalMedsOrder = ({
               );
             })}
           </tbody>
-        </table>
+        </table> */}
+
+        <div className="bg-gray-50 rounded-lg p-4 w-full">
+          <h2 className="text-sm text-blue-500 font-bold mb-2">Selected Medicine</h2>
+          {formdata.medicine.map((item: { label: string; value: string }, index: number) => (
+            <p key={index + item.label} className="text-xs text-blue-500 mb-2">
+              {index + 1}. {item.label}
+            </p>
+          ))}
+          <h2 className="text-sm text-blue-500 font-bold mt-8 mb-2">Instructions</h2>
+          <p className="text-xs text-blue-500 mb-2">{formdata.instructions}</p>
+        </div>
 
         <div className="flex justify-end gap-3 pt-4">
           <button

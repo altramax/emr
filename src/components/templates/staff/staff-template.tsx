@@ -40,8 +40,6 @@ export default function StaffTemplate() {
     clearData();
   };
 
-  console.log(data);
-
   return (
     <div className=" p-5 bg-white min-h-screen">
       <Header title="Staffs" subTitle="Search for staffs here" />
